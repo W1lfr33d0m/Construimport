@@ -16,7 +16,7 @@ class Proveedor(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return Reversible("_detail", kwargs={"pk": self.pk})
+        return Reversible("proveedor_detail", kwargs={"pk": self.pk})
 
 class Producto(models.Model):
 
