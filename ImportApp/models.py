@@ -2,6 +2,7 @@ from django.db.models.base import Model
 from typing import Reversible
 from django.db import models
 from django.db.models.fields import reverse_related
+from django.utils.translation import gettext as _
 
 # Create your models here.
 class Cliente(models.Model):
@@ -10,8 +11,8 @@ class Cliente(models.Model):
     
 
     class Meta:
-        verbose_name = ("Cliente")  
-        verbose_name_plurl = ("Clientes")
+        verbose_name = _("Cliente")  
+        verbose_name_plurl = _("Clientes")
     def __str__(self):
         return self.name
 
@@ -23,8 +24,8 @@ class Proveedor(models.Model):
     Pais = models.TextChoices 
 
     class Meta:
-        verbose_name = ("Proveedor")  
-        verbose_name_plurl = ("Proveedores")
+        verbose_name = _("Proveedor")  
+        verbose_name_plurl = _("Proveedores")
     def __str__(self):
         return self.name
 
@@ -33,14 +34,14 @@ class Proveedor(models.Model):
 
 class Producto(models.Model):
 
-    CodigoProducto = models.CharField(("Codigo"), max_length=50)
-    DescripcionProducto = models.TextField("")
-    Precio = models.FloatField("")
-    Cantidad =  models.IntegerField("")
+    CodigoProducto = models.CharField(_("Codigo"), max_length=50)
+    DescripcionProducto = models.TextField(_(""))
+    Precio = models.FloatField(_(""))
+    Cantidad =  models.IntegerField(_(""))
 
     class Meta:
-        verbose_name = ("Producto")
-        verbose_name_plural = ("Productos")
+        verbose_name = _("Producto")
+        verbose_name_plural = _("Productos")
 
     def __str__(self):
         return self.name
