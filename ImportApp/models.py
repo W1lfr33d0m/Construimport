@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 class Cliente(models.Model):
     NumContratoCliente = models.models.CharField(_("Codigo"), max_length=50)
     NombreCliente = models.models.TextField(_("Nombre"), max_length=100)
-    
+
 
     class Meta:
         verbose_name = _("Cliente")  
