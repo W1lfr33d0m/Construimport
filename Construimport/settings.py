@@ -38,9 +38,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ImportApp',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'CONSTRUIMPORT',
+    'site_header': 'CONSTRUIMPORT',
+    'site_logo': 'img/logo.png',
+    'welcome_sign': 'Iniciar sesión',
+    'icons': {
+        'auth.user': 'fas fa-user',
+        'auth.group': 'fas fa-users',
+        'ImportApp.Proveedor': 'fas fa-users',
+        'ImportApp.Cliente': 'fas fa-users',
+        'ImportApp.Producto': 'fas fa-book',
+        'ImportApp.Pais': 'fas fa-flag' 
+    },
+    'topmenu_links': [
+        {'app': 'ImportApp'},
+        {'model': 'ImportApp.Cliente'}
+    ]
+    #'login_background': 'img/FONDO.jpg'
+}
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
