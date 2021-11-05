@@ -47,6 +47,7 @@ JAZZMIN_SETTINGS = {
     'site_title': 'CONSTRUIMPORT',
     'site_header': 'CONSTRUIMPORT',
     'site_logo': 'img/logo.png',
+    'login_logo': 'img/identidadvisual.png',
     'welcome_sign': 'Iniciar sesión',
     'icons': {
         'auth.user': 'fas fa-user',
@@ -54,7 +55,7 @@ JAZZMIN_SETTINGS = {
         'ImportApp.Proveedor': 'fas fa-users',
         'ImportApp.Cliente': 'fas fa-users',
         'ImportApp.Producto': 'fas fa-book',
-        'ImportApp.Pais': 'fas fa-flag' 
+        'ImportApp.Pais': 'fas fa-flag', 
     },
     'topmenu_links': [
         {'app': 'ImportApp'},
