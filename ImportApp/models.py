@@ -15,7 +15,7 @@ class Pais(models.Model):
         verbose_name_plural = _("Países")
 
     def __str__(self):
-        return self.name
+        return f"{self.CodigoPais} {self.Pais}"
 
     def get_absolute_url(self):
         return Reversible("Pais_detail", kwargs={"pk": self.pk})
@@ -28,7 +28,7 @@ class Cliente(models.Model):
         verbose_name = _("Cliente")  
         verbose_name_plural = _("Clientes")
     def __str__(self):
-        return self.name
+        return f"{self.NumContratoCliente} {self.NombreCliente}"
 
     def get_absolute_url(self):
         return Reversible("cliente_detail", kwargs={"pk": self.pk})
@@ -41,7 +41,7 @@ class Proveedor(models.Model):
         verbose_name = _("Proveedor")  
         verbose_name_plural = _("Proveedores")
     def __str__(self):
-        return self.name
+        return f"{self.NumContratoProveedor} {self.NombreProveedor} {self.Pais}"
 
     def get_absolute_url(self):
         return Reversible("proveedor_detail", kwargs={"pk": self.pk})
@@ -51,14 +51,14 @@ class Producto(models.Model):
     CodigoProducto = models.CharField(_("Código"), max_length=50)
     DescripcionProducto = models.TextField(_("Descripción"))
     Precio = models.FloatField(_("Precio"))
-    Cantidad =  models.IntegerField(_("Cantidad"))
+    Cantidad =  models.FloatField(_("Cantidad"))
 
     class Meta:
         verbose_name = _("Producto")
         verbose_name_plural = _("Productos")
 
     def __str__(self):
-        return self.name
+        return f"{self.CodigoProducto} {self.DescripcionProducto} {self.Precio} {self.Cantidad}"
 
     def get_absolute_url(self):
         return reverse_related("producto_detail", kwargs={"pk": self.pk})
