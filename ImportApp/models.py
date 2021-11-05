@@ -35,7 +35,7 @@ class Cliente(models.Model):
 class Proveedor(models.Model):
     NumContratoProveedor = models.CharField(_("Codigo"), max_length=50)
     NombreProveedor = models.TextField(_("Nombre"), max_length=100)
-    Pais = models.ForeignKey("Pais", verbose_name=_("País"), on_delete=models.CASCADE)
+    Pais = models.ForeignKey(Pais, verbose_name=_("País"), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Proveedor")  
