@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,7 +68,7 @@ JAZZMIN_SETTINGS = {
     
 }
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static', 'img')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,10 +82,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Construimport-Server.urls'
 
+LOGIN_REDIRECT_URL = '/admin'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'Construimport-Server', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

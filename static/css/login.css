@@ -1,0 +1,14 @@
+pre, p {
+    font-size: 1.5em;
+    color: #fdcc61;
+    background-color: transparent;
+}
+
+body {
+  background: url("/Construimport-Server/static/img/FONDO.jpg") no-repeat;
+}
+
+container {
+  position: relative;
+  
+}
