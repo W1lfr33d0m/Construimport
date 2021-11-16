@@ -5,7 +5,7 @@ pre, p {
 }
 
 body {
-  background: url("/Construimport-Server/static/img/FONDO.jpg") no-repeat;
+  background-image: url("/Construimport-Server/static/img/fondo.jpg") no-repeat;
 }
 
 container {
