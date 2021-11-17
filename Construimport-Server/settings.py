@@ -55,14 +55,14 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth.user': 'fas fa-user',
         'auth.group': 'fas fa-users',
-        'ImportApp.Proveedor': 'fas fa-users',
-        'ImportApp.Cliente': 'fas fa-users',
-        'ImportApp.Producto': 'fas fa-book',
-        'ImportApp.Pais': 'fas fa-flag', 
+        'Solicitudes.Proveedor': 'fas fa-users',
+        'Solicitudes.Cliente': 'fas fa-users',
+        'Solicitudes.Producto': 'fas fa-book',
+        'Solicitudes.Pais': 'fas fa-flag', 
     },
     'topmenu_links': [
-        {'app': 'ImportApp'},
-        {'model': 'ImportApp.Cliente'}
+        {'app': 'Solicitudes'},
+        {'model': 'Solicitudes.Producto'}
     ]
     
 }

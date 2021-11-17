@@ -4,6 +4,13 @@ pre, p {
     background-color: transparent;
 }
 
-container {
-  background-image: url("img/FONDO.jpg") no-repeat;
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  background: url("/Construimport-Server/static/img/fondo.jpg") no-repeat;
+  width: 100%;
 }
