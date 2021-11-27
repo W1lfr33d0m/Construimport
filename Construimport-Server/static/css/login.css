@@ -10,7 +10,7 @@ pre, p {
   box-sizing: border-box;
 }
 
-.container {
-  background: url("/Construimport-Server/static/img/fondo.jpg") no-repeat;
+body{
+  background-image: url(Construimport-Server/static/img/fondo.jpg);
   width: 100%;
 }

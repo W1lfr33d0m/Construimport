@@ -67,7 +67,7 @@ JAZZMIN_SETTINGS = {
     
 }
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static', 'img')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static', 'css','img')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

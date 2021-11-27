@@ -282,6 +282,8 @@ class Proveedor(models.Model):
     idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais')
 
     class Meta:
+        verbose_name = _('Proveedor')
+        verbose_name_plural = _('Proveedores')
         managed = False
         db_table = 'proveedor'
 

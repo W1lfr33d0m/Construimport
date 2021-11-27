@@ -6,3 +6,6 @@ from .models import Solicitud, Cliente, Proveedor
 class SolicitudAdmin(admin.ModelAdmin):
     list_display = ('numsolicitud', 'numcontratocliente', 'cantidad', 'idproducto', 'fechasol', 'numcontratoproveedor')
     
+@admin.register(Proveedor)
+class ProveedorAdmin(admin.ModelAdmin):
+    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
