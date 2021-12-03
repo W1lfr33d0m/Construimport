@@ -11,6 +11,6 @@ pre, p {
 }
 
 body{
-  background-image: url(Construimport-Server/static/img/fondo.jpg);
+  background-image: url(/img/fondo.jpg);
   width: 100%;
 }

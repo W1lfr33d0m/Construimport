@@ -50,7 +50,7 @@ JAZZMIN_SETTINGS = {
     'site_title': 'CONSTRUIMPORT',
     'site_header': 'CONSTRUIMPORT',
     'site_logo': 'img/logo.png',
-    'login_logo': 'img/identidadvisual.png',
+    'login_logo': 'img/logo.png',
     'welcome_sign': 'Iniciar sesión',
     'icons': {
         'auth.user': 'fas fa-user',
@@ -67,7 +67,7 @@ JAZZMIN_SETTINGS = {
     
 }
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static', 'css','img')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

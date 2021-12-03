@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.utils.translation import gettext as _
+from django.core.exceptions import ValidationError
 
 
 class AdminInterfaceTheme(models.Model):
@@ -64,7 +65,7 @@ class AdminInterfaceTheme(models.Model):
 
 
 class Almacen(models.Model):
-    idalmacen = models.BigIntegerField(primary_key=True)
+    idalmacen = models.BigIntegerField(primary_key=True, unique=True)
     tipoalmacen = models.CharField(max_length=30)
 
     class Meta:
@@ -152,7 +153,7 @@ class Cliente(models.Model):
 
 
 class ContratoCliente(models.Model):
-    numcontratocliente = models.BigIntegerField(primary_key=True)
+    numcontratocliente = models.BigIntegerField(primary_key=True, unique=True)
     vigencia = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -161,7 +162,7 @@ class ContratoCliente(models.Model):
 
 
 class ContratoProveedor(models.Model):
-    numcontratoproveedor = models.BigIntegerField(primary_key=True)
+    numcontratoproveedor = models.BigIntegerField(primary_key=True, unique=True)
     vigencia = models.DateField()
 
     class Meta:
@@ -298,11 +299,24 @@ class RegistroControlSolicitud(models.Model):
         managed = False
         db_table = 'registro_control_solicitud'
 
-
+def validate_numsolicitud(numsolicitud):
+        if numsolicitud <= 0:
+            raise ValidationError(
+            _('%(numsolicitud)s no es correcto'),
+            params={'numsolicitud': numsolicitud},
+        )
+            
+def validate_cantidad(cantidad):
+        if cantidad <= 0:
+            raise ValidationError(
+            _('%(cantidad)s no es correcto'),
+            params={'cantidad': cantidad},
+        )
+            
 class Solicitud(models.Model):
-    numsolicitud = models.IntegerField(primary_key=True)
+    numsolicitud = models.IntegerField(primary_key=True, validators=[validate_numsolicitud], unique=True)
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
-    cantidad = models.IntegerField()
+    cantidad = models.IntegerField(validators=[validate_cantidad])    
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
     fechasol = models.DateField()
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
@@ -310,7 +324,7 @@ class Solicitud(models.Model):
     class Meta:
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
-        managed = False
+        managed = True
         db_table = 'solicitud'
         unique_together = (('numsolicitud', 'numcontratocliente', 'idproducto'),)
 
