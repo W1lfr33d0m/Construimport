@@ -150,6 +150,9 @@ class Cliente(models.Model):
     class Meta:
         managed = False
         db_table = 'cliente'
+    
+    def __str__(self):
+        return '{}'.format(self.nomcliente)
 
 
 class ContratoCliente(models.Model):
@@ -275,6 +278,9 @@ class Producto(models.Model):
     class Meta:
         managed = False
         db_table = 'producto'
+    
+    def __str__(self):
+        return '{}'.format(self.nombreproducto)
 
 
 class Proveedor(models.Model):
@@ -287,6 +293,9 @@ class Proveedor(models.Model):
         verbose_name_plural = _('Proveedores')
         managed = False
         db_table = 'proveedor'
+    
+    def __str__(self):
+        return '{}'.format(self.nomproveedor)
 
 
 class RegistroControlSolicitud(models.Model):
