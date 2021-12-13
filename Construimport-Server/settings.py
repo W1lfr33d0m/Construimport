@@ -50,7 +50,7 @@ JAZZMIN_SETTINGS = {
     'site_title': 'CONSTRUIMPORT',
     'site_header': 'CONSTRUIMPORT',
     'site_logo': 'img/logo.png',
-    'login_logo': 'img/logo.png',
+    'login_box': 'img/logo.png',
     'welcome_sign': 'Iniciar sesión',
     'icons': {
         'auth.user': 'fas fa-user',
