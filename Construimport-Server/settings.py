@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
-    'reports',
     'admin_interface',
     'colorfield',
     'django.contrib.admin',
@@ -44,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'Solicitudes',
+    'reports',
+    #'django_pdf',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]

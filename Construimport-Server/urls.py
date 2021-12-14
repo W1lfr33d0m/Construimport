@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('Solicitudes/',include('Solicitudes.urls')),
+    #path('pdf/', include('django_pdf.urls')),
 ]
