@@ -107,7 +107,7 @@ class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=150)
+    username = models.CharField(unique=True, max_length=50)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.CharField(max_length=254)
@@ -162,6 +162,9 @@ class ContratoCliente(models.Model):
     class Meta:
         managed = False
         db_table = 'contrato_cliente'
+    
+    def __str__(self):
+        return '{}'.format(self.numcontratocliente)
 
 
 class ContratoProveedor(models.Model):
@@ -171,6 +174,9 @@ class ContratoProveedor(models.Model):
     class Meta:
         managed = False
         db_table = 'contrato_proveedor'
+        
+    def __str__(self):
+        return '{}'.format(self.numcontratoproveedor)
 
 
 class DjangoAdminLog(models.Model):
