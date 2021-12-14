@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.shortcuts import render
 from .models import Solicitud, Cliente, Proveedor
 
 # Register your models here.
@@ -13,3 +14,19 @@ class ProveedorAdmin(admin.ModelAdmin):
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
     list_display = ('numcontratocliente', 'nomcliente')
+    
+def my_view(request, slug):
+    """
+    Display an individual :model:`Solicitudes.Solicitud`.
+
+    **Context**
+
+    ``Solicitud``
+        An instance of :model:`Solicitudes.Solicitud`.
+
+    **Template:**
+
+    :template:`Solicitudes/my_template.html`
+    """
+    context = {'Solicitudes': Solicitud.objects.get(slug=slug)}
+    return render(request, 'Solicitudes/my_template.html', context)
