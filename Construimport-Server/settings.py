@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'Solicitudes',
+    'charts_dashboard',
     'reports',
     #'django_pdf',
 ]

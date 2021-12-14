@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import render
 from .models import Solicitud, Cliente, Proveedor
+from reports.base import ModelReport
 
 
 # Register your models here.
@@ -39,7 +40,10 @@ class ClienteAdmin(admin.ModelAdmin):
         
         return form
     
+class MyReport(ModelReport):
+    name = "Report - My Report"
     
+MyReport(Solicitud, MyReport)    
 
 def my_view(request, slug):
     """
