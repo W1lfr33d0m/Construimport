@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from .models import Solicitud, Cliente, Proveedor
 
+
 # Register your models here.
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
