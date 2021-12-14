@@ -9,3 +9,7 @@ class SolicitudAdmin(admin.ModelAdmin):
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
     list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ('numcontratocliente', 'nomcliente')
