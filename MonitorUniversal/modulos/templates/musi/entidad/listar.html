@@ -1,0 +1,92 @@
+{% extends 'musi/base.html' %}
+
+{% load static %}
+
+    {% block js %}
+    <script>
+        function eliminarEntidad(id, provincia){
+            Swal.fire({
+                title: "¿Desea eliminar la entidad?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "question",
+                showCancelButton: true,
+                cancelButtonText: "No, cancelar.",
+                confirmButtonText: "Sí, eliminar.",
+                reverseButtons: true,
+                confirmButtonColor: "darkred",
+            }) 
+            .then(function(result){
+                if(result.value == true){
+                    window.location = "/entidad/eliminar/" + provincia +"/" + id +"/"
+                }
+            })
+        }
+    </script>
+    {% endblock %}
+
+{% block content %}
+<br>
+<a href="{% url 'entidad' %}" class="btn btn-default btn-sm">Regresar</a>
+<br>
+<br>
+<div class="d-flex justify-content-center">
+    <h2>Listado de Entidades</h2>
+</div>
+<hr>
+<div class="d-flex justify-content-center">
+    <table class="table table-hover table-sm table-bordered table-active table-responsive-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Prefijo</th>
+                <th>Teléfono</th>
+                <th>¿De CIMEX?</th>
+                <th>Jefe Informático</th>
+                <th>Administrador de Redes</th>
+                <th>Rango IP Inicial </th>
+                <th>Rango IP Final</th>
+                <th>Municipio </th>
+                {% if perms.musi.change_entidad or perms.musi.delete_entidad %}
+                <th>Opciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        {% for e in entity %}
+            <tr>
+                <td><a href="{% url 'detallar_entidad' e.provincia.id e.id %}">{{ e.nombre | title }}</a></td>
+                <td>{{ e.prefijo }}</td>
+                <td>{{ e.telefono }}</td>
+                <td>
+                    {% if e.de_cimex %}
+                    SÍ
+                    {% else %}
+                    NO
+                    {% endif %}
+                </td>
+                <td>{{ e.nombre_jefe_informatico | title }} {{  e.apellido_jefe_informatico | title }}</td>
+                <td>{{ e.nombre_admin_redes | title }} {{ e.apellido_admin_redes | title }}</td>
+                <td>{{ e.rango_inicial_ip }}</td>
+                <td>{{ e.rango_final_ip }}</td>
+                <td>{{ e.municipio | title }}</td>
+                <td>
+                    <div class="btn-toolbar">
+                        <div class="btn-group mr-2">
+                            {% if perms.musi.change_entidad %}
+                                <a href="{% url 'modificar_entidad' e.provincia.id e.id %}" class="btn btn-info btn-sm">Editar</a>
+                                {% endif %}
+                                &nbsp;
+                                {% if perms.musi.delete_entidad %}
+                                <a onclick="eliminarEntidad({{ e.id }}, {{e.provincia.id}})" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<hr>
+<div>
+    {% include 'utiles/paginator.html' %}
+</div>
+{% endblock %}

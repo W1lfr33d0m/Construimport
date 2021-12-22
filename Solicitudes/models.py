@@ -272,6 +272,9 @@ class Pais(models.Model):
     class Meta:
         managed = False
         db_table = 'pais'
+    
+    def __str__(self):
+        return '{}'.format(self.pais)
 
 
 class Producto(models.Model):

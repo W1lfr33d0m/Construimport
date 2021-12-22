@@ -1,0 +1,84 @@
+{% extends 'musi/base.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<br>
+<a href="" class="btn btn-default btn-sm">Regresar</a>
+<br><br>
+<div class="row">
+    <div class="col-8 col-md-6 offset-md-3">
+        <div class="card">
+            <div class="carbody">
+                {% if perms.musi.add_usuario %}
+                <div class="d-flex justify-content-center">
+                <h2>Agregar Usuario</h2>
+                </div>
+                <hr>
+                <form action="" method="post" autocomplete="off">
+                    <div class=" form-group col">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.nombre | as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.apellido | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.correo | as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                {{ form.telefono| as_crispy_field }}
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.nombre_usuario | as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.pc | as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    {{ form.entidad | as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.tipo_usuario | as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.cargo | as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.provincia | as_crispy_field }}
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    {{ form.municipio | as_crispy_field }}
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form.media.js }} 
+                        <hr>
+                        <div class="d-flex justify-content-end">
+                            <input type="reset" value="Reiniciar" class="btn btn-secondary btn-sm">
+                            &nbsp;
+                            <input type="submit" value="Guardar" class="btn btn-primary btn-sm">
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

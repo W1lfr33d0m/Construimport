@@ -1,0 +1,18 @@
+{% extends 'musi/base.html' %}
+
+{% block content %}
+<br>
+<div class="d-flex justify-content-center">
+    <h2>Módulos del Sistema</h2>
+</div>
+<hr>
+    <ul>
+        <li>
+            <a href="{% url 'correo' %}">Correo Electrónico</a>
+        </li>
+        <br>
+        <li>
+            <a href="{% url 'internet' %}">Internet</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'musi/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<a href="" class="btn btn-default btn-sm">Regresar</a>
+{% if perms.musi.add_usuario %}
+<a href="{% url 'agregar_usuario' %}" class="btn btn-default btn-sm" style="float: right;">Agregar Usuario</a>
+{% endif %}
+<br>
+<br>
+<div class="col-12 col-md-12 offset-md-12">
+    <div class="d-flex justify-content-center">
+        <h2>Usuarios de la entidad</h2> 
+    </div>
+    <hr>
+    <div class="d-flex justify-content-center">
+        <table class="table table-hover table-sm table-bordered table-active table-responsive-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Nombre de la Pc</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th>Tipo de Usuario</th>
+                    <th>Cargo</th>
+                    {% if perms.musi.change_usuario or perms.musi.delete_usuario %}
+                    <th>Opciones</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            {% for e in entity %}
+                <tr>
+                    <td>{{ e.nombre | title }}</a></td>
+                    <td>{{ e.apellido | title }}</td>
+                    <td>{{ e.telefono }}</td>
+                    <td>{{ e.correo }}</td>
+                    <td>{{ e.nombre_usuario }}</td>
+                    <td>{{ e.pc }}</td>
+                    <td>{{ e.provincia }}</td>
+                    <td>{{ e.municipio }}</td>
+                    <td>{{ e.tipo_usuario }}</td>
+                    <td>{{ e.cargo }}</td>
+                    <td>
+                        <div class="btn-toolbar">
+                            <div class="btn-group mr-2">
+                                {% if perms.musi.change_usuario %}
+                                    <a href="" class="btn btn-info btn-sm">Editar</a>
+                                    {% endif %}
+                                    &nbsp;
+                                    {% if perms.musi.delete_usuario %}
+                                    <a onclick="eliminarEntidad()" class="btn btn-danger btn-sm">Eliminar</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <hr>
+    <div>
+        {% include 'utiles/paginator.html' %}
+    </div>
+</div>  
+{% endblock %}

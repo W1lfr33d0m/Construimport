@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.shortcuts import render
 from .models import Solicitud, Cliente, Proveedor
-from reports.base import ModelReport
+from django.views.generic.base import TemplateView
+
 
 
 # Register your models here.
@@ -18,9 +19,11 @@ class SolicitudAdmin(admin.ModelAdmin):
         
         return form
     
+    
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
     list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['numcontratoproveedor'].label = 'Contrato'
@@ -28,6 +31,9 @@ class ProveedorAdmin(admin.ModelAdmin):
         form.base_fields['idpais'].label = 'País'
         
         return form
+    save_as = True
+    save_on_top = True
+   # change_list_template = 'change_list_graph.html'
         
     
 @admin.register(Cliente)
@@ -38,25 +44,4 @@ class ClienteAdmin(admin.ModelAdmin):
         form.base_fields['numcontratocliente'].label = 'Contrato'
         form.base_fields['nomcliente'].label = 'Nombre'
         
-        return form
-    
-class MyReport(ModelReport):
-    name = "Report - My Report"
-    
-MyReport(Solicitud, MyReport)    
-
-def my_view(request, slug):
-    """
-    Display an individual :model:`Solicitudes.Solicitud`.
-
-    **Context**
-
-    ``Solicitud``
-        An instance of :model:`Solicitudes.Solicitud`.
-
-    **Template:**
-
-    :template:`Solicitudes/my_template.html`
-    """
-    context = {'Solicitudes': Solicitud.objects.get(slug=slug)}
-    return render(request, 'Solicitudes/my_template.html', context)
+        return form     

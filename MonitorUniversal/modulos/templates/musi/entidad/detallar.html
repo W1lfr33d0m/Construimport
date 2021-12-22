@@ -1,0 +1,66 @@
+{% extends 'musi/base.html' %} 
+
+{% block content %}
+<br>
+<a href="{% url 'listar_entidad' entidad.provincia.id %}" class="btn btn-default btn-sm">Regresar</a>
+<br>
+<br>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center">
+            <h2>{{ entidad.nombre | title }}</h2>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-center">
+            <table class="table table-hover table-sm table-bordered table-active table-responsive-sm">  
+            <thead class="thead-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Prefijo</th>
+                <th>Teléfono</th>
+                <th>¿De CIMEX?</th>
+                <th>Jefe Informático</th>
+                <th>Administrador de Redes</th>
+                <th>Rango IP Inicial </th>
+                <th>Rango IP Final</th>
+                <th>Provincia</th>
+                <th>Municipio</th>
+            </thead>
+            <tr>
+                <td>{{ entidad.nombre | title }}</td>
+                <td>{{ entidad.prefijo }}</td>
+                <td>{{ entidad.telefono }}</td>
+                <td>
+                    {% if entidad.de_cimex %}
+                    SÍ
+                    {% else %}
+                    NO
+                    {% endif %}
+                </td>
+                <td>{{ entidad.nombre_jefe_informatico | title }} {{  entidad.apellido_jefe_informatico | title }}</td>
+                <td>{{ entidad.nombre_admin_redes | title }} {{ entidad.apellido_admin_redes | title }}</td>
+                <td>{{ entidad.rango_inicial_ip }}</td>
+                <td>{{ entidad.rango_final_ip }}</td>
+                <td>{{ entidad.provincia }}</td>
+                <td>{{ entidad.municipio }}</td>
+            </tr>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'listar_usuario' entidad.provincia.id entidad.id %}" class="btn btn-default btn-sm">Lista de usuarios</a>
+            &nbsp;
+            &nbsp;
+            <a href="{% url 'agregar_usuario' %}" class="btn btn-default btn-sm">Agregar usuario</a>
+            &nbsp;
+            &nbsp;
+            <a href="" class="btn btn-default btn-sm">Lista de equipos</a>
+            &nbsp;
+            &nbsp;
+            <a href="" class="btn btn-default btn-sm">Ver reportes</a>
+            &nbsp;
+            &nbsp;
+            <a href="{% url 'monitoreos' %}" class="btn btn-default btn-sm">Realizar monitoreos</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
