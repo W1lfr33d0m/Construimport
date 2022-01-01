@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+
+{%block title %}{{ title }} | {{ site_title|default:_('CONSTRUIMPORT') }}{% endblock %}
+{% load static %}
+{% block branding %}
+    <img src="{% static 'img/identidad.png' %}" alt="Identidad" width="80">
+    <p>Sitio Administrativo CONSTRUIMPORT</p>
+{% endblock %}
+{% block nav-global %}{% endblock nav-global %}
