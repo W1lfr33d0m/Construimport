@@ -33,8 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
-    'admin_interface',
-    'colorfield',
+    #'admin_interface',
+    #'colorfield',
     'admin_tools_stats',
     'django_nvd3',
     'django.contrib.admin',
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'Solicitudes',
-    'charts_dashboard',
+    #'charts_dashboard',
     'reports',
     'djangobower',
     #'django_pdf',
