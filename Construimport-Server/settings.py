@@ -67,12 +67,7 @@ JAZZMIN_SETTINGS = {
         'Solicitudes.Cliente': 'fas fa-users',
         'Solicitudes.Producto': 'fas fa-book',
         'Solicitudes.Pais': 'fas fa-flag', 
-    },
-    'topmenu_links': [
-        {'app': 'Solicitudes'},
-        {'model': 'Solicitudes.Producto'}
-    ]
-    
+    },    
 }
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
