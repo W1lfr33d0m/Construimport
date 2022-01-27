@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from operator import contains
 from django.db import models
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
@@ -102,15 +103,21 @@ class AuthPermission(models.Model):
         db_table = 'auth_permission'
         unique_together = (('content_type', 'codename'),)
 
+def validate_firstname(first_name):
+        if first_name == "" or first_name.str.contains(pat = '[0-9]'):
+            raise ValidationError(
+            _('%(first_name)s solo debe contener letras'),
+           params={'first_name': first_name},
+        )
 
 class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=50)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
+    username = models.CharField(unique=True, max_length=15)
+    first_name = models.CharField(max_length=50, blank=False, null=False)
+    last_name = models.CharField(max_length=60)
+    email = models.CharField(max_length=70)
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
@@ -327,7 +334,7 @@ def validate_numsolicitud(numsolicitud):
 def validate_cantidad(cantidad):
         if cantidad <= 0:
             raise ValidationError(
-            _('%(cantidad)s no es correcto'),
+            _('%(cantidad)s debe ser un valor positivo'),
             params={'cantidad': cantidad},
         )
             
