@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'jazzmin',
     #'admin_interface',
     #'colorfield',
-    'admin_tools_stats',
+    #'admin_tools_stats',
     'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'Solicitudes',
     'COMEX',
     #'charts_dashboard',
-    'reports',
+    #'reports',
     'djangobower',
     #'django_pdf',
 ]

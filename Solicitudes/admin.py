@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 
 
 
+
 # Register your models here.
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
