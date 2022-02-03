@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'jazzmin',
     #'admin_interface',
     #'colorfield',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     #'reports',
     'djangobower',
     #'django_pdf',
+    'dbbackup',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
@@ -120,6 +122,12 @@ DATABASES = {
     }
 }
 
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
+
+CRONJOBS = [
+    ('*/5 * * * *', 'Solicitudes.cron.my_backup')
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
