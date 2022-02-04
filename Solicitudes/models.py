@@ -371,3 +371,11 @@ class Usuarios(models.Model):
     class Meta:
         managed = False
         db_table = 'usuarios'
+
+class BackupView(models.Model):
+    
+    
+
+    class Meta:
+        verbose_name = _('Salva')
+        verbose_name_plural = _('Salvas')

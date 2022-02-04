@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.urls.conf import include
 
 urlpatterns = [
+    path('', include('smuggler.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('', admin.site.urls),
     #path('admin/', admin.site.urls),

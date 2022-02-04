@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'djangobower',
     #'django_pdf',
     'dbbackup',
+    'smuggler',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
@@ -69,8 +70,13 @@ JAZZMIN_SETTINGS = {
         'Solicitudes.Cliente': 'fas fa-users',
         'Solicitudes.Producto': 'fas fa-book',
         'Solicitudes.Pais': 'fas fa-flag', 
-    },    
+    },
+    'topmenu_links': [
+        {'name': 'Backup', 'url':'/dump/',},
+        {'name': 'Restaura', 'url':'/load/',},
+    ]    
 }
+
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
 

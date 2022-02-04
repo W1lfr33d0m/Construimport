@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import render
-from .models import Solicitud, Cliente, Proveedor
+from .models import Solicitud, Cliente, Proveedor, BackupView
 from django.views.generic.base import TemplateView
-
 
 
 # Register your models here.
@@ -45,3 +44,7 @@ class ClienteAdmin(admin.ModelAdmin):
         form.base_fields['nomcliente'].label = 'Nombre'
         
         return form     
+    
+#@admin.register(BackupView)
+#class BackupViewAdmin(admin.ModelAdmin):
+#  change_list_template = 'smuggler/change_list.html'
