@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.shortcuts import render
-from .models import Solicitud, Cliente, Proveedor, BackupView
+from .models import Solicitud, Cliente, Proveedor
 from django.views.generic.base import TemplateView
 
 
 # Register your models here.
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = ('numsolicitud', 'numcontratocliente', 'cantidad', 'idproducto', 'fechasol', 'numcontratoproveedor')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
@@ -22,7 +23,7 @@ class SolicitudAdmin(admin.ModelAdmin):
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
     list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
-    list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    #list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['numcontratoproveedor'].label = 'Contrato'

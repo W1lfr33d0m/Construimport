@@ -5,10 +5,22 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from operator import contains
+from datetime import date, datetime
+from tabnanny import verbose
 from django.db import models
+from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
+from .validators import UnicodenameValidator
+from django.utils import timezone
+
+
+class SolicitudesBackupview(models.Model):
+    id = models.BigAutoField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Solicitudes_backupview'
 
 
 class AdminInterfaceTheme(models.Model):
@@ -66,7 +78,7 @@ class AdminInterfaceTheme(models.Model):
 
 
 class Almacen(models.Model):
-    idalmacen = models.BigIntegerField(primary_key=True, unique=True)
+    idalmacen = models.BigIntegerField(primary_key=True)
     tipoalmacen = models.CharField(max_length=30)
 
     class Meta:
@@ -103,20 +115,14 @@ class AuthPermission(models.Model):
         db_table = 'auth_permission'
         unique_together = (('content_type', 'codename'),)
 
-def validate_firstname(first_name):
-        if first_name == "" or first_name.str.contains(pat = '[0-9]'):
-            raise ValidationError(
-            _('%(first_name)s solo debe contener letras'),
-           params={'first_name': first_name},
-        )
 
 class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=15)
-    first_name = models.CharField(max_length=50, blank=False, null=False)
-    last_name = models.CharField(max_length=60)
+    username = models.CharField(unique=True, max_length= 25)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=70)
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
@@ -150,40 +156,80 @@ class AuthUserUserPermissions(models.Model):
 
 
 class Cliente(models.Model):
+    
+    name_validator = UnicodenameValidator()
+    
     numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True)
-    nomcliente = models.CharField(max_length=45)
-    osde = models.CharField(max_length=45)
+    nomcliente = models.CharField(max_length=45, validators=[name_validator],)
+    OSDE = models.CharField(max_length=45)
 
     class Meta:
         managed = False
         db_table = 'cliente'
-    
+
     def __str__(self):
         return '{}'.format(self.nomcliente)
 
-
 class ContratoCliente(models.Model):
-    numcontratocliente = models.BigIntegerField(primary_key=True, unique=True)
+    numcontratocliente = models.BigIntegerField(primary_key=True)
     vigencia = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'contrato_cliente'
-    
+
     def __str__(self):
         return '{}'.format(self.numcontratocliente)
 
-
 class ContratoProveedor(models.Model):
-    numcontratoproveedor = models.BigIntegerField(primary_key=True, unique=True)
+    numcontratoproveedor = models.BigIntegerField(primary_key=True)
     vigencia = models.DateField()
 
     class Meta:
         managed = False
         db_table = 'contrato_proveedor'
-        
+    
     def __str__(self):
         return '{}'.format(self.numcontratoproveedor)
+
+
+class DashStatsCriteria(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    criteria_name = models.CharField(max_length=90)
+    criteria_fix_mapping = models.JSONField(blank=True, null=True)
+    dynamic_criteria_field_name = models.CharField(max_length=90, blank=True, null=True)
+    criteria_dynamic_mapping = models.JSONField(blank=True, null=True)
+    created_date = models.DateTimeField()
+    updated_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'dash_stats_criteria'
+
+
+class DashboardStats(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    graph_key = models.CharField(unique=True, max_length=90)
+    graph_title = models.CharField(max_length=90)
+    model_app_name = models.CharField(max_length=90)
+    model_name = models.CharField(max_length=90)
+    date_field_name = models.CharField(max_length=90)
+    operation_field_name = models.CharField(max_length=90, blank=True, null=True)
+    type_operation_field_name = models.CharField(max_length=90, blank=True, null=True)
+    is_visible = models.BooleanField()
+    created_date = models.DateTimeField()
+    updated_date = models.DateTimeField()
+    user_field_name = models.CharField(max_length=90, blank=True, null=True)
+    default_chart_type = models.CharField(max_length=90)
+    default_time_period = models.IntegerField()
+    default_time_scale = models.CharField(max_length=90)
+    y_axis_format = models.CharField(max_length=90, blank=True, null=True)
+    distinct = models.BooleanField()
+    default_multiseries_criteria_id = models.BigIntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'dashboard_stats'
 
 
 class DjangoAdminLog(models.Model):
@@ -279,7 +325,7 @@ class Pais(models.Model):
     class Meta:
         managed = False
         db_table = 'pais'
-    
+        
     def __str__(self):
         return '{}'.format(self.pais)
 
@@ -290,11 +336,12 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=45)
     idalmacen = models.ForeignKey(Almacen, models.DO_NOTHING, db_column='idalmacen')
     tipo = models.CharField(max_length=10)
+    cantidad = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'producto'
-    
+        
     def __str__(self):
         return '{}'.format(self.nombreproducto)
 
@@ -305,11 +352,11 @@ class Proveedor(models.Model):
     idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais')
 
     class Meta:
+        managed = False
         verbose_name = _('Proveedor')
         verbose_name_plural = _('Proveedores')
-        managed = False
         db_table = 'proveedor'
-    
+        
     def __str__(self):
         return '{}'.format(self.nomproveedor)
 
@@ -323,6 +370,23 @@ class RegistroControlSolicitud(models.Model):
     class Meta:
         managed = False
         db_table = 'registro_control_solicitud'
+        
+    class Meta:
+        managed = False
+        db_table = 'registro_control_solicitud'
+
+
+class ReportsSavedreport(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    date_modified = models.DateTimeField()
+    date_created = models.DateTimeField()
+    report = models.CharField(max_length=255, blank=True, null=True)
+    report_file = models.CharField(max_length=100)
+    run_by = models.ForeignKey(AuthUser, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'reports_savedreport'
 
 def validate_numsolicitud(numsolicitud):
         if numsolicitud <= 0:
@@ -336,15 +400,23 @@ def validate_cantidad(cantidad):
             raise ValidationError(
             _('%(cantidad)s debe ser un valor positivo'),
             params={'cantidad': cantidad},
-        )
-            
+             )
+
+def validate_fecha(fechasol):
+        if fechasol < date.today():
+            raise ValidationError(
+            _('%(fechasol)s la fecha no puede se anterior al día actual'),
+            params={'fecha': fechasol},
+             )            
+       
+
 class Solicitud(models.Model):
-    numsolicitud = models.IntegerField(primary_key=True, validators=[validate_numsolicitud], unique=True)
+    numsolicitud = models.IntegerField(primary_key=True, validators=[validate_numsolicitud], auto_created= True)
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
-    cantidad = models.IntegerField(validators=[validate_cantidad])    
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
-    fechasol = models.DateField()
+    fechasol = models.DateField(default= date.today() , validators=[validate_fecha])
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
 
     class Meta:
         verbose_name = _('Solicitud')
@@ -371,11 +443,3 @@ class Usuarios(models.Model):
     class Meta:
         managed = False
         db_table = 'usuarios'
-
-class BackupView(models.Model):
-    
-    
-
-    class Meta:
-        verbose_name = _('Salva')
-        verbose_name_plural = _('Salvas')
