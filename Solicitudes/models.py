@@ -280,12 +280,13 @@ def validate_fecha(fechasol):
        
 
 class Solicitud(models.Model):
-    numsolicitud = models.IntegerField(primary_key=True, validators=[validate_numsolicitud], auto_created= True)
+    numsolicitud = models.AutoField(primary_key=True, editable = False)
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
     fechasol = models.DateField(default= date.today() , validators=[validate_fecha])
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
     cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
+    aprobada = models.BooleanField(default = False)
 
     class Meta:
         verbose_name = _('Solicitud')

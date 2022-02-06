@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.shortcuts import render
 from .models import Solicitud, Cliente, Proveedor
 from django.views.generic.base import TemplateView
@@ -8,10 +9,11 @@ from django.views.generic.base import TemplateView
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
     change_list_template = 'smuggler/change_list.html'
-    list_display = ('numsolicitud', 'numcontratocliente', 'cantidad', 'idproducto', 'fechasol', 'numcontratoproveedor')
+    list_display = ('numsolicitud', 'numcontratocliente', 'cantidad', 'idproducto', 'fechasol', 'numcontratoproveedor', 'aprobada')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['numsolicitud'].label = 'Número'
+        #form.base_fields['numsolicitud'].label = 'Número'
+        #form.base_fields['numsolicitud'].widget = forms.HiddenInput()
         form.base_fields['numcontratocliente'].label = 'Cliente'
         form.base_fields['idproducto'].label = 'Producto'
         form.base_fields['fechasol'].label = 'Fecha'
