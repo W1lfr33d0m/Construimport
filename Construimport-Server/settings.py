@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.admindocs',
     'Solicitudes',
     'COMEX',
+    'Nomencladores',
     #'charts_dashboard',
     #'reports',
     'djangobower',
@@ -66,10 +67,10 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth.user': 'fas fa-user',
         'auth.group': 'fas fa-users',
-        'Solicitudes.Proveedor': 'fas fa-users',
-        'Solicitudes.Cliente': 'fas fa-users',
-        'Solicitudes.Producto': 'fas fa-book',
-        'Solicitudes.Pais': 'fas fa-flag', 
+        'Nomencladores.Proveedor': 'fas fa-users',
+        'Nomencladores.Cliente': 'fas fa-users',
+        'Solicitudes.Solicitud': 'fas fa-book',
+        'Nomencladores.Pais': 'fas fa-flag', 
     },
     'topmenu_links': [
         {'name': 'Backup', 'url':'/dump/',},

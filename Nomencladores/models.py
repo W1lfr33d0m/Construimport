@@ -1,0 +1,171 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+from django.db import models
+from datetime import date, datetime
+from tabnanny import verbose
+from django.db import models
+from operator import contains
+from django.utils.translation import gettext as _
+from django.core.exceptions import ValidationError
+from .validators import UnicodenameValidator
+from django.utils import timezone
+from Nomencladores.validators import UnicodenameValidator
+
+
+class SolicitudesBackupview(models.Model):
+    id = models.BigAutoField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Solicitudes_backupview'
+
+
+class AdminInterfaceTheme(models.Model):
+    name = models.CharField(unique=True, max_length=50)
+    active = models.BooleanField()
+    title = models.CharField(max_length=50)
+    title_visible = models.BooleanField()
+    logo = models.CharField(max_length=100)
+    logo_visible = models.BooleanField()
+    css_header_background_color = models.CharField(max_length=10)
+    title_color = models.CharField(max_length=10)
+    css_header_text_color = models.CharField(max_length=10)
+    css_header_link_color = models.CharField(max_length=10)
+    css_header_link_hover_color = models.CharField(max_length=10)
+    css_module_background_color = models.CharField(max_length=10)
+    css_module_text_color = models.CharField(max_length=10)
+    css_module_link_color = models.CharField(max_length=10)
+    css_module_link_hover_color = models.CharField(max_length=10)
+    css_module_rounded_corners = models.BooleanField()
+    css_generic_link_color = models.CharField(max_length=10)
+    css_generic_link_hover_color = models.CharField(max_length=10)
+    css_save_button_background_color = models.CharField(max_length=10)
+    css_save_button_background_hover_color = models.CharField(max_length=10)
+    css_save_button_text_color = models.CharField(max_length=10)
+    css_delete_button_background_color = models.CharField(max_length=10)
+    css_delete_button_background_hover_color = models.CharField(max_length=10)
+    css_delete_button_text_color = models.CharField(max_length=10)
+    css = models.TextField()
+    list_filter_dropdown = models.BooleanField()
+    related_modal_active = models.BooleanField()
+    related_modal_background_color = models.CharField(max_length=10)
+    related_modal_rounded_corners = models.BooleanField()
+    logo_color = models.CharField(max_length=10)
+    recent_actions_visible = models.BooleanField()
+    favicon = models.CharField(max_length=100)
+    related_modal_background_opacity = models.CharField(max_length=5)
+    env_name = models.CharField(max_length=50)
+    env_visible_in_header = models.BooleanField()
+    env_color = models.CharField(max_length=10)
+    env_visible_in_favicon = models.BooleanField()
+    related_modal_close_button_visible = models.BooleanField()
+    language_chooser_active = models.BooleanField()
+    language_chooser_display = models.CharField(max_length=10)
+    list_filter_sticky = models.BooleanField()
+    form_pagination_sticky = models.BooleanField()
+    form_submit_sticky = models.BooleanField()
+    css_module_background_selected_color = models.CharField(max_length=10)
+    css_module_link_selected_color = models.CharField(max_length=10)
+    logo_max_height = models.SmallIntegerField()
+    logo_max_width = models.SmallIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'admin_interface_theme'
+
+
+class Almacen(models.Model):
+    idalmacen = models.BigIntegerField(primary_key=True)
+    tipoalmacen = models.CharField(max_length=30)
+
+    class Meta:
+        managed = False
+        db_table = 'almacen'
+
+class Cliente(models.Model):
+    
+    name_validator = UnicodenameValidator()
+    
+    numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True)
+    nomcliente = models.CharField(max_length=45, validators=[name_validator])
+    OSDE = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'cliente'
+
+    def __str__(self):
+        return '{}'.format(self.nomcliente)
+
+
+class ContratoCliente(models.Model):
+    numcontratocliente = models.BigIntegerField(primary_key=True)
+    vigencia = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'contrato_cliente'
+
+    def __str__(self):
+        return '{}'.format(self.numcontratocliente)
+
+class ContratoProveedor(models.Model):
+    numcontratoproveedor = models.BigIntegerField(primary_key=True)
+    vigencia = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'contrato_proveedor'
+    
+    def __str__(self):
+        return '{}'.format(self.numcontratoproveedor)
+
+class Pais(models.Model):
+    idpais = models.CharField(primary_key=True, max_length=3)
+    pais = models.CharField(max_length=30)
+
+    class Meta:
+        verbose_name = _('País')
+        verbose_name_plural = _('Países')
+        managed = False
+        db_table = 'pais'
+        
+    def __str__(self):
+        return '{}'.format(self.pais)
+
+
+class Producto(models.Model):
+    idproducto = models.IntegerField(primary_key=True)
+    nombreproducto = models.CharField(max_length=30)
+    descripcion = models.CharField(max_length=45)
+    idalmacen = models.ForeignKey(Almacen, models.DO_NOTHING, db_column='idalmacen')
+    tipo = models.CharField(max_length=10)
+    cantidad = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'producto'
+
+
+class Proveedor(models.Model):
+    
+    name_validator = UnicodenameValidator()
+    
+    numcontratoproveedor = models.OneToOneField(ContratoProveedor, models.DO_NOTHING, db_column='numcontratoproveedor', primary_key=True)
+    nomproveedor = models.CharField(max_length=45, validators=[name_validator])
+    idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais')
+
+    class Meta:
+        managed = False
+        verbose_name = _('Proveedor')
+        verbose_name_plural = _('Proveedores')
+        db_table = 'proveedor'
+        
+    def __str__(self):
+        return '{}'.format(self.nomproveedor)
+
