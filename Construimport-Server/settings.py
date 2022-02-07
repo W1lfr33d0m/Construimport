@@ -71,6 +71,7 @@ JAZZMIN_SETTINGS = {
         'Nomencladores.Cliente': 'fas fa-users',
         'Solicitudes.Solicitud': 'fas fa-book',
         'Nomencladores.Pais': 'fas fa-flag', 
+        'Nomencladores.ContratoCliente': 'fas fa-file',
     },
     'topmenu_links': [
         {'name': 'Backup', 'url':'/dump/',},

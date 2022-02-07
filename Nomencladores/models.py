@@ -108,6 +108,8 @@ class ContratoCliente(models.Model):
     vigencia = models.DateField(blank=True, null=True)
 
     class Meta:
+        verbose_name = _('Contrato de Cliente')
+        verbose_name_plural = _('Contratos de Clientes')
         managed = False
         db_table = 'contrato_cliente'
 
@@ -119,6 +121,8 @@ class ContratoProveedor(models.Model):
     vigencia = models.DateField()
 
     class Meta:
+        verbose_name = _('Contrato de Proveedor')
+        verbose_name_plural = _('Contratos de Proveedores')
         managed = False
         db_table = 'contrato_proveedor'
     
@@ -146,6 +150,7 @@ class Producto(models.Model):
     idalmacen = models.ForeignKey(Almacen, models.DO_NOTHING, db_column='idalmacen')
     tipo = models.CharField(max_length=10)
     cantidad = models.IntegerField(blank=True, null=True)
+    UM = models.CharField(null= False, default = 'U', max_length=3)
 
     class Meta:
         managed = False

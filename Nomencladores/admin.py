@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.shortcuts import render
-from .models import Cliente, Pais, Proveedor, Producto
+from .models import Cliente, Pais, Proveedor, Producto, ContratoCliente
 from django.views.generic.base import TemplateView
 
 
@@ -42,3 +42,12 @@ class PaisAdmin(admin.ModelAdmin):
         return form
     save_as = True
     save_on_top = True     
+
+@admin.register(ContratoCliente)
+class ContratoClienteAdmin(admin.ModelAdmin):
+    list_display = ('numcontratocliente', 'vigencia')
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields['numcontratocliente'].label = 'Contrato'
+        
+        return form
