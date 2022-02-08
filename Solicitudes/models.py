@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
+#from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
 
 
 class SolicitudesBackupview(models.Model):
@@ -281,16 +281,16 @@ def validate_fecha(fechasol):
 
 class Solicitud(models.Model):
     numsolicitud = models.AutoField(primary_key=True, editable = False)
-    numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
-    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
+    #numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
+    #idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
     fechasol = models.DateField(default= date.today() , validators=[validate_fecha])
-    numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
-    cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
+    #numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
+    #cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
     aprobada = models.BooleanField(default = False)
-
+    
     class Meta:
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
         managed = True
         db_table = 'solicitud'
-        unique_together = (('numsolicitud', 'numcontratocliente', 'idproducto'),)
+        unique_together = (('numsolicitud',),)

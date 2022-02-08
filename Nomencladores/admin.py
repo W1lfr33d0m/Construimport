@@ -51,3 +51,14 @@ class ContratoClienteAdmin(admin.ModelAdmin):
         form.base_fields['numcontratocliente'].label = 'Contrato'
         
         return form
+    
+@admin.register(Producto)
+class ProductoAdmin(admin.ModelAdmin):
+    list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields['idproducto'].label = 'Código'
+        form.base_fields['nombreproducto'].label = 'Descripción'
+        
+        
+        return form

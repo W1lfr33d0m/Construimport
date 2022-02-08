@@ -15,6 +15,8 @@ from django.core.exceptions import ValidationError
 from .validators import UnicodenameValidator
 from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator
+from Solicitudes.models import Solicitud
+from django import forms
 
 
 class SolicitudesBackupview(models.Model):
@@ -108,8 +110,6 @@ class ContratoCliente(models.Model):
     vigencia = models.DateField(blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Contrato de Cliente')
-        verbose_name_plural = _('Contratos de Clientes')
         managed = False
         db_table = 'contrato_cliente'
 
@@ -121,8 +121,6 @@ class ContratoProveedor(models.Model):
     vigencia = models.DateField()
 
     class Meta:
-        verbose_name = _('Contrato de Proveedor')
-        verbose_name_plural = _('Contratos de Proveedores')
         managed = False
         db_table = 'contrato_proveedor'
     
@@ -146,18 +144,32 @@ class Pais(models.Model):
 class Producto(models.Model):
     idproducto = models.IntegerField(primary_key=True)
     nombreproducto = models.CharField(max_length=30)
-    descripcion = models.CharField(max_length=45)
-    idalmacen = models.ForeignKey(Almacen, models.DO_NOTHING, db_column='idalmacen')
     tipo = models.CharField(max_length=10)
     cantidad = models.IntegerField(blank=True, null=True)
-    UM = models.CharField(null= False, default = 'U', max_length=3)
+    UM = models.CharField(null= False, default = 'U', max_length = 3)
+    observaciones = models.TextField(blank=True, null= True, max_length=50)
+    solicitud = models.ForeignKey(Solicitud, models.DO_NOTHING, db_column ='numsolicitud')
 
     class Meta:
+        verbose_name = _('Producto')
+        verbose_name_plural = _('Productos')
         managed = False
         db_table = 'producto'
         
     def __str__(self):
         return '{}'.format(self.nombreproducto)
+    
+class ProductoForm(forms.ModelForm):
+    class meta:
+        model = Solicitud
+        
+    productos = forms.ModelMultipleChoiceField(queryset = Producto.objects.all())
+    
+    def __init__(self, *args, **kwargs):
+        super(ProductoForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['productos'].initial = self.instance.producto_set.all()
+        
 
 
 class Proveedor(models.Model):
