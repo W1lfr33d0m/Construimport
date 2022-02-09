@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Solicitudes',
     'COMEX',
     'Nomencladores',
+    'Trazas',
     #'charts_dashboard',
     #'reports',
     'djangobower',
@@ -74,6 +75,7 @@ JAZZMIN_SETTINGS = {
         'Nomencladores.Pais': 'fas fa-flag', 
         'Nomencladores.ContratoCliente': 'fas fa-file',
         'Nomencladores.Producto': 'fas fa-file',
+        'Admin.LogEntry': 'fas fa-folder',
     },
     #'topmenu_links': [
     #    {'name': 'Backup', 'url':'/dump/',},
