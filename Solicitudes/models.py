@@ -123,7 +123,6 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
-
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
