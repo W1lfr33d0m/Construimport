@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     #'django_pdf',
     'dbbackup',
     'smuggler',
+    'accounts',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
