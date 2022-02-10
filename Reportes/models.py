@@ -3,7 +3,7 @@ from django.db import models
 # models.py as it'll ensure your register() command is run.
 # yourapp/reports.py -- This file can be named anything
 
-from reports.base import ModelReport
+from reports import ModelReport
 # Create your models here.
 class MyReport(ModelReport):
     name = "Report - My Report"
