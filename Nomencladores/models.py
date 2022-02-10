@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from random import choices
 from django.db import models
 from datetime import date, datetime
 from tabnanny import verbose
@@ -142,9 +143,12 @@ class Pais(models.Model):
 
 
 class Producto(models.Model):
+    Pieza = 'PZ'
+    Equipo = 'EQ'
+    TIPO_PRODUCTO_CHOICES = [ (Pieza, 'Pieza'), (Equipo, 'Equipo')]
     idproducto = models.IntegerField(primary_key=True)
     nombreproducto = models.CharField(max_length=30)
-    tipo = models.CharField(max_length=10)
+    tipo = models.CharField(max_length = 2, choices = TIPO_PRODUCTO_CHOICES, default = Pieza)
     cantidad = models.IntegerField(blank=True, null=True)
     UM = models.CharField(null= False, default = 'U', max_length = 3)
     observaciones = models.TextField(blank=True, null= True, max_length=50)
