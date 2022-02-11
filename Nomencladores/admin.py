@@ -45,7 +45,7 @@ class PaisAdmin(admin.ModelAdmin):
 
 @admin.register(ContratoCliente)
 class ContratoClienteAdmin(admin.ModelAdmin):
-    list_display = ('numcontratocliente', 'vigencia')
+    list_display = ('numcontratocliente',)
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['numcontratocliente'].label = 'Contrato'
@@ -54,11 +54,12 @@ class ContratoClienteAdmin(admin.ModelAdmin):
     
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
+    list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM', 'solicitud')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['idproducto'].label = 'Código'
         form.base_fields['nombreproducto'].label = 'Descripción'
-        
+        #form.base_fields['tipo'].label = 'tipo'
+        #form.base_fields['UM'].label = 'UM' 
         
         return form

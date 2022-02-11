@@ -15,13 +15,13 @@ class LogEntryAdmin(admin.ModelAdmin):
 
     # when searching the user will be able to search in both object_repr and change_message
     #search_fields = [
-    #    'object_repr',
-    #    'change_message'
+    #    'content_type',
     #]
 
     list_display = [
-        'action_time',
         'user',
-        'content_type',
         'action_flag',
+        'content_type',
+        'action_time',
+        
     ]

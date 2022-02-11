@@ -7,12 +7,14 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from datetime import date, datetime
 from tabnanny import verbose
+from tkinter import Widget
 from django.db import models
 from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from .validators import UnicodenameValidator
 from django.utils import timezone
+from django import forms
 #from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
 
 
@@ -239,10 +241,6 @@ class RegistroControlSolicitud(models.Model):
         managed = False
         db_table = 'registro_control_solicitud'
         
-    class Meta:
-        managed = False
-        db_table = 'registro_control_solicitud'
-
 
 class ReportsSavedreport(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -263,18 +261,12 @@ def validate_numsolicitud(numsolicitud):
             params={'numsolicitud': numsolicitud},
         )
             
-def validate_cantidad(cantidad):
-        if cantidad <= 0:
-            raise ValidationError(
-            _('%(cantidad)s debe ser un valor positivo'),
-            params={'cantidad': cantidad},
-             )
 
 def validate_fecha(fechasol):
         if fechasol < date.today():
             raise ValidationError(
             _('%(fechasol)s la fecha no puede se anterior al día actual'),
-            params={'fecha': fechasol},
+            params={'fechasol': fechasol},
              )            
        
 
@@ -282,10 +274,11 @@ class Solicitud(models.Model):
     numsolicitud = models.AutoField(primary_key=True, editable = False)
     #numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
     #idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
-    fechasol = models.DateField(default= date.today() , validators=[validate_fecha])
+    fechasol = models.DateField(default= date.today(), validators=[validate_fecha])
     #numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
     #cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
     aprobada = models.BooleanField(default = False)
+ 
     
     class Meta:
         verbose_name = _('Solicitud')
@@ -293,3 +286,4 @@ class Solicitud(models.Model):
         managed = True
         db_table = 'solicitud'
         unique_together = (('numsolicitud',),)
+        

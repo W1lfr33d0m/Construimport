@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from random import choices
+from sqlite3 import Date
 from django.db import models
 from datetime import date, datetime
 from tabnanny import verbose
@@ -96,7 +97,7 @@ class Cliente(models.Model):
     
     numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True)
     nomcliente = models.CharField(max_length=45, validators=[name_validator])
-    OSDE = models.CharField(max_length=45)
+    OSDE = models.CharField(max_length=45, validators=[name_validator])
 
     class Meta:
         managed = False
@@ -105,11 +106,17 @@ class Cliente(models.Model):
     def __str__(self):
         return '{}'.format(self.nomcliente)
 
+def validate_vigencia(vigencia):
+    if vigencia < date.year('2010'):
+        raise ValidationError(
+            _('%(vigencia)s no es correcta'),
+            params={'vigencia': vigencia},
+        )
 
 class ContratoCliente(models.Model):
     numcontratocliente = models.BigIntegerField(primary_key=True)
-    vigencia = models.DateField(blank=True, null=True)
 
+    
     class Meta:
         managed = False
         db_table = 'contrato_cliente'
@@ -119,7 +126,7 @@ class ContratoCliente(models.Model):
 
 class ContratoProveedor(models.Model):
     numcontratoproveedor = models.BigIntegerField(primary_key=True)
-    vigencia = models.DateField()
+    
 
     class Meta:
         managed = False
@@ -141,23 +148,28 @@ class Pais(models.Model):
     def __str__(self):
         return '{}'.format(self.pais)
 
-
+def validate_cantidad(cantidad):
+        if cantidad <= 0:
+            raise ValidationError(
+            _('%(cantidad)s debe ser un valor positivo'),
+            params={'cantidad': cantidad},
+             )
 class Producto(models.Model):
     Pieza = 'PZ'
     Equipo = 'EQ'
     TIPO_PRODUCTO_CHOICES = [ (Pieza, 'Pieza'), (Equipo, 'Equipo')]
+    U = 'U'
+    SET = 'SET'
+    UM = [(U, 'U'), (SET, 'SET')]
     idproducto = models.IntegerField(primary_key=True)
-    nombreproducto = models.CharField(max_length=30)
-    tipo = models.CharField(max_length = 2, choices = TIPO_PRODUCTO_CHOICES, default = Pieza)
-    cantidad = models.IntegerField(blank=True, null=True)
-    UM = models.CharField(null= False, default = 'U', max_length = 3)
-    observaciones = models.TextField(blank=True, null= True, max_length=50)
-    solicitud = models.ForeignKey(Solicitud, models.DO_NOTHING, db_column ='numsolicitud')
-
+    nombreproducto = models.CharField(max_length=50)
+    tipo = models.CharField(max_length = 5, null= False, choices = TIPO_PRODUCTO_CHOICES, default = Pieza)
+    UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
+    solicitud = models.ManyToOneRel(Solicitud, models.DO_NOTHING, field_name = 'Solicitud')
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
-        managed = False
+        managed = True
         db_table = 'producto'
         
     def __str__(self):
@@ -165,10 +177,11 @@ class Producto(models.Model):
     
 class ProductoForm(forms.ModelForm):
     class meta:
-        model = Solicitud
+        model = Producto
         
     productos = forms.ModelMultipleChoiceField(queryset = Producto.objects.all())
-    
+    cantidad = models.IntegerField(blank=True, null=True)
+    observaciones = models.TextField(blank=True, null= True, max_length=50)
     def __init__(self, *args, **kwargs):
         super(ProductoForm, self).__init__(*args, **kwargs)
         if self.instance:
