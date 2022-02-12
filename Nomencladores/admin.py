@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.shortcuts import render
-from .models import Cliente, Pais, Proveedor, Producto, ContratoCliente
+from .models import Cliente, Pais, Proveedor, Producto, ContratoCliente, ContratoProveedor
 from django.views.generic.base import TemplateView
 
 
@@ -52,9 +52,18 @@ class ContratoClienteAdmin(admin.ModelAdmin):
         
         return form
     
+@admin.register(ContratoProveedor)
+class ContratoProveedor(admin.ModelAdmin):
+    list_display = ('numcontratoproveedor',)
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields['numcontratoproveedor'].label = 'Contrato'
+        
+        return form
+    
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM', 'solicitud')
+    list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['idproducto'].label = 'Código'

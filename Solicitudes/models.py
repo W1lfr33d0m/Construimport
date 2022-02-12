@@ -5,18 +5,26 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from ast import Raise
 from datetime import date, datetime
 from tabnanny import verbose
 from tkinter import Widget
 from django.db import models
 from operator import contains
+from django.dispatch import receiver
 from django.utils.translation import gettext as _
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from .validators import UnicodenameValidator
 from django.utils import timezone
 from django import forms
-#from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
+from django.urls import reverse
+import shutil
+from django.db.models.signals import pre_delete 
+from django.dispatch import receiver
 
+#from taggit.managers import TaggableManager
+from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
+from django.contrib.auth.models import User, UserManager
 
 class SolicitudesBackupview(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -260,30 +268,41 @@ def validate_numsolicitud(numsolicitud):
             _('%(numsolicitud)s no es correcto'),
             params={'numsolicitud': numsolicitud},
         )
-            
+
+def validate_cantidad(cantidad):
+        if cantidad <= 0:
+            raise ValidationError(
+            _('%(cantidad)s debe ser un valor positivo'),
+            params={'cantidad': cantidad},
+             )            
 
 def validate_fecha(fechasol):
-        if fechasol < date.today():
+        if not fechasol == date.today() or not date.weekday(fechasol):
             raise ValidationError(
-            _('%(fechasol)s la fecha no puede se anterior al día actual'),
+            _('%(fechasol)s la fecha debe ser del día actual'),
             params={'fechasol': fechasol},
              )            
        
 
+    
+    
 class Solicitud(models.Model):
-    numsolicitud = models.AutoField(primary_key=True, editable = False)
-    #numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
-    #idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
+    numsolicitud = models.AutoField(primary_key=True, editable = True)
+    numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente')
+    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha])
-    #numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
-    #cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
-    aprobada = models.BooleanField(default = False)
- 
+    numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
+    aprobada = models.BooleanField( default = False)
+    #tag = TaggableManager()
+    #@receiver(pre_delete)
+    
+    
     
     class Meta:
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
-        managed = True
+        managed = False
         db_table = 'solicitud'
-        unique_together = (('numsolicitud',),)
+        unique_together = (('numsolicitud', 'numcontratocliente', 'idproducto'),)
         

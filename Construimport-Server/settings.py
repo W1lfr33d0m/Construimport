@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'dbbackup',
     'smuggler',
     'accounts',
+    'reports',
+    #'taggit',
 ]
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
@@ -98,6 +100,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Construimport-Server.urls'
 
 LOGIN_REDIRECT_URL = '/admin'
+
+NOTIFICATIONS_USE_JSONFIELD = True
 
 TEMPLATES = [
     {

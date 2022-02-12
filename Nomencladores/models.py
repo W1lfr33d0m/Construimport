@@ -17,7 +17,7 @@ from django.core.exceptions import ValidationError
 from .validators import UnicodenameValidator
 from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator
-from Solicitudes.models import Solicitud
+#from Solicitudes.models import Solicitud
 from django import forms
 
 
@@ -77,6 +77,7 @@ class AdminInterfaceTheme(models.Model):
     css_module_link_selected_color = models.CharField(max_length=10)
     logo_max_height = models.SmallIntegerField()
     logo_max_width = models.SmallIntegerField()
+    from Nomencladores.validators import UnicodenameValidator
 
     class Meta:
         managed = False
@@ -96,7 +97,7 @@ class Cliente(models.Model):
     name_validator = UnicodenameValidator()
     
     numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True)
-    nomcliente = models.CharField(max_length=45, validators=[name_validator])
+    nomcliente = models.CharField(max_length=100, validators=[name_validator])
     OSDE = models.CharField(max_length=45, validators=[name_validator])
 
     class Meta:
@@ -113,22 +114,40 @@ def validate_vigencia(vigencia):
             params={'vigencia': vigencia},
         )
 
+def validate_contrato(numcontratoproveedor):
+    if numcontratoproveedor < 20220000 or numcontratoproveedor > 20229999:
+        raise ValidationError(
+        _('%(numcontratoproveedor)s debe ser un valor entre 20220000 o 20229999'),
+        params={'numcontratoproveedor': numcontratoproveedor},
+         )    
+
 class ContratoCliente(models.Model):
-    numcontratocliente = models.BigIntegerField(primary_key=True)
+    numcontratocliente = models.BigIntegerField(primary_key=True, validators = [validate_contrato])
 
     
     class Meta:
+        verbose_name = _('Contrato de Cliente')
+        verbose_name_plural = _('Contratos de Clientes')
         managed = False
         db_table = 'contrato_cliente'
 
     def __str__(self):
         return '{}'.format(self.numcontratocliente)
+    
+def validate_contrato(numcontratoproveedor):
+    if numcontratoproveedor < 20220000 or numcontratoproveedor > 20229999:
+        raise ValidationError(
+        _('%(numcontratoproveedor)s debe ser un valor entre 20220000 o 20229999'),
+        params={'numcontratoproveedor': numcontratoproveedor},
+         )    
 
 class ContratoProveedor(models.Model):
-    numcontratoproveedor = models.BigIntegerField(primary_key=True)
+    numcontratoproveedor = models.BigIntegerField(primary_key=True, validators= [validate_contrato])
     
 
     class Meta:
+        verbose_name = _('Contrato de Proveedor')
+        verbose_name_plural = _('Contratos de Proveedores')
         managed = False
         db_table = 'contrato_proveedor'
     
@@ -148,24 +167,21 @@ class Pais(models.Model):
     def __str__(self):
         return '{}'.format(self.pais)
 
-def validate_cantidad(cantidad):
-        if cantidad <= 0:
-            raise ValidationError(
-            _('%(cantidad)s debe ser un valor positivo'),
-            params={'cantidad': cantidad},
-             )
+
 class Producto(models.Model):
-    Pieza = 'PZ'
+    PPA = 'PZ'
     Equipo = 'EQ'
-    TIPO_PRODUCTO_CHOICES = [ (Pieza, 'Pieza'), (Equipo, 'Equipo')]
+    Batería = 'Batería'
+    Neumático = 'Neumático'
+    TIPO_PRODUCTO_CHOICES = [ (PPA, 'PPA'), (Equipo, 'Equipo'), (Batería, 'Batería'), (Neumático, 'Neumático')]
     U = 'U'
     SET = 'SET'
     UM = [(U, 'U'), (SET, 'SET')]
     idproducto = models.IntegerField(primary_key=True)
     nombreproducto = models.CharField(max_length=50)
-    tipo = models.CharField(max_length = 5, null= False, choices = TIPO_PRODUCTO_CHOICES, default = Pieza)
+    tipo = models.CharField(max_length = 10, null= False, choices = TIPO_PRODUCTO_CHOICES, default = PPA)
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
-    solicitud = models.ManyToOneRel(Solicitud, models.DO_NOTHING, field_name = 'Solicitud')
+    #solicitud = models.ManyToOneRel(Solicitud, models.DO_NOTHING, field_name = 'Solicitud')
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')

@@ -27,7 +27,7 @@ class UnicodeUsernameValidator(validators.RegexValidator):
 
 deconstructible
 class UnicodeFirst_nameValidator(validators.RegexValidator):
-    regex = r'^[A-Za-záéíñ ]+\Z'
+    regex = r'^[A-Za-záéóíñ ]+\Z'
     message = _(
         'Escriba el nombre correcto, solo puede contener letras '
     )
@@ -35,7 +35,7 @@ class UnicodeFirst_nameValidator(validators.RegexValidator):
     
 @deconstructible
 class UnicodenameValidator(validators.RegexValidator):
-    regex = r'^[A-Za-záéíñ1-9 ]+\Z'
+    regex = r'^[A-Z a-z áéóíñ 1-9 ]+\Z'
     message = _(
         'Escriba correctamente el nombre '
     )

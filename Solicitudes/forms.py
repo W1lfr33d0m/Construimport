@@ -7,6 +7,7 @@ class SolicitudForm(forms.ModelForm):
     class Meta:
         model = Solicitud
         fields = '__all__'
+        Solicitud.aprobada = forms.CheckboxInput
         
 def validate_cantidad(cantidad):
         if cantidad <= 0:

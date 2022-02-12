@@ -1,8 +1,8 @@
 from django.contrib import admin
 from Reportes.models import MyReport
-from .models import MyModel
+from Solicitudes.models import Solicitud
 
 # Register your models here.
-admin.register(MyModel, MyReport)
+admin.register(Solicitud, MyReport)
 
 
