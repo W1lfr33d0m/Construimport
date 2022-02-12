@@ -56,8 +56,11 @@ INSTALLED_APPS = [
     'smuggler',
     'accounts',
     'reports',
-    #'taggit',
+    'notifications',
+    
 ]
+
+NOTIFICATIONS_NOTIFICATION_MODEL = 'apps.notis.Notification'
 
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
 
