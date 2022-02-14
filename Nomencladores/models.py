@@ -96,9 +96,9 @@ class Cliente(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True)
-    nomcliente = models.CharField(max_length=100, validators=[name_validator])
-    OSDE = models.CharField(max_length=45, validators=[name_validator])
+    numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True, verbose_name = 'Numero de Contrato' )
+    nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
+    OSDE = models.CharField(max_length=45, validators=[name_validator],)
 
     class Meta:
         managed = False
@@ -122,7 +122,7 @@ def validate_contrato(numcontratoproveedor):
          )    
 
 class ContratoCliente(models.Model):
-    numcontratocliente = models.BigIntegerField(primary_key=True, validators = [validate_contrato])
+    numcontratocliente = models.BigIntegerField(primary_key=True, validators = [validate_contrato], verbose_name = 'Numero de Contrato')
 
     
     class Meta:
@@ -142,7 +142,7 @@ def validate_contrato(numcontratoproveedor):
          )    
 
 class ContratoProveedor(models.Model):
-    numcontratoproveedor = models.BigIntegerField(primary_key=True, validators= [validate_contrato])
+    numcontratoproveedor = models.BigIntegerField(primary_key=True, validators= [validate_contrato], verbose_name = 'Numero de Contrato')
     
 
     class Meta:
@@ -155,7 +155,7 @@ class ContratoProveedor(models.Model):
         return '{}'.format(self.numcontratoproveedor)
 
 class Pais(models.Model):
-    idpais = models.CharField(primary_key=True, max_length=3)
+    idpais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
     pais = models.CharField(max_length=30)
 
     class Meta:
@@ -167,8 +167,17 @@ class Pais(models.Model):
     def __str__(self):
         return '{}'.format(self.pais)
 
+def validate_idproducto(idproducto):
+    if idproducto <= 0 or idproducto > 9999999999:
+         raise ValidationError(
+        _('%(idproducto)s debe ser un valor entre 20220000 o 20229999'),
+        params={'idproducto': idproducto},
+         )
 
 class Producto(models.Model):
+    
+    desc_validator = UnicodenameValidator
+    
     PPA = 'PZ'
     Equipo = 'EQ'
     Batería = 'Batería'
@@ -177,8 +186,8 @@ class Producto(models.Model):
     U = 'U'
     SET = 'SET'
     UM = [(U, 'U'), (SET, 'SET')]
-    idproducto = models.IntegerField(primary_key=True)
-    nombreproducto = models.CharField(max_length=50)
+    idproducto = models.IntegerField(primary_key=True, verbose_name = 'Código')
+    nombreproducto = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     tipo = models.CharField(max_length = 10, null= False, choices = TIPO_PRODUCTO_CHOICES, default = PPA)
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
     #solicitud = models.ManyToOneRel(Solicitud, models.DO_NOTHING, field_name = 'Solicitud')
@@ -209,9 +218,9 @@ class Proveedor(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratoproveedor = models.OneToOneField(ContratoProveedor, models.DO_NOTHING, db_column='numcontratoproveedor', primary_key=True)
-    nomproveedor = models.CharField(max_length=45, validators=[name_validator])
-    idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais')
+    numcontratoproveedor = models.OneToOneField(ContratoProveedor, models.DO_NOTHING, db_column='numcontratoproveedor', primary_key=True, verbose_name = 'Numero de Contrato')
+    nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
+    idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais', verbose_name = 'País')
 
     class Meta:
         managed = False

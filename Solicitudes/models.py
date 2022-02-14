@@ -7,11 +7,14 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from ast import Raise
 from datetime import date, datetime
+from re import T
 from tabnanny import verbose
 from tkinter import Widget
 from django.db import models
 from operator import contains
 from django.dispatch import receiver
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError, PermissionDenied
 from .validators import UnicodenameValidator
@@ -21,7 +24,7 @@ from django.urls import reverse
 import shutil
 from django.db.models.signals import pre_delete 
 from django.dispatch import receiver
-
+from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
 from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
 from django.contrib.auth.models import User, UserManager
@@ -270,9 +273,9 @@ def validate_numsolicitud(numsolicitud):
         )
 
 def validate_cantidad(cantidad):
-        if cantidad <= 0:
+        if cantidad <= 0 or cantidad > 9999:
             raise ValidationError(
-            _('%(cantidad)s debe ser un valor positivo'),
+            _('%(cantidad)s debe ser un valor mayor que cero y menor de 10000'),
             params={'cantidad': cantidad},
              )            
 
@@ -287,19 +290,32 @@ def validate_fecha(fechasol):
     
     
 class Solicitud(models.Model):
-    numsolicitud = models.AutoField(primary_key=True, editable = True, verbose_name = 'Numero')
+    numsolicitud = models.AutoField(primary_key=True, editable = True, verbose_name = 'Número')
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
-    cantidad = models.IntegerField(blank=True, null=True, validators=[validate_cantidad])
+    cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
     aprobada = models.BooleanField( default = False)
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
+    def delete(self, *args, **kwargs):
+        if self.aprobada == True:
+            RedirectView.as_view(url=('Solicitudes/solicitud'))
+            raise PermissionDenied(('No puede eliminar una solicitud aprobada'), )   
+        else:
+            super().delete(*args, **kwargs)
+            
     
-    
+    def change(self, *args, **kwargs):
+        if self.aprobada == True:
+            return False
+        else:
+            super().edit(*args, **kwargs)
+        
     class Meta:
+        app_label = ('Solicitudes')
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
         managed = False
