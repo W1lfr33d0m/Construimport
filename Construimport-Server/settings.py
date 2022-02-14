@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'reports',
     'notifications',
     
+    
 ]
 
 NOTIFICATIONS_NOTIFICATION_MODEL = 'apps.notis.Notification'
@@ -73,12 +74,13 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth.user': 'fas fa-user',
         'auth.group': 'fas fa-users',
-        'Nomencladores.Proveedor': 'fas fa-users',
-        'Nomencladores.Cliente': 'fas fa-users',
+        'Nomencladores.Proveedor': 'fas fa-id-card',
+        'Nomencladores.Cliente': 'fas fa-id-badge',
         'Solicitudes.Solicitud': 'fas fa-book',
         'Nomencladores.Pais': 'fas fa-flag', 
         'Nomencladores.ContratoCliente': 'fas fa-file',
-        'Nomencladores.Producto': 'fas fa-file',
+        'Nomencladores.ContratoProveedor': 'fas fa-file',
+        'Nomencladores.Producto': 'fas fa-tractor',
         'Admin.LogEntry': 'fas fa-folder',
     },
     #'topmenu_links': [
