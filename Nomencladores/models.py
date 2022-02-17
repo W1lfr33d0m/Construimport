@@ -221,6 +221,7 @@ class Proveedor(models.Model):
     numcontratoproveedor = models.OneToOneField(ContratoProveedor, models.DO_NOTHING, db_column='numcontratoproveedor', primary_key=True, verbose_name = 'Numero de Contrato')
     nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
     idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais', verbose_name = 'País')
+    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name='Producto')
 
     class Meta:
         managed = False

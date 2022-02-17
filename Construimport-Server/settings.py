@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'COMEX',
     'Nomencladores',
     'Trazas',
+    'Información',
     #'charts_dashboard',
     'djangobower',
     #'django_pdf',

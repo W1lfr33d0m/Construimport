@@ -18,9 +18,8 @@ from django.urls import reverse, URLPattern, URLResolver, get_urlconf, set_urlco
 
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
     
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'edit_link', 'delete_link')
+    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'edit_link', 'cancel_link')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
@@ -36,12 +35,12 @@ class SolicitudAdmin(admin.ModelAdmin):
         elif request.solicitud.arpobada() == True:
             self.exclude = ('delete_link')
     
-    def delete_link(self, obj):
+    def cancel_link(self, obj):
         info = obj._meta.app_label, obj._meta.model_name
         url = reverse('admin:%s_%s_delete' % info, args=(obj.numsolicitud,))
-        return format_html('<a href="%s">Eliminar</a>'  % url)
-    delete_link.allow_tags = True
-    delete_link.short_description = 'Eliminar'
+        return format_html('<a href="%s">Cancelar</a>'  % url)
+    cancel_link.allow_tags = True
+    cancel_link.short_description = 'Cancelar'
 
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
