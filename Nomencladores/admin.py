@@ -1,36 +1,50 @@
+
 from django.contrib import admin
 from django.shortcuts import render
-from .models import Cliente, Pais, Proveedor, Producto, ContratoCliente, ContratoProveedor
+from sqlalchemy import ForeignKey
+from attr import field
+from xlrd import open_workbook_xls
+from simplejson import dump
+from .models import Cliente, Pais, Proveedor, Producto
 from django.views.generic.base import TemplateView
+from import_export import resources, widgets, fields
+from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 
+# Register your models here.     
 
-# Register your models here.      
+class ProveedorResource(resources.ModelResource):
+    
+    idpais = fields.Field(
+        column_name='idpais', 
+        attribute='idpais', 
+        widget=ForeignKeyWidget(Pais, 'pais'))
+    
+    class Meta:
+        model = Proveedor
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ('numcontratoproveedor',)
+        fields = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+
 @admin.register(Proveedor)
-class ProveedorAdmin(admin.ModelAdmin):
-    change_list_template = 'smuggler/change_list.html'
+class ProveedorAdmin(ImportExportModelAdmin):
+    resource_class = ProveedorResource
     list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
-    #list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['numcontratoproveedor'].label = 'Contrato'
-        form.base_fields['nomproveedor'].label = 'Nombre'
-        form.base_fields['idpais'].label = 'País'
         
-        return form
-    save_as = True
-    save_on_top = True
-   # change_list_template = 'change_list_graph.html'
-        
+class ClienteResource(resources.ModelResource):
+    
+    class Meta:
+        model = Cliente
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ('numcontratocliente',)
+        fields = ('numcontratocliente', 'nomcliente', 'OSDE')
     
 @admin.register(Cliente)
-class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('numcontratocliente', 'nomcliente')
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['numcontratocliente'].label = 'Contrato'
-        form.base_fields['nomcliente'].label = 'Nombre'
-        
-        return form
+class ClienteAdmin(ImportExportModelAdmin):
+    resource_class = ClienteResource
+    list_display = ('numcontratocliente', 'nomcliente', 'OSDE')
     
 @admin.register(Pais)
 class PaisAdmin(admin.ModelAdmin):
@@ -42,34 +56,19 @@ class PaisAdmin(admin.ModelAdmin):
         
         return form
     save_as = True
-    save_on_top = True     
+    save_on_top = True
+    
+class ProductoResource(resources.ModelResource):
+    
+    class Meta:
+        model = Producto
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ('idproducto',)
+        fields = ('idproducto', 'nombreproducto', 'tipo', 'UM')
 
-@admin.register(ContratoCliente)
-class ContratoClienteAdmin(admin.ModelAdmin):
-    list_display = ('numcontratocliente',)
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['numcontratocliente'].label = 'Contrato'
-        
-        return form
-    
-@admin.register(ContratoProveedor)
-class ContratoProveedor(admin.ModelAdmin):
-    list_display = ('numcontratoproveedor',)
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['numcontratoproveedor'].label = 'Contrato'
-        
-        return form
-    
 @admin.register(Producto)
-class ProductoAdmin(admin.ModelAdmin):
+class ProductoAdmin(ImportExportModelAdmin):
+    resource_class = ProductoResource
     list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['idproducto'].label = 'Código'
-        form.base_fields['nombreproducto'].label = 'Descripción'
-        #form.base_fields['tipo'].label = 'tipo'
-        #form.base_fields['UM'].label = 'UM' 
-        
-        return form
+   

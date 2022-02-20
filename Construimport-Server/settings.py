@@ -59,9 +59,12 @@ INSTALLED_APPS = [
     'reports',
     'notifications',
     'multiselectfield',
+    'import_export',
     
     
 ]
+
+DJANGO_SETTINGS_MODULE = 'Construimport-Server.settings'
 
 NOTIFICATIONS_NOTIFICATION_MODEL = 'apps.notis.Notification'
 
@@ -91,6 +94,15 @@ JAZZMIN_SETTINGS = {
     #]    
 }
 
+IMPORT_EXPORT_USE_TRANSACTIONS = False
+
+IMPORT_EXPORT_SKIP_ADMIN_LOG = False
+
+#IMPORT_EXPORT_TMP_STORAGE_CLASS = 'import_export.tmp_storages.TempFolderStorage'
+
+
+
+STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
 

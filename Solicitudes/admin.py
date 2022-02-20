@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from .models import Solicitud
 from django.views.generic.base import TemplateView
-from Nomencladores.models import Producto, ProductoForm, Cliente, Proveedor
+from Nomencladores.models import Producto, Cliente, Proveedor, Pais
 from django.contrib.auth.models import Group, User, UserManager, GroupManager, PermissionsMixin
 from django.core.exceptions import ValidationError, PermissionDenied
 from ast import Raise
@@ -18,7 +18,7 @@ from django.urls import reverse, URLPattern, URLResolver, get_urlconf, set_urlco
 
 @admin.register(Solicitud)
 class SolicitudAdmin(admin.ModelAdmin):
-    
+    #change_list_template = 'smuggler/change_list.html'
     list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'edit_link', 'cancel_link')
     
     def get_form(self, request, obj=None, change=False, **kwargs):

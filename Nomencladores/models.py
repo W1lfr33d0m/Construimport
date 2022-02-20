@@ -38,7 +38,7 @@ class Cliente(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratocliente = models.OneToOneField('ContratoCliente', models.DO_NOTHING, db_column='numcontratocliente', primary_key=True, verbose_name = 'Numero de Contrato' )
+    numcontratocliente = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
 
@@ -49,52 +49,6 @@ class Cliente(models.Model):
     def __str__(self):
         return '{}'.format(self.nomcliente)
 
-def validate_vigencia(vigencia):
-    if vigencia < date.year('2010'):
-        raise ValidationError(
-            _('%(vigencia)s no es correcta'),
-            params={'vigencia': vigencia},
-        )
-
-def validate_contrato(numcontratoproveedor):
-    if numcontratoproveedor < 20220000 or numcontratoproveedor > 20229999:
-        raise ValidationError(
-        _('%(numcontratoproveedor)s debe ser un valor entre 20220000 o 20229999'),
-        params={'numcontratoproveedor': numcontratoproveedor},
-         )    
-
-class ContratoCliente(models.Model):
-    numcontratocliente = models.BigIntegerField(primary_key=True, validators = [validate_contrato], verbose_name = 'Numero de Contrato')
-
-    
-    class Meta:
-        verbose_name = _('Contrato de Cliente')
-        verbose_name_plural = _('Contratos de Clientes')
-        managed = False
-        db_table = 'contrato_cliente'
-
-    def __str__(self):
-        return '{}'.format(self.numcontratocliente)
-    
-def validate_contrato(numcontratoproveedor):
-    if numcontratoproveedor < 20220000 or numcontratoproveedor > 20229999:
-        raise ValidationError(
-        _('%(numcontratoproveedor)s debe ser un valor entre 20220000 o 20229999'),
-        params={'numcontratoproveedor': numcontratoproveedor},
-         )    
-
-class ContratoProveedor(models.Model):
-    numcontratoproveedor = models.BigIntegerField(primary_key=True, validators= [validate_contrato], verbose_name = 'Numero de Contrato')
-    
-
-    class Meta:
-        verbose_name = _('Contrato de Proveedor')
-        verbose_name_plural = _('Contratos de Proveedores')
-        managed = False
-        db_table = 'contrato_proveedor'
-    
-    def __str__(self):
-        return '{}'.format(self.numcontratoproveedor)
 
 class Pais(models.Model):
     idpais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
@@ -142,42 +96,22 @@ class Producto(models.Model):
     def __str__(self):
         return '{}'.format(self.nombreproducto)
     
-class ProductoForm(forms.ModelForm):
-    class meta:
-        model = Producto
-        
-    productos = forms.ModelMultipleChoiceField(queryset = Producto.objects.all())
-    cantidad = models.IntegerField(blank=True, null=True)
-    observaciones = models.TextField(blank=True, null= True, max_length=50)
-    def __init__(self, *args, **kwargs):
-        super(ProductoForm, self).__init__(*args, **kwargs)
-        if self.instance:
-            self.fields['productos'].initial = self.instance.producto_set.all()
-        
-def upload_to(instance, filename):
-    filename_base, filename_ext = os.path.splitext(filename)
-    return "proveedores/%s--%s%s" % (
-    slugify(instance.nomproveedor),
-    filename_ext.lower(),
-)
-
-    
 class Proveedor(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratoproveedor = models.OneToOneField(ContratoProveedor, models.DO_NOTHING, db_column='numcontratoproveedor', primary_key=True, verbose_name = 'Numero de Contrato')
+    numcontratoproveedor = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato')
     nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
-    idpais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='idpais', verbose_name = 'País')
-   # idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name='Producto')
+    idpais = models.ForeignKey(Pais, models.CASCADE, db_column='idpais', verbose_name = 'País')
 
     class Meta:
         managed = False
         verbose_name = _('Proveedor')
         verbose_name_plural = _('Proveedores')
         db_table = 'proveedor'
+        unique_together = (('numcontratoproveedor', 'idpais'),)
         
     def __str__(self):
         
-        return "%s - %s" % '{}'.format(self.nomproveedor)
+        return '{}'.format(self.nomproveedor)
 
