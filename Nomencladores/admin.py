@@ -7,6 +7,7 @@ from django.views.generic.base import TemplateView
 # Register your models here.      
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
+    change_list_template = 'smuggler/change_list.html'
     list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
     #list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
     def get_form(self, request, obj=None, change=False, **kwargs):

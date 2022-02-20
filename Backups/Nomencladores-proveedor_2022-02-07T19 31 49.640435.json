@@ -1,0 +1,42 @@
+[
+{
+  "model": "Nomencladores.Proveedor",
+  "pk": 20190130,
+  "fields": {
+    "nomproveedor": "CAIEC",
+    "idpais": "CH"
+  }
+},
+{
+  "model": "Nomencladores.Proveedor",
+  "pk": 20190225,
+  "fields": {
+    "nomproveedor": "CAMCE",
+    "idpais": "CH"
+  }
+},
+{
+  "model": "Nomencladores.Proveedor",
+  "pk": 20210531,
+  "fields": {
+    "nomproveedor": "EL ESTABLO",
+    "idpais": "ES"
+  }
+},
+{
+  "model": "Nomencladores.Proveedor",
+  "pk": 20210607,
+  "fields": {
+    "nomproveedor": "FOREGO",
+    "idpais": "ES"
+  }
+},
+{
+  "model": "Nomencladores.Proveedor",
+  "pk": 20210609,
+  "fields": {
+    "nomproveedor": "WOMY",
+    "idpais": "AL"
+  }
+}
+]

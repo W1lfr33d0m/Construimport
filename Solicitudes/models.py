@@ -30,6 +30,7 @@ from django.views.generic.base import RedirectView
 from Nomencladores.models import Cliente, ContratoProveedor, Pais, Producto, Proveedor, ContratoProveedor
 from django.contrib.auth.models import User, UserManager
 
+
 class SolicitudesBackupview(models.Model):
     id = models.BigAutoField(primary_key=True)
 
@@ -70,10 +71,7 @@ def validate_fecha(fechasol):
             _('%(fechasol)s la fecha debe ser del día actual'),
             params={'fechasol': fechasol},
              )            
-       
 
-    
-    
 class Solicitud(models.Model):
     numsolicitud = models.AutoField(primary_key=True, editable = True, verbose_name = 'Número')
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
