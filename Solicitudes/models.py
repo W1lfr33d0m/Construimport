@@ -73,13 +73,16 @@ def validate_fecha(fechasol):
              )            
 
 class Solicitud(models.Model):
+    Aprobada = 'Aprobada'
+    Denegada = 'Denegada'
+    ESTADO_CHOICES = [ (Aprobada, 'Aprobada'), (Denegada, 'Denegada')]
     numsolicitud = models.AutoField(primary_key=True, editable = True, verbose_name = 'Número')
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
-    idproducto =models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
+    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
     cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
-    aprobada = models.BooleanField( default = False)
+    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES)
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
@@ -103,5 +106,8 @@ class Solicitud(models.Model):
         verbose_name_plural = _('Solicitudes')
         managed = False
         db_table = 'solicitud'
-        unique_together = (('numsolicitud', 'numcontratocliente'),)
+        unique_together = (('numsolicitud', 'numcontratocliente', 'idproducto'),)
+        
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
         

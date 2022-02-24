@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -60,6 +59,7 @@ INSTALLED_APPS = [
     'notifications',
     'multiselectfield',
     'import_export',
+    'easy_pdf',
     
     
 ]
@@ -100,7 +100,7 @@ IMPORT_EXPORT_SKIP_ADMIN_LOG = False
 
 #IMPORT_EXPORT_TMP_STORAGE_CLASS = 'import_export.tmp_storages.TempFolderStorage'
 
-
+IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 
 STATIC_ROOT = 'static'
 
@@ -109,6 +109,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

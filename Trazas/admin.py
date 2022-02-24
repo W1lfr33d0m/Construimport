@@ -1,8 +1,20 @@
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
 # Register your models here.
+from import_export import resources, widgets, fields
+from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
+
+class LogEntryResource(resources.ModelResource):
+    
+    class Meta:
+        model = LogEntry
+        skip_unchanged = True
+        report_skipped = False
+        fields = ('user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr')
+
 @admin.register(LogEntry)
-class LogEntryAdmin(admin.ModelAdmin):
+class LogEntryAdmin(ImportExportModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = 'action_time'
 
@@ -23,5 +35,7 @@ class LogEntryAdmin(admin.ModelAdmin):
         'action_flag',
         'content_type',
         'action_time',
+        'object_id',
+        'object_repr'
         
     ]

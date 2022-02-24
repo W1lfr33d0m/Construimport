@@ -1,4 +1,5 @@
 from cProfile import label
+from importlib import import_module
 from multiprocessing.sharedctypes import Value
 from django.contrib import admin
 #from django import forms
@@ -14,26 +15,59 @@ from django import urls
 from django import http
 from django.utils.html import format_html
 from django.urls import reverse, URLPattern, URLResolver, get_urlconf, set_urlconf
+from import_export import resources, widgets, fields
+from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 # Register your models here.
 
+class SolicitudResource(resources.ModelResource):
+    
+    numcontratocliente = fields.Field(
+        column_name= 'numcontratocliente',
+        attribute= 'numcontratocliente',
+        widget= ForeignKeyWidget(Cliente, 'nomcliente')
+    )
+    
+    numcontratoproveedor = fields.Field(
+        column_name= 'numcontratoproveedor',
+        attribute= 'numcontratoproveedor',
+        widget= ForeignKeyWidget(Proveedor, 'nomproveedor')
+    )
+    
+    idproducto = fields.Field(
+        column_name= 'idproducto',
+        attribute= 'idproducto',
+        widget= ForeignKeyWidget(Producto, 'idproducto')
+    )
+    
+    class Meta:
+        model = Solicitud
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ('numcontratocliente', 'numcontratoproveedor', 'idproducto')
+        fields = ('numsolicitud', 'numcontratocliente', 'fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado')
+    
+
 @admin.register(Solicitud)
-class SolicitudAdmin(admin.ModelAdmin):
+class SolicitudAdmin(ImportExportModelAdmin):
+    resource_class = SolicitudResource
     #change_list_template = 'smuggler/change_list.html'
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'edit_link', 'cancel_link')
+    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado', 'edit_link', 'cancel_link')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         return form
     
     def get_fields(self, request, obj=None):
-        fields = ['numcontratocliente', 'fechasol', 'idproducto', 'cantidad','numcontratoproveedor' ]
+        fields = ['numcontratocliente',  'idproducto', 'cantidad','numcontratoproveedor']
+        if request.user.get_username() == 'director_desarrollo':
+           return ('estado', )
         return fields
         
-    def hide_delete(self, request, obj=None):
+    def hide_fields(self, request, obj=None):
         if request.user.get_username() == 'director_desarrollo':
-            list_display_links = None
-        elif request.solicitud.arpobada() == True:
-            self.exclude = ('delete_link')
+            self.fields['numcontratocliente'].widget.attrs['readonly'] = True
+            
     
     def cancel_link(self, obj):
         info = obj._meta.app_label, obj._meta.model_name

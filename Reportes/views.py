@@ -3,6 +3,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from datetime import datetime
 from django.http import HttpResponse
+from easy_pdf.views import PDFTemplateView
 # Create your views here.
 def pdf_dw(request):                                  
 
@@ -29,3 +30,7 @@ def pdf_dw(request):
 
     # Show the result to the user    
     return response
+
+class HelloPDFView(PDFTemplateView):
+    template_name = 'hello.html'
+    
