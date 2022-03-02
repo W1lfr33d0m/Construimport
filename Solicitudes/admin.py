@@ -51,30 +51,31 @@ class SolicitudResource(resources.ModelResource):
 @admin.register(Solicitud)
 class SolicitudAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
+    readonly_fields = ('numsolicitud', 'fechasol')
     #change_list_template = 'smuggler/change_list.html'
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado', 'edit_link', 'cancel_link')
+    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado', 'edit_link')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         return form
     
     def get_fields(self, request, obj=None):
-        fields = ['numcontratocliente',  'idproducto', 'cantidad','numcontratoproveedor']
+        fields = ['numsolicitud', 'fechasol', 'numcontratocliente',  'idproducto', 'cantidad','numcontratoproveedor']
         if request.user.get_username() == 'director_desarrollo':
            return ('estado', )
         return fields
         
-    def hide_fields(self, request, obj=None):
-        if request.user.get_username() == 'director_desarrollo':
-            self.fields['numcontratocliente'].widget.attrs['readonly'] = True
-            
+    #def has_change_permission(self, request, obj=None):
+      #  estado = self.fields('estado')
+       # if estado == 'Aprobada' or estado == 'Denegada':
+        #    request.user.has_change_permission = False
     
-    def cancel_link(self, obj):
-        info = obj._meta.app_label, obj._meta.model_name
-        url = reverse('admin:%s_%s_delete' % info, args=(obj.numsolicitud,))
-        return format_html('<a href="%s">Cancelar</a>'  % url)
-    cancel_link.allow_tags = True
-    cancel_link.short_description = 'Cancelar'
+    #def cancel_link(self, obj):
+    #    info = obj._meta.app_label, obj._meta.model_name
+    #    url = reverse('admin:%s_%s_delete' % info, args=(obj.numsolicitud,))
+    #    return format_html('<a href="%s">Cancelar</a>'  % url)
+    #cancel_link.allow_tags = True
+    #cancel_link.short_description = 'Cancelar'
 
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (

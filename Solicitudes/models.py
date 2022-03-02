@@ -86,6 +86,10 @@ class Solicitud(models.Model):
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
+    def get_estado(self):
+       return self.estado
+       
+    
     def delete(self, *args, **kwargs):
         if self.aprobada == True:
             RedirectView.as_view(url=('Solicitudes/solicitud'))

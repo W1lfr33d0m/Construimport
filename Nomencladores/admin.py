@@ -46,17 +46,17 @@ class ClienteAdmin(ImportExportModelAdmin):
     resource_class = ClienteResource
     list_display = ('numcontratocliente', 'nomcliente', 'OSDE')
     
-@admin.register(Pais)
-class PaisAdmin(admin.ModelAdmin):
-    list_display = ('idpais', 'pais')
-    #list_filter = ('numcontratoproveedor', 'nomproveedor', 'idpais')
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields['idpais'].label = 'Código del País'
+class PaisResource(resources.ModelResource):
+    
+    class meta:
+        model = Pais
+        skip_unchanged = True
+        report_skipped = False
         
-        return form
-    save_as = True
-    save_on_top = True
+    
+@admin.register(Pais)
+class PaisAdmin(ImportExportModelAdmin):
+    list_display = ('idpais', 'pais')
     
 class ProductoResource(resources.ModelResource):
     
