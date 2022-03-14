@@ -25,6 +25,7 @@ urlpatterns = [
     path('', admin.site.urls),
     #path('admin/', admin.site.urls),
     path('Solicitudes/',include('Solicitudes.urls')),
+    path('Información/',include('Información.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),

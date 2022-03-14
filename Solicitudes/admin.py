@@ -4,7 +4,7 @@ from multiprocessing.sharedctypes import Value
 from django.contrib import admin
 #from django import forms
 from django.shortcuts import render
-from .models import Solicitud
+from .models import Solicitud, RegistroControlSolicitud
 from django.views.generic.base import TemplateView
 from Nomencladores.models import Producto, Cliente, Proveedor, Pais
 from django.contrib.auth.models import Group, User, UserManager, GroupManager, PermissionsMixin
@@ -57,29 +57,37 @@ class SolicitudAdmin(ImportExportModelAdmin):
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
+        if 'Solicitud' in request.session:
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['idproducto'].widget.can_add_related = False
+            form.base_fields['idproducto'].widget.can_delete_related = False
+            form.base_fields['numcontratoproveedor'].widget.can_add_related = False
+            form.base_fields['numcontratoproveedor'].widget.can_delete_related = False
+        #if self.get_fields('estado')=='Aprobada' or self.get_fields('estado')=='Denegada':
+        #    form.base_fields['numcontratocliente'].widget.can_change_related = False
+        #    form.base_fields['idproducto'].widget.can_change_related = False
+        #    form.base_fields['numcontratoproveedor'].widget.can_change_related = False
         return form
     
     def get_fields(self, request, obj=None):
-        fields = ['numsolicitud', 'fechasol', 'numcontratocliente',  'idproducto', 'cantidad','numcontratoproveedor']
-        if request.user.get_username() == 'director_desarrollo':
+        #fields = ['numsolicitud', 'fechasol', 'numcontratocliente',  'idproducto', 'cantidad','numcontratoproveedor']
+        if request.user.username == 'director_desarrollo':
            return ('estado', )
-        return fields
         
-    #def has_change_permission(self, request, obj=None):
-      #  estado = self.fields('estado')
-       # if estado == 'Aprobada' or estado == 'Denegada':
-        #    request.user.has_change_permission = False
     
-    #def cancel_link(self, obj):
-    #    info = obj._meta.app_label, obj._meta.model_name
-    #    url = reverse('admin:%s_%s_delete' % info, args=(obj.numsolicitud,))
-    #    return format_html('<a href="%s">Cancelar</a>'  % url)
-    #cancel_link.allow_tags = True
-    #cancel_link.short_description = 'Cancelar'
-
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
+    
+@admin.register(RegistroControlSolicitud)
+class RegistroControlSolicitudAdmin(admin.ModelAdmin):
+    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado') 
+
+    class Meta:
+        model = RegistroControlSolicitud
+        skip_unchanged = True
+        report_skipped = False
     

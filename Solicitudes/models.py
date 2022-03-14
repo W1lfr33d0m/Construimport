@@ -39,24 +39,13 @@ class SolicitudesBackupview(models.Model):
         db_table = 'Solicitudes_backupview'
 
 
-
-class RegistroControlSolicitud(models.Model):
-    numsolicitud = models.IntegerField(primary_key=True)
-    numcontratocliente = models.IntegerField()
-    numcontratoproveedor = models.IntegerField()
-    fechasol = models.DateField()
-
-    class Meta:
-        managed = False
-        db_table = 'registro_control_solicitud'
-        
-
 def validate_numsolicitud(numsolicitud):
         if numsolicitud <= 0:
             raise ValidationError(
             _('%(numsolicitud)s no es correcto'),
             params={'numsolicitud': numsolicitud},
         )
+
 
 def validate_cantidad(cantidad):
         if cantidad <= 0 or cantidad > 9999:
@@ -65,6 +54,7 @@ def validate_cantidad(cantidad):
             params={'cantidad': cantidad},
              )            
 
+
 def validate_fecha(fechasol):
         if not fechasol == date.today() or not date.weekday(fechasol):
             raise ValidationError(
@@ -72,17 +62,19 @@ def validate_fecha(fechasol):
             params={'fechasol': fechasol},
              )            
 
+
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Denegada = 'Denegada'
-    ESTADO_CHOICES = [ (Aprobada, 'Aprobada'), (Denegada, 'Denegada')]
-    numsolicitud = models.AutoField(primary_key=True, editable = True, verbose_name = 'Número')
+    Pendiente = 'Pendiente'
+    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Denegada, 'Denegada'), (Pendiente, 'Pendiente')]
+    numsolicitud = models.AutoField(primary_key=True, editable = False, verbose_name = 'Número')
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
     cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
-    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES)
+    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
@@ -98,8 +90,8 @@ class Solicitud(models.Model):
             super().delete(*args, **kwargs)
             
     
-    def change(self, *args, **kwargs):
-        if self.aprobada == True:
+    def has_change_permission(self, *args, **kwargs):
+        if self.estado == 'Aprobada' or self.estado == 'Denegada':
             return False
         else:
             super().edit(*args, **kwargs)
@@ -115,3 +107,27 @@ class Solicitud(models.Model):
     def __str__(self):
         return '{}'.format(self.numsolicitud)
         
+
+class RegistroControlSolicitud(models.Model):
+    Aprobada = 'Aprobada'
+    Denegada = 'Denegada'
+    Pendiente = 'Pendiente'
+    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Denegada, 'Denegada'), (Pendiente, 'Pendiente')]
+    numsolicitud = models.AutoField(primary_key=True, editable = False, verbose_name = 'Número')
+    numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
+    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
+    fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
+    numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
+    cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
+    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
+    
+    
+    class Meta:
+        managed = False
+        db_table = 'registro_control_solicitud'
+        verbose_name = ('Registro de Solicitud')
+        verbose_name_plural = ('Registro de Solicitudes')
+        
+        
+    def save(self, request, object = None):
+        return super().save()
