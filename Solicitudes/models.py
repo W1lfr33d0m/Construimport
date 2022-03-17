@@ -27,7 +27,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
-from Nomencladores.models import Cliente, Pais, Producto, Proveedor
+from Nomencladores.models import Cliente, EspecialistaCOMEX, Pais, Producto, Proveedor
 from django.contrib.auth.models import User, UserManager
 
 
@@ -75,6 +75,7 @@ class Solicitud(models.Model):
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
     cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
     estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
+    idespecialista = models.ForeignKey(EspecialistaCOMEX, models.CASCADE, db_column='idespecialista', verbose_name='Especialista COMEX')
     #tag = TaggableManager()
     #@receiver(pre_delete)
     

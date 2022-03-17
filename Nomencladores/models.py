@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 import os
+from pyexpat import model
 from random import choices
 from sqlite3 import Date
 from django.db import models
@@ -20,6 +21,7 @@ from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator
 from django import forms
 from django.utils.text import slugify
+#from Solicitudes.models import Solicitud
 
 
 
@@ -33,6 +35,20 @@ class Almacen(models.Model):
     class Meta:
         managed = False
         db_table = 'almacen'
+        
+class  Provincia(models.Model):
+    idprovincia = models.CharField(max_length=3, primary_key=True, null=False, unique=True)
+    nombre = models.CharField(max_length=100)
+    capital =  models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        verbose_name = _('Provincia')
+        verbose_name_plural = _('Provincias')
+        db_table = 'provincia'
+        
+    def __str__(self):
+        return '%s' % self.nombre    
 
 class Cliente(models.Model):
     
@@ -41,6 +57,7 @@ class Cliente(models.Model):
     numcontratocliente = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
+    idprovincia = models.ForeignKey(Provincia, models.CASCADE, db_column='idprovincia', verbose_name='Provincia')
 
     class Meta:
         managed = False
@@ -86,7 +103,7 @@ class Producto(models.Model):
     nombreproducto = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     tipo = models.CharField(max_length = 10, null= False, choices = TIPO_PRODUCTO_CHOICES, default = PPA)
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
-    #solicitud = models.ManyToOneRel(Solicitud, models.DO_NOTHING, field_name = 'Solicitud')
+    #solicitud = models.ForeignKey(Solicitud, models.DO_NOTHING, field_name = 'numsolicitud')
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
@@ -103,9 +120,10 @@ class Proveedor(models.Model):
     numcontratoproveedor = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato')
     nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
     idpais = models.ForeignKey(Pais, models.CASCADE, db_column='idpais', verbose_name = 'País')
+    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name='Producto')
 
     class Meta:
-        managed = False
+        managed = True
         verbose_name = _('Proveedor')
         verbose_name_plural = _('Proveedores')
         db_table = 'proveedor'
@@ -114,4 +132,27 @@ class Proveedor(models.Model):
     def __str__(self):
         
         return '{}'.format(self.nomproveedor)
+
+
+class EspecialistaCOMEX(models.Model):
+    
+    PPA = 'PZ'
+    Equipo = 'EQ'
+    CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
+    name_validator = UnicodenameValidator()
+    
+    idespecialista = models.IntegerField(primary_key=True, verbose_name='Especialista')
+    nombre = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
+    apellidos = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Apellidos')
+    categoria = models.CharField(max_length = 10, null= False, choices = CATEGORIA_CHOICES, default = PPA)
+    
+    class Meta:
+        managed = True
+        verbose_name = _('Especialista COMEX')
+        verbose_name_plural = _('Especialistas COMEX')
+        db_table = 'especialista_comex'
+        
+    def __str__(self):
+        
+        return '{}'.format(self.nombre)
 

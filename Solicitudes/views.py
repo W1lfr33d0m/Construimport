@@ -5,6 +5,7 @@ from django.http import FileResponse
 from reportlab.pdfgen import canvas
 from Solicitudes.models import Solicitud
 
+
 def some_view(request):
     # Create a file-like buffer to receive PDF data.
     buffer = io.BytesIO(Solicitud.objects.all())

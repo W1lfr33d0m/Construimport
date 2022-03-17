@@ -2,10 +2,11 @@
 from django.contrib import admin
 from django.shortcuts import render
 from sqlalchemy import ForeignKey
+from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
-from .models import Cliente, Pais, Proveedor, Producto
+from .models import Cliente, Pais, Proveedor, Producto, EspecialistaCOMEX, Provincia
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -30,7 +31,7 @@ class ProveedorResource(resources.ModelResource):
 @admin.register(Proveedor)
 class ProveedorAdmin(ImportExportModelAdmin):
     resource_class = ProveedorResource
-    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais', 'idproducto')
         
 class ClienteResource(resources.ModelResource):
     
@@ -39,7 +40,7 @@ class ClienteResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = False
         import_id_fields = ('numcontratocliente',)
-        fields = ('numcontratocliente', 'nomcliente', 'OSDE')
+        fields = ('numcontratocliente', 'nomcliente', 'OSDE', 'idprovincia')
     
 @admin.register(Cliente)
 class ClienteAdmin(ImportExportModelAdmin):
@@ -58,6 +59,23 @@ class PaisResource(resources.ModelResource):
 class PaisAdmin(ImportExportModelAdmin):
     list_display = ('idpais', 'pais')
     
+class ProvinciaResource(resources.ModelResource):
+    
+    class meta:
+        model = Provincia
+        skip_unchanged = True
+        report_skipped = False
+        fields = ('idprovincia', 'nombre', 'capital')
+        
+    
+@admin.register(Provincia)
+class ProvinciaAdmin(ImportExportModelAdmin):
+    list_display = ('idprovincia', 'nombre', 'capital')
+    
+class SolicitudInLine(admin.TabularInline):
+    
+    model = Solicitud
+    
 class ProductoResource(resources.ModelResource):
     
     class Meta:
@@ -70,5 +88,20 @@ class ProductoResource(resources.ModelResource):
 @admin.register(Producto)
 class ProductoAdmin(ImportExportModelAdmin):
     resource_class = ProductoResource
+    inlines = [SolicitudInLine,]
     list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
    
+class EspecialistaCOMEXResource(resources.ModelResource):
+    
+    class Meta:
+        model = EspecialistaCOMEX
+        skip_unchanged = True
+        report_skipped = False
+        fields = ('idespecialista', 'nombre', 'apellidos', 'categoria')
+        
+@admin.register(EspecialistaCOMEX)
+class EspecialistaCOMEXAdmin(ImportExportModelAdmin):
+    resource_class = EspecialistaCOMEXResource
+    list_display = ('idespecialista', 'nombre', 'apellidos', 'categoria')
+    
+        
