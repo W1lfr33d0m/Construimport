@@ -6,7 +6,7 @@ from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
-from .models import Cliente, Pais, Proveedor, Producto, EspecialistaCOMEX, Provincia
+from .models import Cliente, Pais, Proveedor, Producto, EspecialistaCOMEX, Provincia, Proveedor_Producto
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -14,7 +14,15 @@ from import_export.widgets import ForeignKeyWidget
 
 # Register your models here.     
 
+#@admin.register(Proveedor_Producto)
+class Proveedor_ProductoInLine(admin.TabularInline):
+    model = Proveedor_Producto
+    extra = 1
+
+admin.site.register(Proveedor_Producto)
+
 class ProveedorResource(resources.ModelResource):
+    
     
     idpais = fields.Field(
         column_name='idpais', 
@@ -26,12 +34,16 @@ class ProveedorResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = False
         import_id_fields = ('numcontratoproveedor',)
-        fields = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+        fields = ('numcontratoproveedor', 'nomproveedor', 'idpais', 'productos')
 
 @admin.register(Proveedor)
 class ProveedorAdmin(ImportExportModelAdmin):
     resource_class = ProveedorResource
-    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais', 'idproducto')
+    inlines = [Proveedor_ProductoInLine, ]
+    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    filter_horizontal = ['productos',]
+    
+    
         
 class ClienteResource(resources.ModelResource):
     
@@ -72,10 +84,7 @@ class ProvinciaResource(resources.ModelResource):
 class ProvinciaAdmin(ImportExportModelAdmin):
     list_display = ('idprovincia', 'nombre', 'capital')
     
-class SolicitudInLine(admin.TabularInline):
-    
-    model = Solicitud
-    
+
 class ProductoResource(resources.ModelResource):
     
     class Meta:
@@ -88,7 +97,6 @@ class ProductoResource(resources.ModelResource):
 @admin.register(Producto)
 class ProductoAdmin(ImportExportModelAdmin):
     resource_class = ProductoResource
-    inlines = [SolicitudInLine,]
     list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
    
 class EspecialistaCOMEXResource(resources.ModelResource):

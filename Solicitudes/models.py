@@ -70,7 +70,7 @@ class Solicitud(models.Model):
     ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Denegada, 'Denegada'), (Pendiente, 'Pendiente')]
     numsolicitud = models.AutoField(primary_key=True, editable = False, verbose_name = 'Número')
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
-    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
+    productos = models.ManyToManyField(Producto, through='Solicitud_Producto', db_column='idproducto', verbose_name = 'Producto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
     numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
     cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
@@ -103,11 +103,19 @@ class Solicitud(models.Model):
         verbose_name_plural = _('Solicitudes')
         managed = False
         db_table = 'solicitud'
-        unique_together = (('numsolicitud', 'numcontratocliente', 'idproducto'),)
+        unique_together = (('numsolicitud', 'numcontratocliente'),)
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
         
+class Solicitud_Producto(models.Model):
+    
+    numsolicitud = models.ForeignKey(Solicitud, models.CASCADE, db_column='numconsolicitud', verbose_name = 'Solicitud')
+    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name = 'Productos')
+    
+    class Meta:
+        managed = True
+        db_table = 'solicitud_producto'
 
 class RegistroControlSolicitud(models.Model):
     Aprobada = 'Aprobada'

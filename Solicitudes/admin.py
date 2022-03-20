@@ -1,5 +1,6 @@
 from cProfile import label
 from email import message
+from hashlib import new
 from importlib import import_module
 from msilib.schema import Verb
 from multiprocessing.sharedctypes import Value
@@ -7,9 +8,11 @@ from urllib import request
 from django.contrib import admin
 #from django import forms
 from django.shortcuts import render
-from .models import Solicitud, RegistroControlSolicitud
+
+from attr import field
+from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
 from django.views.generic.base import TemplateView
-from Nomencladores.models import Producto, Cliente, Proveedor, Pais
+from Nomencladores.models import EspecialistaCOMEX, Producto, Cliente, Proveedor, Pais
 from django.contrib.auth.models import Group, User, UserManager, GroupManager, PermissionsMixin
 from django.core.exceptions import ValidationError, PermissionDenied
 from ast import Raise
@@ -25,9 +28,17 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from notifications.signals import notify
 from django.forms import forms, formset_factory
+from django.contrib import messages
+
 
 # Register your models here.
 
+class Solicitud_ProductoInLine(admin.TabularInline):
+    fields = ['idproducto', ]
+    model = Solicitud_Producto
+    extra = 1
+
+admin.site.register(Solicitud_Producto)
 
 class SolicitudResource(resources.ModelResource):
     
@@ -43,10 +54,10 @@ class SolicitudResource(resources.ModelResource):
         widget= ForeignKeyWidget(Proveedor, 'nomproveedor')
     )
     
-    idproducto = fields.Field(
-        column_name= 'idproducto',
-        attribute= 'idproducto',
-        widget= ForeignKeyWidget(Producto, 'idproducto')
+    idespecialista = fields.Field(
+        column_name= 'idespecialista',
+        attribute= 'idespecialista',
+        widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
     )
     
     class Meta:
@@ -54,33 +65,37 @@ class SolicitudResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = False
         import_id_fields = ('numcontratocliente', 'numcontratoproveedor', 'idproducto')
-        fields = ('numsolicitud', 'numcontratocliente', 'fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado')
+        fields = ('numsolicitud', 'numcontratocliente', 'fechasol', 'cantidad','numcontratoproveedor', 'estado', 'idespecialista',)
     
 
 @admin.register(Solicitud)
 class SolicitudAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
+    inlines = [Solicitud_ProductoInLine, ]
     #change_list_template = 'smuggler/change_list.html'
     readonly_fields = ('numsolicitud', 'fechasol')
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado', 'edit_link')
+    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'cantidad','numcontratoproveedor', 'estado', 'idespecialista', 'edit_link')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        if 'Solicitud' in request.session:
-            form.base_fields['numcontratocliente'].widget.can_add_related = False
-            form.base_fields['numcontratocliente'].widget.can_delete_related = False
-            form.base_fields['idproducto'].widget.can_add_related = False
-            form.base_fields['idproducto'].widget.can_delete_related = False
-            form.base_fields['numcontratoproveedor'].widget.can_add_related = False
-            form.base_fields['numcontratoproveedor'].widget.can_delete_related = False
-        fields = ['numsolicitud', 'fechasol', 'numcontratocliente', 'idproducto', 'cantidad','numcontratoproveedor']
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['numcontratocliente'].widget.can_add_related = False
+        form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        #form.base_fields['idproducto'].widget.can_add_related = False
+        #form.base_fields['idproducto'].widget.can_delete_related = False
+        form.base_fields['numcontratoproveedor'].widget.can_add_related = False
+        form.base_fields['numcontratoproveedor'].widget.can_delete_related = False
+        estado = getattr(self, 'estado', None)        
+        if request.user.username == 'director_desarrollo':
+            del form.base_fields['numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor',]
+        #elif request.user.username == 'Marketing' :
+           #readonly_fields = ('estado', )      
         return form
-    
-    #def get_fields(self, request, obj=None):
-    #    fields = ['numsolicitud', 'fechasol', 'numcontratocliente', 'idproducto', 'cantidad','numcontratoproveedor']
-     #   if request.user.username == 'director_desarrollo':
-     #      return ('estado', )
-        
+            
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ['url']
+        else:
+            return []
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
@@ -88,13 +103,11 @@ class SolicitudAdmin(ImportExportModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
     
-    #def save(sender, request, **kwargs):
-    #    sender = User.objects.get(username = request.user.username)
-    #    recipient = User.objects.get(id = 'director_desarrollo')
-    #    message = "Tiene solicitudes pendientes a verificar"
-    #    notify.send(actor=sender, recipient=recipient, verb='Message', description=message)
-        
-    #post_save.connect(save, sender=User)
+    def save(self, request, **kwargs):
+        if request.user.username == 'Marketing':
+            messages.add_message(request, messages.INFO, 'Hay solicitudes pendientes a revisar')
+        #if request.user.username == 'director_desarrollo' and self.estado != 'Pendiente':
+        #    solicitud_registro = RegistroControlSolicitud.create
     
 @admin.register(RegistroControlSolicitud)
 class RegistroControlSolicitudAdmin(admin.ModelAdmin):

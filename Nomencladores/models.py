@@ -103,7 +103,8 @@ class Producto(models.Model):
     nombreproducto = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     tipo = models.CharField(max_length = 10, null= False, choices = TIPO_PRODUCTO_CHOICES, default = PPA)
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
-    #solicitud = models.ForeignKey(Solicitud, models.DO_NOTHING, field_name = 'numsolicitud')
+    #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
+    
     class Meta:
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
@@ -113,14 +114,21 @@ class Producto(models.Model):
     def __str__(self):
         return '{}'.format(self.nombreproducto)
     
+def validate_numcontratoproveedor(numcontratoproveedor):
+    if numcontratoproveedor <= 0 or numcontratoproveedor > 999999:
+         raise ValidationError(
+        _('%(numcontratoproveedor)s debe ser un valor mayor que cero y menor que 999999'),
+        params={'numcontratoproveedor': numcontratoproveedor},
+         )
+    
 class Proveedor(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratoproveedor = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato')
+    numcontratoproveedor = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato', validators=[validate_numcontratoproveedor])
     nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
     idpais = models.ForeignKey(Pais, models.CASCADE, db_column='idpais', verbose_name = 'País')
-    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name='Producto')
+    productos = models.ManyToManyField(Producto, through= 'Proveedor_Producto', db_column= 'idproducto', verbose_name='Producto')
 
     class Meta:
         managed = True
@@ -132,6 +140,15 @@ class Proveedor(models.Model):
     def __str__(self):
         
         return '{}'.format(self.nomproveedor)
+    
+class Proveedor_Producto(models.Model):
+    
+    numcontratoproveedor = models.ForeignKey(Proveedor, models.CASCADE, db_column='numcontratoproveedor', verbose_name = 'Proveedores')
+    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name = 'Productos')
+    
+    class Meta:
+        managed = True
+        db_table = 'proveedor_producto'
 
 
 class EspecialistaCOMEX(models.Model):
