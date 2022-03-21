@@ -161,8 +161,7 @@ class EspecialistaCOMEX(models.Model):
     CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
     name_validator = UnicodenameValidator()
     
-    idespecialista = models.AutoField(primary_key=True, verbose_name='Identificador')
-    username = models.ForeignKey(User, models.DO_NOTHING, db_column='username', verbose_name='Usuario')
+    id = models.OneToOneField(User, models.DO_NOTHING, primary_key=True, db_column='id', verbose_name='Usuario')
     categoria = models.CharField(max_length = 10, null= False, choices = CATEGORIA_CHOICES, default = PPA)
     
     class Meta:
@@ -173,5 +172,5 @@ class EspecialistaCOMEX(models.Model):
         
     def __str__(self):
         
-        return '{}'.format(self.nombre)
+        return '{}'.format(self.id)
 

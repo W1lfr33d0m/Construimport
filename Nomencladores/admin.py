@@ -107,16 +107,16 @@ class EspecialistaCOMEXResource(resources.ModelResource):
         model = EspecialistaCOMEX
         skip_unchanged = True
         report_skipped = False
-        fields = ('idespecialista', 'username', 'categoria')
+        fields = ('id', 'categoria')
         
 @admin.register(EspecialistaCOMEX)
 class EspecialistaCOMEXAdmin(ImportExportModelAdmin):
     resource_class = EspecialistaCOMEXResource
-    list_display = ('idespecialista', 'username', 'categoria')
+    list_display = ('id', 'categoria')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['username'].widget.can_delete_related = False
+        form.base_fields['id'].widget.can_delete_related = False
         return form
     
         
