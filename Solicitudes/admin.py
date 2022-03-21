@@ -103,11 +103,11 @@ class SolicitudAdmin(ImportExportModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
     
-    def save(self, request, **kwargs):
-        if request.user.username == 'Marketing':
-            messages.add_message(request, messages.INFO, 'Hay solicitudes pendientes a revisar')
-        #if request.user.username == 'director_desarrollo' and self.estado != 'Pendiente':
-        #    solicitud_registro = RegistroControlSolicitud.create
+    def pending_alert(self, request):
+        for sol in self:
+            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
+                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
+        
     
 @admin.register(RegistroControlSolicitud)
 class RegistroControlSolicitudAdmin(admin.ModelAdmin):

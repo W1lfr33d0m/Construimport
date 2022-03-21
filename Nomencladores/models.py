@@ -16,11 +16,14 @@ from django.db import models
 from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
+
+from numpy import save
 from .validators import UnicodenameValidator
 from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator
 from django import forms
 from django.utils.text import slugify
+from django.contrib.auth.models import User 
 #from Solicitudes.models import Solicitud
 
 
@@ -158,9 +161,8 @@ class EspecialistaCOMEX(models.Model):
     CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
     name_validator = UnicodenameValidator()
     
-    idespecialista = models.IntegerField(primary_key=True, verbose_name='Especialista')
-    nombre = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
-    apellidos = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Apellidos')
+    idespecialista = models.AutoField(primary_key=True, verbose_name='Identificador')
+    username = models.ForeignKey(User, models.DO_NOTHING, db_column='username', verbose_name='Usuario')
     categoria = models.CharField(max_length = 10, null= False, choices = CATEGORIA_CHOICES, default = PPA)
     
     class Meta:
