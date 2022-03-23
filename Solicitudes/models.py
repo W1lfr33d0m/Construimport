@@ -29,6 +29,7 @@ from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
 from Nomencladores.models import Cliente, EspecialistaCOMEX, Pais, Producto, Proveedor
 from django.contrib.auth.models import User, UserManager
+from django.utils.timezone import now
 
 
 class SolicitudesBackupview(models.Model):
@@ -65,17 +66,50 @@ def validate_fecha(fechasol):
 
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
-    Denegada = 'Denegada'
+    Cancelada = 'Cancelada'
     Pendiente = 'Pendiente'
-    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Denegada, 'Denegada'), (Pendiente, 'Pendiente')]
-    numsolicitud = models.AutoField(primary_key=True, editable = False, verbose_name = 'Número')
-    numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
-    productos = models.ManyToManyField(Producto, through='Solicitud_Producto', db_column='idproducto', verbose_name = 'Producto')
-    fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
-    numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
-    cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
-    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
-    idespecialista = models.ForeignKey(EspecialistaCOMEX, models.CASCADE, db_column='idespecialista', verbose_name='Especialista COMEX')
+    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Cancelada, 'Cancelada'), (Pendiente, 'Pendiente')]
+    numsolicitud = models.AutoField(
+        primary_key=True, 
+        editable = False, 
+        verbose_name = 'Número'
+        )
+    numcontratocliente = models.ForeignKey(
+        Cliente, 
+        models.DO_NOTHING, 
+        db_column='numcontratocliente', 
+        verbose_name = 'Cliente'
+        )
+    idproducto = models.ManyToManyField(
+        Producto, 
+        through='Solicitud_Producto', 
+        verbose_name = 'Producto'
+        )
+    fechasol = models.DateField(
+        default= date.today(), 
+        validators=[validate_fecha], 
+        verbose_name = 'Fecha'
+        )
+    estado = models.CharField(
+        max_length = 10, 
+        null= True, 
+        choices = ESTADO_CHOICES, 
+        default='Pendiente'
+        )
+    observaciones = models.TextField(
+        max_length=150, 
+        null=True, 
+        blank=True, 
+        verbose_name='Observaciones'
+        )
+    idespecialista = models.ForeignKey(
+        EspecialistaCOMEX, 
+        models.DO_NOTHING, 
+        db_column='idespecialista', 
+        null=True, 
+        blank=True, 
+        verbose_name='Especialista COMEX'
+        )
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
@@ -104,18 +138,44 @@ class Solicitud(models.Model):
         managed = False
         db_table = 'solicitud'
         unique_together = (('numsolicitud', 'numcontratocliente'),)
+        ordering = ['numsolicitud', 'fechasol']
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
         
 class Solicitud_Producto(models.Model):
     
-    numsolicitud = models.ForeignKey(Solicitud, models.CASCADE, db_column='numconsolicitud', verbose_name = 'Solicitud')
-    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name = 'Productos')
+    numsolicitud = models.ForeignKey(
+        Solicitud, 
+        models.CASCADE, 
+        db_column='numsolicitud'
+        )
+    idproducto = models.ForeignKey(
+        Producto, 
+        models.CASCADE, 
+        db_column='idproducto'
+        )
+    numcontratoproveedor = models.ForeignKey(
+        Proveedor, 
+        models.DO_NOTHING, 
+        db_column='numcontratoproveedor', 
+        blank=True, null=True, 
+        verbose_name = 'Proveedor')
+    cantidad = models.IntegerField(
+        blank=False, 
+        null=False, 
+        validators=[validate_cantidad]
+        )
     
     class Meta:
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
         managed = True
         db_table = 'solicitud_producto'
+    
+    
+    def __str__(self):
+           return '{}'.format(self.idproducto)
 
 class RegistroControlSolicitud(models.Model):
     Aprobada = 'Aprobada'
