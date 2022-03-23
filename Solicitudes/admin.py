@@ -10,6 +10,7 @@ from django.contrib import admin
 from django.shortcuts import render
 
 from attr import field
+from pydantic import Field
 from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
 from django.views.generic.base import TemplateView
 from Nomencladores.models import EspecialistaCOMEX, Producto, Cliente, Proveedor, Pais
@@ -33,12 +34,14 @@ from django.contrib import messages
 
 # Register your models here.
 
-class Solicitud_ProductoInLine(admin.TabularInline):
-    fields = ['idproducto', ]
-    model = Solicitud_Producto
-    extra = 1
 
 admin.site.register(Solicitud_Producto)
+class Solicitud_ProductoInline(admin.TabularInline):
+    model = Solicitud_Producto
+    extra = 1
+    Autocomplete_fields = ['idproducto', ]
+    
+
 
 class SolicitudResource(resources.ModelResource):
     
@@ -60,37 +63,64 @@ class SolicitudResource(resources.ModelResource):
         widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
     )
     
+    productos = fields.Field(
+        column_name='productos',
+        attribute='productos',
+        widget = ForeignKeyWidget(Solicitud_Producto, 'idproducto')
+        
+    )
+    
     class Meta:
         model = Solicitud
         skip_unchanged = True
         report_skipped = False
-        import_id_fields = ('numcontratocliente', 'numcontratoproveedor', 'idproducto')
-        fields = ('numsolicitud', 'numcontratocliente', 'fechasol', 'cantidad','numcontratoproveedor', 'estado', 'idespecialista',)
+        import_id_fields = (
+                            'numcontratocliente', 
+                            'numcontratoproveedor', 
+                            'idproducto'
+                            )
+        readonly_fields = (
+                          'numsolicitud', 
+                          'fechasol'
+                          )
+        fields = (
+                  'numsolicitud', 
+                  'numcontratocliente', 
+                  'cantidad',
+                  'numcontratoproveedor', 
+                  'estado', 
+                  'idespecialista', 
+                  'productos'
+                  )
     
 
 @admin.register(Solicitud)
 class SolicitudAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
-    inlines = [Solicitud_ProductoInLine, ]
-    #change_list_template = 'smuggler/change_list.html'
-    readonly_fields = ('numsolicitud', 'fechasol')
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'cantidad','numcontratoproveedor', 'estado', 'idespecialista', 'edit_link')
-    
+    inlines = [Solicitud_ProductoInline,]
+    list_display = (
+                   'numsolicitud', 
+                   'numcontratocliente', 
+                   'fechasol', 
+                   'estado', 
+                   'edit_link'
+                   )
+    #list_filter = (
+    #              'numsolicitud', 
+    #              'idproducto'
+    #              )
+    filter_horizontal = ('inlines', )
+        
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
+        #form.base_fields['fechasol', ].disabled = True
         form.base_fields['numcontratocliente'].widget.can_add_related = False
         form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        #form.base_fields['productos'].widget.can_add_related = False
         #form.base_fields['idproducto'].widget.can_add_related = False
         #form.base_fields['idproducto'].widget.can_delete_related = False
-        form.base_fields['numcontratoproveedor'].widget.can_add_related = False
-        form.base_fields['numcontratoproveedor'].widget.can_delete_related = False
-        estado = getattr(self, 'estado', None)        
-        if request.user.username == 'director_desarrollo':
-            del form.base_fields['numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor',]
-        #elif request.user.username == 'Marketing' :
-           #readonly_fields = ('estado', )      
         return form
-            
+
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return ['url']
