@@ -8,7 +8,6 @@ from urllib import request
 from django.contrib import admin
 #from django import forms
 from django.shortcuts import render
-
 from attr import field
 from pydantic import Field
 from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
@@ -30,14 +29,13 @@ from django.db.models.signals import post_save
 from notifications.signals import notify
 from django.forms import forms, formset_factory
 from django.contrib import messages
-
-
 # Register your models here.
 
 
 admin.site.register(Solicitud_Producto)
-class Solicitud_ProductoInline(admin.TabularInline):
+class Solicitud_ProductoInline(admin.StackedInline):
     model = Solicitud_Producto
+    fk_name = 'numsolicitud'
     extra = 1
     Autocomplete_fields = ['idproducto', ]
     
@@ -77,7 +75,7 @@ class SolicitudResource(resources.ModelResource):
         import_id_fields = (
                             'numcontratocliente', 
                             'numcontratoproveedor', 
-                            'idproducto'
+                            'productos'
                             )
         readonly_fields = (
                           'numsolicitud', 
@@ -109,7 +107,7 @@ class SolicitudAdmin(ImportExportModelAdmin):
     #              'numsolicitud', 
     #              'idproducto'
     #              )
-    filter_horizontal = ('idproducto', )
+    filter_horizontal = ('productos', )
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -120,6 +118,10 @@ class SolicitudAdmin(ImportExportModelAdmin):
         #form.base_fields['idproducto'].widget.can_add_related = False
         #form.base_fields['idproducto'].widget.can_delete_related = False
         return form
+    
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = Solicitud_ProductoInline().get_formset(request, obj, **kwargs)
+        return formset
 
     def get_readonly_fields(self, request, obj=None):
         if obj:

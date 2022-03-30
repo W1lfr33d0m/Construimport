@@ -60,7 +60,7 @@ class Cliente(models.Model):
     numcontratocliente = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
-    idprovincia = models.ForeignKey(Provincia, models.CASCADE, db_column='idprovincia', verbose_name='Provincia')
+    #idprovincia = models.ForeignKey(Provincia, models.CASCADE, db_column='idprovincia', verbose_name='Provincia')
 
     class Meta:
         managed = False
@@ -128,10 +128,28 @@ class Proveedor(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratoproveedor = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato', validators=[validate_numcontratoproveedor])
-    nomproveedor = models.CharField(max_length=45, validators=[name_validator], verbose_name = 'Nombre')
-    idpais = models.ForeignKey(Pais, models.CASCADE, db_column='idpais', verbose_name = 'País')
-    productos = models.ManyToManyField(Producto, through= 'Proveedor_Producto', db_column= 'idproducto', verbose_name='Producto')
+    numcontratoproveedor = models.IntegerField(
+                                               primary_key=True, 
+                                               verbose_name = 'Numero de Contrato', 
+                                               validators=[validate_numcontratoproveedor]
+                                               )
+    nomproveedor = models.CharField(
+                                    max_length=45, 
+                                    validators=[name_validator], 
+                                    verbose_name = 'Nombre'
+                                    )
+    idpais = models.ForeignKey(
+                               Pais, 
+                               models.CASCADE, 
+                               db_column='idpais', 
+                               verbose_name = 'País'
+                               )
+    productos = models.ManyToManyField(
+                                       Producto, 
+                                       through= 'Proveedor_Producto', 
+                                       db_column= 'idproducto', 
+                                       verbose_name='Producto'
+                                       )
 
     class Meta:
         managed = True
@@ -146,8 +164,18 @@ class Proveedor(models.Model):
     
 class Proveedor_Producto(models.Model):
     
-    numcontratoproveedor = models.ForeignKey(Proveedor, models.CASCADE, db_column='numcontratoproveedor', verbose_name = 'Proveedores')
-    idproducto = models.ForeignKey(Producto, models.CASCADE, db_column='idproducto', verbose_name = 'Productos')
+    numcontratoproveedor = models.ForeignKey(
+                                             Proveedor, 
+                                             models.CASCADE, 
+                                             db_column='numcontratoproveedor', 
+                                             verbose_name = 'Proveedores'
+                                             )
+    idproducto = models.ForeignKey(
+                                   Producto, 
+                                   models.CASCADE, 
+                                   db_column='idproducto', 
+                                   verbose_name = 'Productos'
+                                   )
     
     class Meta:
         managed = True
@@ -161,8 +189,19 @@ class EspecialistaCOMEX(models.Model):
     CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
     name_validator = UnicodenameValidator()
     
-    id = models.OneToOneField(User, models.DO_NOTHING, primary_key=True, db_column='id', verbose_name='Usuario')
-    categoria = models.CharField(max_length = 10, null= False, choices = CATEGORIA_CHOICES, default = PPA)
+    idespecialista = models.OneToOneField(
+                                          User, 
+                                          models.DO_NOTHING, 
+                                          primary_key=True, 
+                                          db_column='idespecialista', 
+                                          verbose_name='Usuario'
+                                          )
+    categoria = models.CharField(
+                                 max_length = 10, 
+                                 null= False, 
+                                 choices = CATEGORIA_CHOICES, 
+                                 default = PPA
+                                 )
     
     class Meta:
         managed = True
@@ -172,5 +211,5 @@ class EspecialistaCOMEX(models.Model):
         
     def __str__(self):
         
-        return '{}'.format(self.id)
+        return '{}'.format(self.idespecialista)
 

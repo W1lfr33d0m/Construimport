@@ -33,7 +33,7 @@ from django.utils.timezone import now
 
 
 class SolicitudesBackupview(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    ids = models.BigAutoField(primary_key=True)
 
     class Meta:
         managed = False
@@ -68,7 +68,11 @@ class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
     Pendiente = 'Pendiente'
-    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Cancelada, 'Cancelada'), (Pendiente, 'Pendiente')]
+    ESTADO_CHOICES = [
+                      (Aprobada, 'Aprobada'), 
+                      (Cancelada, 'Cancelada'), 
+                      (Pendiente, 'Pendiente')
+                      ]
     numsolicitud = models.AutoField(
         primary_key=True, 
         editable = False, 
@@ -80,10 +84,11 @@ class Solicitud(models.Model):
         db_column='numcontratocliente', 
         verbose_name = 'Cliente'
         )
-    idproducto = models.ManyToManyField(
+    productos = models.ManyToManyField(
         Producto, 
-        through='Solicitud_Producto', 
-        verbose_name = 'Producto'
+        through='Solicitud_Producto',
+        through_fields=('numsolicitud', 'idproducto'), 
+        verbose_name = 'Productos'
         )
     fechasol = models.DateField(
         default= date.today(), 

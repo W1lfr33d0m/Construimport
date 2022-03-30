@@ -54,7 +54,7 @@ class ClienteResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = False
         import_id_fields = ('numcontratocliente',)
-        fields = ('numcontratocliente', 'nomcliente', 'OSDE', 'idprovincia')
+        fields = ('numcontratocliente', 'nomcliente', 'OSDE',)
     
 @admin.register(Cliente)
 class ClienteAdmin(ImportExportModelAdmin):
@@ -107,16 +107,16 @@ class EspecialistaCOMEXResource(resources.ModelResource):
         model = EspecialistaCOMEX
         skip_unchanged = True
         report_skipped = False
-        fields = ('id', 'categoria')
+        fields = ('idespecialista', 'categoria')
         
 @admin.register(EspecialistaCOMEX)
 class EspecialistaCOMEXAdmin(ImportExportModelAdmin):
     resource_class = EspecialistaCOMEXResource
-    list_display = ('id', 'categoria')
+    list_display = ('idespecialista', 'categoria')
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['id'].widget.can_delete_related = False
+        form.base_fields['idespecialista'].widget.can_delete_related = False
         return form
     
         
