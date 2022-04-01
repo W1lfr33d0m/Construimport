@@ -6,12 +6,12 @@ from Nomencladores.validators import UnicodenameValidator
 from django.contrib.auth.models import User, Group 
 
 
-def validate_especialista(idespecialista):
-    if .group._user_has_module_perms('COMEX') == False:
-        raise ValidationError(
-        _('%(idespecialista)s debe ser un valor entre 20220000 o 20229999'),
-        params={'idespecialista': idespecialista},
-        ) 
+#def validate_especialista(idespecialista):
+#    if .group._user_has_module_perms('COMEX') == False:
+#        raise ValidationError(
+#        _('%(idespecialista)s debe ser un valor entre 20220000 o 20229999'),
+#        params={'idespecialista': idespecialista},
+#        ) 
 
 class EspecialistaCOMEX(models.Model):
     
@@ -26,7 +26,7 @@ class EspecialistaCOMEX(models.Model):
                                           primary_key=True, 
                                           db_column='idespecialista', 
                                           verbose_name='Usuario',
-                                          validators=[validate_especialista]
+                                          #validators=[validate_especialista]
                                           )
     categoria = models.CharField(
                                  max_length = 10, 
