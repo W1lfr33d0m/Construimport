@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from ast import Raise
 from datetime import date, datetime
+from math import prod
 from re import T
 from tabnanny import verbose
 from tkinter import Widget
@@ -85,7 +86,8 @@ class Solicitud(models.Model):
         verbose_name = 'Cliente'
         )
     productos = models.ManyToManyField(
-        Producto, 
+        Producto,
+        'Producto', 
         through='Solicitud_Producto',
         through_fields=('numsolicitud', 'idproducto'), 
         verbose_name = 'Productos'

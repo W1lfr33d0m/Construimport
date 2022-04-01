@@ -91,6 +91,8 @@ JAZZMIN_SETTINGS = {
         'Información.Salva': 'fas fa-download',
         'Información.Restauras': 'fas fa-upload',
     },
+    'changeform_format': 'vertical_tabs',
+    'related_modal_active': False,
     #'topmenu_links': [
     #    {'name': 'Backup', 'url':'/dump/',},
     #    {'name': 'Restaura', 'url':'/load/',},

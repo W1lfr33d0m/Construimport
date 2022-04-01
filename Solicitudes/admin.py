@@ -4,6 +4,7 @@ from hashlib import new
 from importlib import import_module
 from msilib.schema import Verb
 from multiprocessing.sharedctypes import Value
+from tkinter import Widget
 from urllib import request
 from django.contrib import admin
 #from django import forms
@@ -23,21 +24,24 @@ from django.utils.html import format_html
 from django.urls import reverse, URLPattern, URLResolver, get_urlconf, set_urlconf
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from notifications.signals import notify
 from django.forms import forms, formset_factory
 from django.contrib import messages
+
 # Register your models here.
 
 
 admin.site.register(Solicitud_Producto)
-class Solicitud_ProductoInline(admin.StackedInline):
+class Solicitud_ProductoInlineAdmin(admin.TabularInline):
     model = Solicitud_Producto
     fk_name = 'numsolicitud'
     extra = 1
-    Autocomplete_fields = ['idproducto', ]
+    fields = ('idproducto', 'cantidad')
+    Autocomplete_fields = ['productos', ]
+    verbose_name = 'Productos'
     
 
 
@@ -64,7 +68,7 @@ class SolicitudResource(resources.ModelResource):
     productos = fields.Field(
         column_name='productos',
         attribute='productos',
-        widget = ForeignKeyWidget(Solicitud_Producto, 'idproducto')
+        widget = ManyToManyWidget(Solicitud_Producto, 'idproducto', 'cantidad')
         
     )
     
@@ -82,7 +86,6 @@ class SolicitudResource(resources.ModelResource):
                           'fechasol'
                           )
         fields = (
-                  'numsolicitud', 
                   'numcontratocliente', 
                   'cantidad',
                   'numcontratoproveedor', 
@@ -95,7 +98,8 @@ class SolicitudResource(resources.ModelResource):
 @admin.register(Solicitud)
 class SolicitudAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
-    inlines = [Solicitud_ProductoInline,]
+   
+    inlines = (Solicitud_ProductoInlineAdmin,)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -103,15 +107,16 @@ class SolicitudAdmin(ImportExportModelAdmin):
                    'estado', 
                    'edit_link'
                    )
+    raw_id_fields = ('productos',)
     #list_filter = (
     #              'numsolicitud', 
     #              'idproducto'
     #              )
-    filter_horizontal = ('productos', )
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        #form.base_fields['fechasol', ].disabled = True
+        fields = ['numcontratocliente', 'estado', 'productos']
+        #form.base_fields['fechasol' ].readonly = True
         form.base_fields['numcontratocliente'].widget.can_add_related = False
         form.base_fields['numcontratocliente'].widget.can_delete_related = False
         #form.base_fields['productos'].widget.can_add_related = False
@@ -119,15 +124,12 @@ class SolicitudAdmin(ImportExportModelAdmin):
         #form.base_fields['idproducto'].widget.can_delete_related = False
         return form
     
-    def get_formset(self, request, obj=None, **kwargs):
-        formset = Solicitud_ProductoInline().get_formset(request, obj, **kwargs)
-        return formset
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return ['url']
-        else:
-            return []
+    
+    def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
+        return super().get_inline_formsets(request, formsets, inline_instances, obj)
+    
+                
+    #jazzmin_section_order = ('solicitud', 'Productos')
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
@@ -149,4 +151,5 @@ class RegistroControlSolicitudAdmin(admin.ModelAdmin):
         model = RegistroControlSolicitud
         skip_unchanged = True
         report_skipped = False
+        
     
