@@ -6,7 +6,7 @@ from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
-from .models import Cliente, Pais, Proveedor, Producto, EspecialistaCOMEX, Provincia, Proveedor_Producto
+from .models import Cliente, Pais, Proveedor, Producto, Provincia, Proveedor_Producto
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -101,22 +101,8 @@ class ProductoAdmin(ImportExportModelAdmin):
     resource_class = ProductoResource
     list_display = ('idproducto', 'nombreproducto', 'tipo', 'UM')
    
-class EspecialistaCOMEXResource(resources.ModelResource):
-    
-    class Meta:
-        model = EspecialistaCOMEX
-        skip_unchanged = True
-        report_skipped = False
-        fields = ('idespecialista', 'categoria')
+
         
-@admin.register(EspecialistaCOMEX)
-class EspecialistaCOMEXAdmin(ImportExportModelAdmin):
-    resource_class = EspecialistaCOMEXResource
-    list_display = ('idespecialista', 'categoria')
-    
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        form.base_fields['idespecialista'].widget.can_delete_related = False
-        return form
+
     
         

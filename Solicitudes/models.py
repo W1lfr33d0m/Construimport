@@ -28,7 +28,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
-from Nomencladores.models import Cliente, EspecialistaCOMEX, Pais, Producto, Proveedor
+from Nomencladores.models import Cliente, Pais, Producto, Proveedor
+from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import User, UserManager
 from django.utils.timezone import now
 

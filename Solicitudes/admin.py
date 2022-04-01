@@ -13,7 +13,8 @@ from attr import field
 from pydantic import Field
 from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
 from django.views.generic.base import TemplateView
-from Nomencladores.models import EspecialistaCOMEX, Producto, Cliente, Proveedor, Pais
+from Nomencladores.models import Producto, Cliente, Proveedor, Pais
+from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import Group, User, UserManager, GroupManager, PermissionsMixin
 from django.core.exceptions import ValidationError, PermissionDenied
 from ast import Raise
@@ -60,10 +61,11 @@ class SolicitudResource(resources.ModelResource):
     )
     
     idespecialista = fields.Field(
-        column_name= 'idespecialista',
-        attribute= 'idespecialista',
-        widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
+       column_name= 'idespecialista',
+       attribute= 'idespecialista',
+       widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
     )
+   
     
     productos = fields.Field(
         column_name='productos',
@@ -90,8 +92,8 @@ class SolicitudResource(resources.ModelResource):
                   'cantidad',
                   'numcontratoproveedor', 
                   'estado', 
-                  'idespecialista', 
                   'productos'
+                  'idespecialista'
                   )
     
 
