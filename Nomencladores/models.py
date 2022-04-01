@@ -23,7 +23,7 @@ from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator
 from django import forms
 from django.utils.text import slugify
-from django.contrib.auth.models import User 
+
 #from Solicitudes.models import Solicitud
 
 
@@ -182,34 +182,4 @@ class Proveedor_Producto(models.Model):
         db_table = 'proveedor_producto'
 
 
-class EspecialistaCOMEX(models.Model):
-    
-    PPA = 'PZ'
-    Equipo = 'EQ'
-    CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
-    name_validator = UnicodenameValidator()
-    
-    idespecialista = models.OneToOneField(
-                                          User, 
-                                          models.DO_NOTHING, 
-                                          primary_key=True, 
-                                          db_column='idespecialista', 
-                                          verbose_name='Usuario'
-                                          )
-    categoria = models.CharField(
-                                 max_length = 10, 
-                                 null= False, 
-                                 choices = CATEGORIA_CHOICES, 
-                                 default = PPA
-                                 )
-    
-    class Meta:
-        managed = True
-        verbose_name = _('Especialista COMEX')
-        verbose_name_plural = _('Especialistas COMEX')
-        db_table = 'especialista_comex'
-        
-    def __str__(self):
-        
-        return '{}'.format(self.idespecialista)
 
