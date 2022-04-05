@@ -9,7 +9,7 @@ from urllib import request
 from django.contrib import admin
 #from django import forms
 from django.shortcuts import render
-from attr import field
+from attr import attributes, field
 from pydantic import Field
 from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
 from django.views.generic.base import TemplateView
@@ -35,16 +35,31 @@ from django.contrib import messages
 # Register your models here.
 
 
-admin.site.register(Solicitud_Producto)
+class Solicitud_ProductoResource(resources.ModelResource):
+    
+    idproducto = fields.Field(
+        column_name = 'idproducto',
+        attribute = 'idproducto',
+        widget = ManyToManyWidget(Solicitud_Producto, 'idproducto')
+    )
+    
+#admin.site.register(Solicitud_ProductoResource)
+    
 class Solicitud_ProductoInlineAdmin(admin.TabularInline):
+    resource_class = Solicitud_ProductoResource
     model = Solicitud_Producto
     fk_name = 'numsolicitud'
     extra = 1
     fields = ('idproducto', 'cantidad')
     Autocomplete_fields = ['productos', ]
-    verbose_name = 'Productos'
+    verbose_name = 'Producto'
     
-
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_ProductoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'idproducto':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
 
 class SolicitudResource(resources.ModelResource):
     
@@ -109,7 +124,7 @@ class SolicitudAdmin(ImportExportModelAdmin):
                    'estado', 
                    'edit_link'
                    )
-    raw_id_fields = ('productos',)
+    #raw_id_fields = ('productos',)
     #list_filter = (
     #              'numsolicitud', 
     #              'idproducto'
@@ -122,10 +137,12 @@ class SolicitudAdmin(ImportExportModelAdmin):
         form.base_fields['numcontratocliente'].widget.can_add_related = False
         form.base_fields['numcontratocliente'].widget.can_delete_related = False
         #form.base_fields['productos'].widget.can_add_related = False
-        #form.base_fields['idproducto'].widget.can_add_related = False
-        #form.base_fields['idproducto'].widget.can_delete_related = False
+        #form.base_fields['productos'].widget.can_add_related = False
         return form
     
+    def save(self, request, obj=None):
+        messages.success(request, "La Solicitud se agregó correctamente")
+        return super().save(self, request)
     
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)

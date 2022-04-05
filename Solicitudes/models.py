@@ -91,7 +91,7 @@ class Solicitud(models.Model):
         'Producto', 
         through='Solicitud_Producto',
         through_fields=('numsolicitud', 'idproducto'), 
-        verbose_name = 'Productos'
+        verbose_name = 'Producto'
         )
     fechasol = models.DateField(
         default= date.today(), 

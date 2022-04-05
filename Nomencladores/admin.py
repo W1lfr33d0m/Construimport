@@ -1,4 +1,5 @@
 
+from tabnanny import verbose
 from django.contrib import admin
 from django.shortcuts import render
 from sqlalchemy import ForeignKey
@@ -11,6 +12,7 @@ from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, Widget
+from import_export.resources import *
 from django.forms import forms, formset_factory
 from django.contrib.auth.models import User
 
@@ -20,8 +22,9 @@ from django.contrib.auth.models import User
 class Proveedor_ProductoInLine(admin.TabularInline):
     model = Proveedor_Producto
     extra = 1
+    verbose_name = ('Producto')
 
-admin.site.register(Proveedor_Producto)
+#admin.site.register(Proveedor_Producto)
 
 class ProveedorResource(resources.ModelResource):
     
@@ -71,6 +74,7 @@ class PaisResource(resources.ModelResource):
     
 @admin.register(Pais)
 class PaisAdmin(ImportExportModelAdmin):
+    resource_class = PaisResource
     list_display = ('idpais', 'pais')
     
 class ProvinciaResource(resources.ModelResource):
@@ -79,12 +83,14 @@ class ProvinciaResource(resources.ModelResource):
         model = Provincia
         skip_unchanged = True
         report_skipped = False
-        fields = ('idprovincia', 'nombre', 'capital')
+        import_id_fields = ('codigoprovincia',)
+        fields = ('codigoprovincia', 'nombre', 'capital')
         
     
 @admin.register(Provincia)
 class ProvinciaAdmin(ImportExportModelAdmin):
-    list_display = ('idprovincia', 'nombre', 'capital')
+    resource_class = ProvinciaResource
+    list_display = ('codigoprovincia', 'nombre', 'capital')
     
 
 class ProductoResource(resources.ModelResource):
