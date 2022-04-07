@@ -116,22 +116,46 @@ class Producto(models.Model):
         
     def __str__(self):
         return '{}'.format(self.nombreproducto)
+
+
+class Datos(models.Model):
+    identificador = models.IntegerField(primary_key=True, max_length=4),
+    direccion = models.TextField(max_length=60, verbose_name='Dirección')
+    email = models.EmailField(verbose_name='Correo Eléctronico')
+    telefono = models.BigIntegerField(verbose_name='Teléfono')
+    contacto = models.TextField(verbose_name='Persona de Contacto')
     
-def validate_numcontratoproveedor(numcontratoproveedor):
-    if numcontratoproveedor <= 0 or numcontratoproveedor > 999999:
-         raise ValidationError(
-        _('%(numcontratoproveedor)s debe ser un valor mayor que cero y menor que 999999'),
-        params={'numcontratoproveedor': numcontratoproveedor},
-         )
+    class Meta:
+        abstract = True
+
+        
+class Sucursal_Cuba(Datos):
+    carnet_trabajo = models.TextField(verbose_name='Carnet de Trabajo')
     
+    class Meta:
+        verbose_name = _('Sucursal en Cuba')
+        managed = True
+        db_table = 'sucursal_cuba'
+        
+    
+class Casa_Matriz(Datos):
+    sitio_web = models.TextField(verbose_name='Página Web')
+     
+    class Meta:
+        verbose_name = _('Casa Matriz')
+        managed = True
+        db_table = 'casa_matriz' 
+
+
 class Proveedor(models.Model):
-    
+    Productor = 'Productor'
+    Comercializador = 'Comercializador'
+    TIPO_PROVEEDOR_CHOICES = [ (Productor, 'Productor'), (Comercializador, 'Comercializador')]
     name_validator = UnicodenameValidator()
-    
-    numcontratoproveedor = models.IntegerField(
+    codmincex = models.TextField(
                                                primary_key=True, 
-                                               verbose_name = 'Numero de Contrato', 
-                                               validators=[validate_numcontratoproveedor]
+                                               verbose_name = 'Código MINCEX', 
+                                               validators=[UnicodeCodeValidator]
                                                )
     nomproveedor = models.CharField(
                                     max_length=45, 
@@ -145,7 +169,7 @@ class Proveedor(models.Model):
                                verbose_name = 'País'
                                )
     productos = models.ManyToManyField(
-                                       Producto, 
+                                       Producto,
                                        through= 'Proveedor_Producto', 
                                        db_column= 'idproducto', 
                                        verbose_name='Producto'
