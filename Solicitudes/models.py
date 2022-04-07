@@ -161,12 +161,13 @@ class Solicitud_Producto(models.Model):
     idproducto = models.ForeignKey(
         Producto, 
         models.CASCADE, 
-        db_column='idproducto'
+        db_column='idproducto',
+        verbose_name= 'Producto'
         )
-    numcontratoproveedor = models.ForeignKey(
+    codmincex = models.ForeignKey(
         Proveedor, 
         models.DO_NOTHING, 
-        db_column='numcontratoproveedor', 
+        db_column='codmincex', 
         blank=True, null=True, 
         verbose_name = 'Proveedor')
     cantidad = models.IntegerField(
@@ -194,7 +195,7 @@ class RegistroControlSolicitud(models.Model):
     numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
     idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
     fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
-    numcontratoproveedor = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='numcontratoproveedor', blank=True, null=True, verbose_name = 'Proveedor')
+    codmincex = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='codmincex', blank=True, null=True, verbose_name = 'Proveedor')
     cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
     estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
     
