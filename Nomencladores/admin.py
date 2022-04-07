@@ -7,7 +7,7 @@ from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
-from .models import Cliente, Pais, Proveedor, Producto, Provincia, Proveedor_Producto
+from .models import Cliente, Pais, Proveedor, Producto, Provincia, Proveedor_Producto, Sucursal_Cuba
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -24,10 +24,23 @@ class Proveedor_ProductoInLine(admin.TabularInline):
     extra = 1
     verbose_name = ('Producto')
 
-#admin.site.register(Proveedor_Producto)
+class Sucursal_CubaInline(admin.TabularInline):
+    model = Sucursal_Cuba
+    extra = 1
+    max_num = 1
+    verbose_name = 'Sucursal'
+    verbose_name_plural = 'Sucursal'
+
+
+class Casa_MatrizInline(admin.TabularInline):
+    model = Sucursal_Cuba
+    extra = 1
+    max_num = 1
+    verbose_name = 'Casa Matriz'
+    verbose_name_plural = 'Casa Matriz'
+
 
 class ProveedorResource(resources.ModelResource):
-    
     
     idpais = fields.Field(
         column_name='idpais', 
@@ -44,7 +57,7 @@ class ProveedorResource(resources.ModelResource):
 @admin.register(Proveedor)
 class ProveedorAdmin(ImportExportModelAdmin):
     resource_class = ProveedorResource
-    inlines = [Proveedor_ProductoInLine, ]
+    inlines = [Proveedor_ProductoInLine, Sucursal_CubaInline, Casa_MatrizInline]
     list_display = ('codmincex', 'nomproveedor', 'idpais', 'clasificacion')
     filter_horizontal = ['productos',]
     

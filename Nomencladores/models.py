@@ -129,25 +129,6 @@ class Datos(models.Model):
     class Meta:
         abstract = True
 
-        
-class Sucursal_Cuba(Datos):
-    carnet_trabajo = models.TextField(verbose_name='Carnet de Trabajo')
-    
-    class Meta:
-        verbose_name = _('Sucursal en Cuba')
-        managed = True
-        db_table = 'sucursal_cuba'
-        
-    
-class Casa_Matriz(Datos):
-    sitio_web = models.TextField(verbose_name='Página Web')
-     
-    class Meta:
-        verbose_name = _('Casa Matriz')
-        managed = True
-        db_table = 'casa_matriz' 
-
-
 class Proveedor(models.Model):
     
     code_validator = UnicodeCodeValidator
@@ -156,11 +137,12 @@ class Proveedor(models.Model):
     Comercializador = 'Comercializador'
     TIPO_PROVEEDOR_CHOICES = [ (Productor, 'Productor'), (Comercializador, 'Comercializador')]
     name_validator = UnicodenameValidator()
-    codmincex = models.TextField(
-                                               primary_key=True, 
-                                               verbose_name = 'Código MINCEX', 
-                                               validators=[code_validator]
-                                               )
+    codmincex = models.CharField(
+                                 max_length=8,
+                                 primary_key=True, 
+                                 verbose_name = 'Código MINCEX', 
+                                 validators=[code_validator]
+                                 )
     nomproveedor = models.CharField(
                                     max_length=45, 
                                     validators=[name_validator], 
@@ -185,11 +167,6 @@ class Proveedor(models.Model):
                                        verbose_name = 'Clasificación'
                                     )
     
-    sucursal_cuba = models.ManyToManyField(
-                                           Sucursal_Cuba,
-                                           through= 'Proveedor_Sucursal',
-                                           )
-    
     class Meta:
         managed = True
         verbose_name = _('Proveedor')
@@ -201,14 +178,49 @@ class Proveedor(models.Model):
         
         return '{}'.format(self.nomproveedor)
     
+class Sucursal_Cuba(Datos):
+       
+    carnet_trabajo = models.TextField(
+                                      verbose_name='Carnet de Trabajo'
+                                      )
+    
+    proveedor = models.ForeignKey(
+                                  Proveedor,
+                                  models.CASCADE,
+                                  db_column='codmincex',
+                                  verbose_name='Sucursal en Cuba'
+    )
+    
+    class Meta:
+        verbose_name = _('Sucursal en Cuba')
+        managed = True
+        db_table = 'sucursal_cuba'
+        
+    
+class Casa_Matriz(Datos):
+    sitio_web = models.TextField(verbose_name='Página Web')
+    
+    proveedor = models.ForeignKey(
+                                  Proveedor,
+                                  models.CASCADE,
+                                  db_column='codmincex',
+                                  verbose_name='Casa Matriz'
+    )
+     
+    class Meta:
+        verbose_name = _('Casa Matriz')
+        managed = True
+        db_table = 'casa_matriz' 
+    
 class Proveedor_Producto(models.Model):
     
-    numcontratoproveedor = models.ForeignKey(
-                                             Proveedor, 
-                                             models.CASCADE, 
-                                             db_column='numcontratoproveedor', 
-                                             verbose_name = 'Proveedores'
-                                             )
+    codmincex = models.ForeignKey(
+                                  Proveedor, 
+                                  models.CASCADE, 
+                                  db_column='codmincex', 
+                                  verbose_name = 'Proveedores'
+                                  )
+    
     idproducto = models.ForeignKey(
                                    Producto, 
                                    models.CASCADE, 
@@ -219,15 +231,3 @@ class Proveedor_Producto(models.Model):
     class Meta:
         managed = True
         db_table = 'proveedor_producto'
-
-class Proveedor_Sucursal(models.Model):
-    identificador = models.ForeignKey(
-                                      Sucursal_Cuba,
-                                      models.CASCADE
-                                      )
-    
-    codmincex = models.ForeignKey(
-                                  Proveedor,
-                                  models.CASCADE
-                                  )
-
