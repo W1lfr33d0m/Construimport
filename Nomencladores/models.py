@@ -183,7 +183,12 @@ class Proveedor(models.Model):
                                        choices = TIPO_PROVEEDOR_CHOICES,
                                        default = Productor,
                                        verbose_name = 'Clasificación'
-    )
+                                    )
+    
+    sucursal_cuba = models.ManyToManyField(
+                                           Sucursal_Cuba,
+                                           through= 'Proveedor_Sucursal',
+                                           )
     
     class Meta:
         managed = True
@@ -215,5 +220,14 @@ class Proveedor_Producto(models.Model):
         managed = True
         db_table = 'proveedor_producto'
 
-
+class Proveedor_Sucursal(models.Model):
+    identificador = models.ForeignKey(
+                                      Sucursal_Cuba,
+                                      models.CASCADE
+                                      )
+    
+    codmincex = models.ForeignKey(
+                                  Proveedor,
+                                  models.CASCADE
+                                  )
 

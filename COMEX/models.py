@@ -44,3 +44,7 @@ class EspecialistaCOMEX(models.Model):
     def __str__(self):
         
         return '{}'.format(self.idespecialista)
+    
+class SolicitudOferta(models.Model):
+    
+    idnumoferta = models.IntegerField(primary_key=True)
