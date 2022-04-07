@@ -40,3 +40,11 @@ class UnicodenameValidator(validators.RegexValidator):
         'Escriba correctamente el nombre '
     )
     flags = 0
+    
+@deconstructible
+class UnicodeCodeValidator(validators.RegexValidator):
+    regex = r'^[A-Z]+\Z' '-' r'^[0-9]+\Z'
+    message = _(
+        'Escriba correctamente el codigo '
+    )
+    flags = 0

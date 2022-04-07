@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from email.policy import default
 import os
 from pyexpat import model
 from random import choices
@@ -20,7 +21,7 @@ from django.core.exceptions import ValidationError
 from numpy import save
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.validators import UnicodenameValidator
+from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
 from django import forms
 from django.utils.text import slugify
 
@@ -148,6 +149,9 @@ class Casa_Matriz(Datos):
 
 
 class Proveedor(models.Model):
+    
+    code_validator = UnicodeCodeValidator
+    
     Productor = 'Productor'
     Comercializador = 'Comercializador'
     TIPO_PROVEEDOR_CHOICES = [ (Productor, 'Productor'), (Comercializador, 'Comercializador')]
@@ -155,7 +159,7 @@ class Proveedor(models.Model):
     codmincex = models.TextField(
                                                primary_key=True, 
                                                verbose_name = 'Código MINCEX', 
-                                               validators=[UnicodeCodeValidator]
+                                               validators=[code_validator]
                                                )
     nomproveedor = models.CharField(
                                     max_length=45, 
@@ -175,12 +179,18 @@ class Proveedor(models.Model):
                                        verbose_name='Producto'
                                        )
 
+    clasificacion = models.TextField(
+                                       choices = TIPO_PROVEEDOR_CHOICES,
+                                       default = Productor,
+                                       verbose_name = 'Clasificación'
+    )
+    
     class Meta:
         managed = True
         verbose_name = _('Proveedor')
         verbose_name_plural = _('Proveedores')
         db_table = 'proveedor'
-        unique_together = (('numcontratoproveedor', 'idpais'),)
+        unique_together = (('codmincex', 'idpais'),)
         
     def __str__(self):
         

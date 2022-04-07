@@ -38,15 +38,21 @@ class ProveedorResource(resources.ModelResource):
         model = Proveedor
         skip_unchanged = True
         report_skipped = False
-        import_id_fields = ('numcontratoproveedor',)
-        fields = ('numcontratoproveedor', 'nomproveedor', 'idpais', 'productos')
+        import_id_fields = ('codmincex',)
+        fields = ('codmincex', 'nomproveedor', 'idpais', 'productos', 'clasificacion')
 
 @admin.register(Proveedor)
 class ProveedorAdmin(ImportExportModelAdmin):
     resource_class = ProveedorResource
     inlines = [Proveedor_ProductoInLine, ]
-    list_display = ('numcontratoproveedor', 'nomproveedor', 'idpais')
+    list_display = ('codmincex', 'nomproveedor', 'idpais', 'clasificacion')
     filter_horizontal = ['productos',]
+    
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['idpais'].widget.can_add_related = False
+        
+        return form
     
     
         

@@ -4,6 +4,7 @@ from hashlib import new
 from importlib import import_module
 from msilib.schema import Verb
 from multiprocessing.sharedctypes import Value
+from tabnanny import verbose
 from tkinter import Widget
 from urllib import request
 from django.contrib import admin
@@ -52,7 +53,7 @@ class Solicitud_ProductoInlineAdmin(admin.TabularInline):
     extra = 1
     fields = ('idproducto', 'cantidad')
     Autocomplete_fields = ['productos', ]
-    verbose_name = 'Producto'
+    
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_ProductoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -69,9 +70,9 @@ class SolicitudResource(resources.ModelResource):
         widget= ForeignKeyWidget(Cliente, 'nomcliente')
     )
     
-    numcontratoproveedor = fields.Field(
-        column_name= 'numcontratoproveedor',
-        attribute= 'numcontratoproveedor',
+    codmincex = fields.Field(
+        column_name= 'codmincex',
+        attribute= 'codmincex',
         widget= ForeignKeyWidget(Proveedor, 'nomproveedor')
     )
     
@@ -95,7 +96,7 @@ class SolicitudResource(resources.ModelResource):
         report_skipped = False
         import_id_fields = (
                             'numcontratocliente', 
-                            'numcontratoproveedor', 
+                            'codmincex', 
                             'productos'
                             )
         readonly_fields = (
@@ -105,7 +106,7 @@ class SolicitudResource(resources.ModelResource):
         fields = (
                   'numcontratocliente', 
                   'cantidad',
-                  'numcontratoproveedor', 
+                  'codmincex', 
                   'estado', 
                   'productos'
                   'idespecialista'
@@ -164,7 +165,7 @@ class SolicitudAdmin(ImportExportModelAdmin):
     
 @admin.register(RegistroControlSolicitud)
 class RegistroControlSolicitudAdmin(admin.ModelAdmin):
-    list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','numcontratoproveedor', 'estado') 
+    #list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','codmincex', 'estado') 
 
     class Meta:
         model = RegistroControlSolicitud
