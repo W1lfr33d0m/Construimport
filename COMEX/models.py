@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from Nomencladores.validators import UnicodenameValidator
+from Solicitudes.models import Solicitud, Solicitud_Producto
 from django.contrib.auth.models import User, Group 
 
 
@@ -47,4 +48,11 @@ class EspecialistaCOMEX(models.Model):
     
 class SolicitudOferta(models.Model):
     
-    idnumoferta = models.IntegerField(primary_key=True)
+    numoferta = models.IntegerField(
+                                      primary_key=True
+                                      )
+    
+    productos = models.ForeignKey(
+                                  Solicitud_Producto,
+                                  models.CASCADE,
+    )

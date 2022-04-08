@@ -110,6 +110,13 @@ class Solicitud(models.Model):
         blank=True, 
         verbose_name='Observaciones'
         )
+    
+    valor_estimado = models.FloatField(
+                                       max_length= 10,
+                                       null= False,
+                                       verbose_name= 'Valor Estimado',
+                                       )
+    
     idespecialista = models.ForeignKey(
         EspecialistaCOMEX, 
         models.DO_NOTHING, 
@@ -168,8 +175,11 @@ class Solicitud_Producto(models.Model):
         Proveedor, 
         models.DO_NOTHING, 
         db_column='codmincex', 
-        blank=True, null=True, 
-        verbose_name = 'Proveedor')
+        blank=True, 
+        null=True, 
+        verbose_name = 'Proveedor'
+        )
+    
     cantidad = models.IntegerField(
         blank=False, 
         null=False, 

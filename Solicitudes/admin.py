@@ -44,6 +44,12 @@ class Solicitud_ProductoResource(resources.ModelResource):
         widget = ManyToManyWidget(Solicitud_Producto, 'idproducto')
     )
     
+    codmincex = fields.Field(
+                             column_name= 'codmincex',
+                             attribute= 'codmincex',
+                             widget= ManyToManyWidget(Solicitud_Producto, 'codmincex')
+                            )
+    
 #admin.site.register(Solicitud_ProductoResource)
     
 class Solicitud_ProductoInlineAdmin(admin.TabularInline):
@@ -51,16 +57,18 @@ class Solicitud_ProductoInlineAdmin(admin.TabularInline):
     model = Solicitud_Producto
     fk_name = 'numsolicitud'
     extra = 1
-    fields = ('idproducto', 'cantidad')
+    fields = ('idproducto', 'cantidad', 'codmincex')
     Autocomplete_fields = ['productos', ]
-    
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_ProductoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'idproducto':
+        if db_field.name == 'idproducto' or db_field.name == 'codmincex':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
+    
+    
+    
 
 class SolicitudResource(resources.ModelResource):
     
@@ -87,8 +95,9 @@ class SolicitudResource(resources.ModelResource):
         column_name='productos',
         attribute='productos',
         widget = ManyToManyWidget(Solicitud_Producto, 'idproducto', 'cantidad')
-        
     )
+    
+    
     
     class Meta:
         model = Solicitud
@@ -107,6 +116,7 @@ class SolicitudResource(resources.ModelResource):
                   'numcontratocliente', 
                   'cantidad',
                   'codmincex', 
+                  'valor_estimado',
                   'estado', 
                   'productos'
                   'idespecialista'
@@ -116,20 +126,19 @@ class SolicitudResource(resources.ModelResource):
 @admin.register(Solicitud)
 class SolicitudAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
-   
+    #productos_display = Solicitud_ProductoInlineAdmin.productos_display
+    
     inlines = (Solicitud_ProductoInlineAdmin,)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
                    'fechasol', 
-                   'estado', 
+                   'estado',
+                   'valor_estimado',
                    'edit_link'
                    )
-    #raw_id_fields = ('productos',)
-    #list_filter = (
-    #              'numsolicitud', 
-    #              'idproducto'
-    #              )
+    
+    filter_horizontal = ('productos', )    
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -140,6 +149,7 @@ class SolicitudAdmin(ImportExportModelAdmin):
         #form.base_fields['productos'].widget.can_add_related = False
         #form.base_fields['productos'].widget.can_add_related = False
         return form
+    
     
     def save(self, request, obj=None):
         messages.success(request, "La Solicitud se agregó correctamente")

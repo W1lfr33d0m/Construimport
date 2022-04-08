@@ -135,7 +135,7 @@ class Proveedor(models.Model):
     
     Productor = 'Productor'
     Comercializador = 'Comercializador'
-    TIPO_PROVEEDOR_CHOICES = [ (Productor, 'Productor'), (Comercializador, 'Comercializador')]
+    TIPO_PROVEEDOR_CHOICES = [(Productor, 'Productor'), (Comercializador, 'Comercializador')]
     name_validator = UnicodenameValidator()
     codmincex = models.CharField(
                                  max_length=8,
