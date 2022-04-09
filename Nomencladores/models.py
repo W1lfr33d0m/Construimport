@@ -157,7 +157,6 @@ class Proveedor(models.Model):
     productos = models.ManyToManyField(
                                        Producto,
                                        through= 'Proveedor_Producto', 
-                                       db_column= 'idproducto', 
                                        verbose_name='Producto'
                                        )
 
@@ -166,6 +165,7 @@ class Proveedor(models.Model):
                                        default = Productor,
                                        verbose_name = 'Clasificación'
                                     )
+    
     
     class Meta:
         managed = True

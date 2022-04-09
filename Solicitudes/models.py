@@ -88,9 +88,7 @@ class Solicitud(models.Model):
         )
     productos = models.ManyToManyField(
         Producto,
-        'Producto', 
         through='Solicitud_Producto',
-        through_fields=('numsolicitud', 'idproducto'), 
         verbose_name = 'Producto'
         )
     fechasol = models.DateField(
@@ -112,10 +110,10 @@ class Solicitud(models.Model):
         )
     
     valor_estimado = models.FloatField(
-                                       max_length= 10,
-                                       null= False,
-                                       verbose_name= 'Valor Estimado',
-                                       )
+        max_length= 10,
+        null= False,
+        verbose_name= 'Valor Estimado',
+        )
     
     idespecialista = models.ForeignKey(
         EspecialistaCOMEX, 
@@ -128,18 +126,7 @@ class Solicitud(models.Model):
     #tag = TaggableManager()
     #@receiver(pre_delete)
     
-    def get_estado(self):
-       return self.estado
-       
-    
-    def delete(self, *args, **kwargs):
-        if self.aprobada == True:
-            RedirectView.as_view(url=('Solicitudes/solicitud'))
-            raise PermissionDenied(('No puede eliminar una solicitud aprobada'), )   
-        else:
-            super().delete(*args, **kwargs)
-            
-    
+   
     def has_change_permission(self, *args, **kwargs):
         if self.estado == 'Aprobada' or self.estado == 'Denegada':
             return False
@@ -163,21 +150,17 @@ class Solicitud_Producto(models.Model):
     numsolicitud = models.ForeignKey(
         Solicitud, 
         models.CASCADE, 
-        db_column='numsolicitud'
+        db_column='numsolicitud',
         )
     idproducto = models.ForeignKey(
         Producto, 
         models.CASCADE, 
         db_column='idproducto',
-        verbose_name= 'Producto'
+        verbose_name= 'Producto',
         )
-    codmincex = models.ForeignKey(
-        Proveedor, 
-        models.DO_NOTHING, 
-        db_column='codmincex', 
-        blank=True, 
-        null=True, 
-        verbose_name = 'Proveedor'
+    codmincex = models.ManyToManyField(
+        Proveedor,
+        verbose_name = 'Proveedor',
         )
     
     cantidad = models.IntegerField(
