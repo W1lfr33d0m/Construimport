@@ -3,7 +3,9 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from Nomencladores.validators import UnicodenameValidator
-from Solicitudes.models import Solicitud, Solicitud_Producto
+#from django.db.models import apps
+#Solicitud_Producto = apps.get_model('Solicitud', 'Solicitud_Producto')
+#from Solicitudes.models import Solicitud, Solicitud_Producto
 from django.contrib.auth.models import User, Group 
 
 
@@ -14,12 +16,16 @@ from django.contrib.auth.models import User, Group
 #        params={'idespecialista': idespecialista},
 #        ) 
 
+
+         
+
 class EspecialistaCOMEX(models.Model):
     
     PPA = 'PZ'
     Equipo = 'EQ'
     CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
     name_validator = UnicodenameValidator()
+    
     
     idespecialista = models.OneToOneField(
                                           User, 
@@ -53,6 +59,8 @@ class SolicitudOferta(models.Model):
                                       )
     
     productos = models.ForeignKey(
-                                  Solicitud_Producto,
+                                  "Solicitudes.Solicitud_Producto",
                                   models.CASCADE,
-    )
+                                  related_name= 'Productos',
+                                  db_column='idproducto',  
+                                 )

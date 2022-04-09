@@ -56,13 +56,13 @@ class Solicitud_ProductoInlineAdmin(admin.TabularInline):
     resource_class = Solicitud_ProductoResource
     model = Solicitud_Producto
     fk_name = 'numsolicitud'
-    extra = 1
+    extra = 2
     fields = ('idproducto', 'cantidad', 'codmincex')
     Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_ProductoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'idproducto' or db_field.name == 'codmincex':
+        if db_field.name == 'idproducto' or db_field.name == 'codmincex' or db_field.name == 'proveedor':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
@@ -152,7 +152,11 @@ class SolicitudAdmin(ImportExportModelAdmin):
     
     
     def save(self, request, obj=None):
-        messages.success(request, "La Solicitud se agregó correctamente")
+        try:
+            messages.success(request, "La Solicitud se agregó correctamente")
+            super(Solicitud, self).save_model(request, obj)
+        except:
+            message.error(request, "Error agregando Solicitud")
         return super().save(self, request)
     
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
