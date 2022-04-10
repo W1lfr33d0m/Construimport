@@ -41,7 +41,7 @@ class Almacen(models.Model):
         db_table = 'almacen'
         
 class  Provincia(models.Model):
-    codigoprovincia = models.CharField(max_length=3, primary_key=True, unique=True)
+    codigoprovincia = models.CharField(max_length=3, primary_key=True, unique=True, verbose_name='Abreviatura')
     nombre = models.CharField(max_length=100)
     capital =  models.CharField(max_length=100, blank=True, null=True)
 

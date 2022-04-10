@@ -18,13 +18,16 @@ SET row_security = off;
 
 ALTER TABLE ONLY public.taggit_taggeditem DROP CONSTRAINT taggit_taggeditem_tag_id_f4f5b767_fk_taggit_tag_id;
 ALTER TABLE ONLY public.taggit_taggeditem DROP CONSTRAINT taggit_taggeditem_content_type_id_9957a03c_fk_django_co;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_fk_solicitud;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_idproducto_a7faf533_fk_producto_idproducto;
 ALTER TABLE ONLY public.reports_savedreport DROP CONSTRAINT reports_savedreport_run_by_id_0e49a3ac_fk_auth_user_id;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT proveedor;
+ALTER TABLE ONLY public.solicitud DROP CONSTRAINT productos;
+ALTER TABLE ONLY public.solicitud_oferta DROP CONSTRAINT productos;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_target_content_type__ccb24d88_fk_django_co;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_recipient_id_d055f3f0_fk_auth_user;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_actor_content_type_i_0c69d7b7_fk_django_co;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_action_object_conten_7d2b8ee9_fk_django_co;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT idproducto;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT idproducto;
 ALTER TABLE ONLY public.especialista_comex DROP CONSTRAINT idespecialista;
 ALTER TABLE ONLY public.proveedor_sucursal DROP CONSTRAINT identificador;
@@ -32,9 +35,11 @@ ALTER TABLE ONLY public.proveedor DROP CONSTRAINT fk_table1_pais1;
 ALTER TABLE ONLY public.factura_proveedor DROP CONSTRAINT fk_proveedor_has_producto_producto1;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT codmincex;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT codmincex;
 ALTER TABLE ONLY public.proveedor_sucursal DROP CONSTRAINT codmincex;
 ALTER TABLE ONLY public.solicitud DROP CONSTRAINT cliente;
+ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm;
 ALTER TABLE ONLY public.auth_user_groups DROP CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id;
@@ -74,6 +79,8 @@ DROP INDEX public.dashboard_stats_graph_key_4256e63f_like;
 DROP INDEX public.dashboard_stats_default_multiseries_criteria_id_1c00740c;
 DROP INDEX public.dash_stats_criteria_criteria_name_7fe7ae1e_like;
 DROP INDEX public.dash_stats_criteria_criteria_name_7fe7ae1e;
+DROP INDEX public.casa_matriz_codmincex_bd5fc4f6_like;
+DROP INDEX public.casa_matriz_codmincex_bd5fc4f6;
 DROP INDEX public.auth_user_username_6821ab7c_like;
 DROP INDEX public.auth_user_user_permissions_user_id_a95ead1b;
 DROP INDEX public.auth_user_user_permissions_permission_id_1fbb5f2c;
@@ -91,7 +98,11 @@ ALTER TABLE ONLY public.taggit_tag DROP CONSTRAINT taggit_tag_pkey;
 ALTER TABLE ONLY public.taggit_tag DROP CONSTRAINT taggit_tag_name_key;
 ALTER TABLE ONLY public.sucursal_cuba DROP CONSTRAINT sucursal_cuba_pkey;
 ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_pkey;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_uniq;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_idproducto_a7faf533_uniq;
 ALTER TABLE ONLY public.solicitud DROP CONSTRAINT solicitud_pk;
+ALTER TABLE ONLY public.solicitud_oferta DROP CONSTRAINT solicitud_oferta_pk;
+ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT soicitud_producto_unique;
 ALTER TABLE ONLY public.reports_savedreport DROP CONSTRAINT reports_savedreport_pkey;
 ALTER TABLE ONLY public.provincia DROP CONSTRAINT provincia_pkey;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT proveedor_producto_pk;
@@ -105,6 +116,7 @@ ALTER TABLE ONLY public.cliente DROP CONSTRAINT pk_cliente;
 ALTER TABLE ONLY public.almacen DROP CONSTRAINT pk_almacen;
 ALTER TABLE ONLY public.proveedor_sucursal DROP CONSTRAINT p_s_pk;
 ALTER TABLE ONLY public.solicitud DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.solicitud_oferta DROP CONSTRAINT numoferta;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notification_pkey;
 ALTER TABLE ONLY public.proveedor DROP CONSTRAINT nomproveedor;
 ALTER TABLE ONLY public.producto DROP CONSTRAINT nombreproducto;
@@ -119,6 +131,7 @@ ALTER TABLE ONLY public.dashboard_stats DROP CONSTRAINT dashboard_stats_graph_ke
 ALTER TABLE ONLY public.dash_stats_criteria DROP CONSTRAINT dash_stats_criteria_pkey;
 ALTER TABLE ONLY public.datos DROP CONSTRAINT contacto_pk;
 ALTER TABLE ONLY public.provincia DROP CONSTRAINT codigoprovincia;
+ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_pkey;
 ALTER TABLE ONLY public.auth_user DROP CONSTRAINT auth_user_username_key;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_pkey;
@@ -166,6 +179,7 @@ DROP SEQUENCE public.taggit_tag_id_seq;
 DROP TABLE public.taggit_tag;
 DROP TABLE public.sucursal_cuba;
 DROP TABLE public.solicitud_producto;
+DROP TABLE public.solicitud_oferta;
 DROP TABLE public.solicitud;
 DROP SEQUENCE public.reports_savedreport_id_seq;
 DROP TABLE public.reports_savedreport;
@@ -195,6 +209,7 @@ DROP TABLE public.dashboard_stats;
 DROP SEQUENCE public.dash_stats_criteria_id_seq;
 DROP TABLE public.dash_stats_criteria;
 DROP TABLE public.cliente;
+DROP TABLE public.casa_matriz;
 DROP SEQUENCE public.auth_user_user_permissions_id_seq;
 DROP TABLE public.auth_user_user_permissions;
 DROP SEQUENCE public.auth_user_id_seq;
@@ -638,6 +653,25 @@ ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO const;
 
 ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
 
+
+--
+-- Name: casa_matriz; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.casa_matriz (
+    identificador integer NOT NULL,
+    direccion text NOT NULL,
+    email text NOT NULL,
+    telefono integer NOT NULL,
+    contacto text NOT NULL,
+    id integer,
+    sitio_web character varying,
+    proveedor character varying,
+    codmincex character varying(8) NOT NULL
+);
+
+
+ALTER TABLE public.casa_matriz OWNER TO postgres;
 
 --
 -- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
@@ -1164,9 +1198,9 @@ COMMENT ON COLUMN public.producto.nombreproducto IS 'TRIAL';
 CREATE TABLE public.proveedor (
     nomproveedor character varying(45) NOT NULL,
     idpais character varying(3) NOT NULL,
-    productos integer[] NOT NULL,
     codmincex character varying(8) NOT NULL,
-    clasificacion text NOT NULL
+    clasificacion text NOT NULL,
+    productos integer
 );
 
 
@@ -1199,7 +1233,8 @@ COMMENT ON COLUMN public.proveedor.idpais IS 'TRIAL';
 
 CREATE TABLE public.proveedor_producto (
     idproducto integer NOT NULL,
-    codmincex character varying(8) NOT NULL
+    codmincex character varying(8) NOT NULL,
+    id integer
 );
 
 
@@ -1224,7 +1259,8 @@ ALTER TABLE public.proveedor_sucursal OWNER TO postgres;
 CREATE TABLE public.provincia (
     nombre character varying NOT NULL,
     capital character varying NOT NULL,
-    codigoprovincia character varying(3) NOT NULL
+    codigoprovincia character varying(3) NOT NULL,
+    id integer
 );
 
 
@@ -1294,7 +1330,9 @@ CREATE TABLE public.solicitud (
     numcontratocliente bigint NOT NULL,
     estado character varying NOT NULL,
     idespecialista integer,
-    observaciones text
+    observaciones text,
+    valor_estimado money NOT NULL,
+    productos integer
 );
 
 
@@ -1316,13 +1354,27 @@ ALTER TABLE public.solicitud ALTER COLUMN numsolicitud ADD GENERATED BY DEFAULT 
 
 
 --
+-- Name: solicitud_oferta; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_oferta (
+    numoferta integer NOT NULL,
+    productos integer NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_oferta OWNER TO postgres;
+
+--
 -- Name: solicitud_producto; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.solicitud_producto (
     numsolicitud integer NOT NULL,
     idproducto integer NOT NULL,
-    cantidad integer NOT NULL
+    cantidad integer NOT NULL,
+    codmincex character varying,
+    id integer
 );
 
 
@@ -1721,8 +1773,8 @@ COPY public.auth_group (id, name) FROM stdin;
 4	Director Desarrollo
 8	Especialista COMEX
 5	supervisor
-7	Director COMEX
 3	Especialista Marketing
+7	Director COMEX
 \.
 
 
@@ -1877,6 +1929,8 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 535	3	337
 536	3	353
 537	3	361
+538	3	349
+539	7	108
 \.
 
 
@@ -2259,11 +2313,11 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
 65	pbkdf2_sha256$320000$QA56N9hfcBXXiTfCu6kEPC$Co/wNAmQiHvQa664ewgWzfq6wkkxfv6yBzT2LS4BTTc=	2022-03-20 18:03:09.429783-04	f	cecilia.valdes	Cecilia	Valdes Rodriguez		t	t	2022-03-20 17:49:02.521352-04
 66	pbkdf2_sha256$320000$pUhAEPeFfjFjboromojwno$L/jhxtNPixvZ4lUD2EqyMPVVUDzqjnKjAoWZ8ePDyS0=	\N	f	roberto.garcia	Roberto	García Marrero		t	t	2022-03-21 14:13:09.13163-04
-60	pbkdf2_sha256$320000$H2Ukt52h45iphVouuie1hE$wgmHUJeZeDPLXKoNm3FXJZej/FLKoPRgKgnf9iHb+2k=	2022-03-18 08:47:21.282608-04	f	director_desarrollo	Ana	Rodriguez Perez		t	t	2022-02-05 12:35:55.86176-05
-64	pbkdf2_sha256$320000$08xEuZ8lsMHksO5L316zkw$vYzDuvObRxTG4lxr7ryJxG2do6UJ5pAKb2X5TQ2Lhbc=	2022-04-01 11:40:42.989647-04	f	director_comex	Cecilia	Lopez Hernandez		t	t	2022-03-20 12:07:42.988552-04
-59	pbkdf2_sha256$320000$1XOywMPWL0xse2x6ePX1rk$LMuYbHso7Mmtyk0buoZs5MKVqsu/t2lXIdltqVgjxNY=	2022-04-03 17:27:58.207962-04	t	admin	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-02-04 21:15:08.37-05
-61	pbkdf2_sha256$320000$y6b6IqgBHKHLbutJfmCDBN$k9DEXHZb0+o4o7UXtfW2qa7mJDjGmmRTqGMufQvYgac=	2022-04-07 14:27:25.818334-04	f	supervisor	Wilfredo	Ferreira Rabí		t	t	2022-02-08 23:36:02.741995-05
-40	pbkdf2_sha256$320000$dW1yo6VBZFD6uzj9CErZn2$I3hpORHscXCmV7RxN1X6BYbpxB0/Jt6eTt3RbQiS2D0=	2022-04-07 14:27:36.023786-04	f	Marketing	Maria	Perez Fernandez		t	t	2022-01-28 09:05:38.381-05
+61	pbkdf2_sha256$320000$y6b6IqgBHKHLbutJfmCDBN$k9DEXHZb0+o4o7UXtfW2qa7mJDjGmmRTqGMufQvYgac=	2022-04-09 10:11:31.628302-04	f	supervisor	Wilfredo	Ferreira Rabí		t	t	2022-02-08 23:36:02.741995-05
+59	pbkdf2_sha256$320000$1XOywMPWL0xse2x6ePX1rk$LMuYbHso7Mmtyk0buoZs5MKVqsu/t2lXIdltqVgjxNY=	2022-04-07 15:48:22.676909-04	t	admin	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-02-04 21:15:08.37-05
+40	pbkdf2_sha256$320000$dW1yo6VBZFD6uzj9CErZn2$I3hpORHscXCmV7RxN1X6BYbpxB0/Jt6eTt3RbQiS2D0=	2022-04-09 05:20:55.747856-04	f	Marketing	Maria	Perez Fernandez		t	t	2022-01-28 09:05:38.381-05
+60	pbkdf2_sha256$320000$H2Ukt52h45iphVouuie1hE$wgmHUJeZeDPLXKoNm3FXJZej/FLKoPRgKgnf9iHb+2k=	2022-04-09 09:52:57.45786-04	f	director_desarrollo	Ana	Rodriguez Perez		t	t	2022-02-05 12:35:55.86176-05
+64	pbkdf2_sha256$320000$08xEuZ8lsMHksO5L316zkw$vYzDuvObRxTG4lxr7ryJxG2do6UJ5pAKb2X5TQ2Lhbc=	2022-04-09 09:54:59.52534-04	f	director_comex	Cecilia	Lopez Hernandez		t	t	2022-03-20 12:07:42.988552-04
 \.
 
 
@@ -2287,6 +2341,14 @@ COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
 --
 
 COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: casa_matriz; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.casa_matriz (identificador, direccion, email, telefono, contacto, id, sitio_web, proveedor, codmincex) FROM stdin;
 \.
 
 
@@ -2643,6 +2705,12 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 764	2022-04-07 14:17:24.810141-04	68	john_doe	1	[{"added": {}}]	4	61
 765	2022-04-07 14:23:49.79344-04	68	john_doe	3		4	61
 766	2022-04-07 14:24:51.548047-04	594284043	Neumáticos R18	1	[{"added": {}}]	71	40
+767	2022-04-07 21:44:36.291383-04	220123	220123	1	[{"added": {}}, {"added": {"name": "Producto", "object": "Neum\\u00e1ticos R16"}}]	11	40
+768	2022-04-08 21:00:44.93514-04	220126	220126	1	[{"added": {}}, {"added": {"name": "Producto", "object": "Grua Kamaz"}}]	11	40
+769	2022-04-09 05:20:48.296936-04	3	Especialista Marketing	2	[{"changed": {"fields": ["Permissions"]}}]	3	61
+770	2022-04-09 06:31:56.23292-04	65	cecilia.valdes	1	[{"added": {}}]	87	64
+771	2022-04-09 06:32:05.152476-04	66	roberto.garcia	1	[{"added": {}}]	87	64
+772	2022-04-09 09:54:48.878612-04	7	Director COMEX	2	[{"changed": {"fields": ["Permissions"]}}]	3	61
 \.
 
 
@@ -2877,6 +2945,10 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 125	Nomencladores	0003_rename_idprovincia_provincia_codigoprovincia	2022-04-01 20:55:44.086462-04
 126	Solicitudes	0002_alter_solicitud_producto_idproducto	2022-04-07 05:32:40.146465-04
 127	COMEX	0002_solicitudoferta	2022-04-07 05:48:42.569563-04
+128	Nomencladores	0002_casa_matriz_proveedor	2022-04-08 05:11:31.967889-04
+129	Solicitudes	0002_alter_solicitud_producto_idproducto_and_more	2022-04-08 19:38:53.581345-04
+130	Solicitudes	0002_alter_solicitud_producto_codmincex	2022-04-08 22:02:57.277275-04
+131	Nomencladores	0002_alter_proveedor_productos	2022-04-09 05:59:46.505777-04
 \.
 
 
@@ -2916,7 +2988,7 @@ u5fz3nnwveyza7t1i7jqstpntyfh3hch	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765Nut
 kpa736tvfdr5b4g8yc4zhpu86hskin2h	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765NutDtf-_9lwi0rTVsnZcwZXEWVonT7xgpPbjtJN-p3WaZ5rYuU5S7Ig_a5XXO_Lwc7t9BpV6_tcYSHfpCbCIqHNDGTOiTS0DKFwejVoYASBu2NCTI1jEwWTuyB6XF-wMGTjfE:1nUwKE:yBdsoRHMsy50F4HeJr2M3dhtSuR8H6dcxa6lgnjaS-A	2022-03-31 16:02:22.709735-04
 vwi42w6vksozi221548k3nnyhoqa2c80	.eJxVjDsOwjAQBe_iGlmxN3YcSvqcIdr1W3AAJVI-FeLuECkFtG9m3sv0vK2l3xad-wHmbGJtTr-jcH7ouBPcebxNNk_jOg9id8UedLHdBH1eDvfvoPBSvvW1CtAQfQPS5KllUNUgChITfE21sFBWrsh759pIoW0AZBUXXGJv3h8O-jgl:1naJOE:jg93dKJJBmyOmIE4hDFueKlDCmloMnGy38kIKj4nBwY	2022-04-15 11:40:42.992178-04
 mrrxqqi68x3h7lwv1iowua81k80v6fcg	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765NutDtf-_9lwi0rTVsnZcwZXEWVonT7xgpPbjtJN-p3WaZ5rYuU5S7Ig_a5XXO_Lwc7t9BpV6_tcYSHfpCbCIqHNDGTOiTS0DKFwejVoYASBu2NCTI1jEwWTuyB6XF-wMGTjfE:1nXLmL:ipAKd_-aIbDVNnbDscJI9J6qVCGn61k768Rc0nf4eYE	2022-04-07 07:37:21.199439-04
-1sz9csbfdv3yo9rtnl2qqhl0fjf94mdv	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765NutDtf-_9lwi0rTVsnZcwZXEWVonT7xgpPbjtJN-p3WaZ5rYuU5S7Ig_a5XXO_Lwc7t9BpV6_tcYSHfpCbCIqHNDGTOiTS0DKFwejVoYASBu2NCTI1jEwWTuyB6XF-wMGTjfE:1ncWr2:0xuFj0XzicRXIrfVOPQrZ2nOP9TXrIftOdqDcfwN4fA	2022-04-21 14:27:36.023786-04
+sgunhycw27qj2vydiptxa4t1fszpi3pw	.eJxVjDEOwjAQBP_iGlmOz44JJT1viPZ8Bw6gRIqTCvF3iJQC2p2ZfZke61L6tercD2JOpm3M4Xdk5IeOG5E7xttk8zQu88B2U-xOq71Mos_z7v4dFNTyreEjOgTK_iiBk7hMLkbqOlbNPhGHDK-UHJwkCIhbcIA2_poCUTDvDxYYOHI:1ndBoJ:u-P8sy3okeVio7Qf1G2VcgosueYsMjjD8nQKb31EBnI	2022-04-23 10:11:31.628302-04
 \.
 
 
@@ -2925,6 +2997,8 @@ mrrxqqi68x3h7lwv1iowua81k80v6fcg	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765Nut
 --
 
 COPY public.especialista_comex (categoria, idespecialista) FROM stdin;
+EQ	65
+PZ	66
 \.
 
 
@@ -2986,7 +3060,7 @@ COPY public.producto (idproducto, nombreproducto, tipo, "UM") FROM stdin;
 -- Data for Name: proveedor; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.proveedor (nomproveedor, idpais, productos, codmincex, clasificacion) FROM stdin;
+COPY public.proveedor (nomproveedor, idpais, codmincex, clasificacion, productos) FROM stdin;
 \.
 
 
@@ -2994,7 +3068,7 @@ COPY public.proveedor (nomproveedor, idpais, productos, codmincex, clasificacion
 -- Data for Name: proveedor_producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.proveedor_producto (idproducto, codmincex) FROM stdin;
+COPY public.proveedor_producto (idproducto, codmincex, id) FROM stdin;
 \.
 
 
@@ -3010,8 +3084,8 @@ COPY public.proveedor_sucursal (identificador, codmincex) FROM stdin;
 -- Data for Name: provincia; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.provincia (nombre, capital, codigoprovincia) FROM stdin;
-Pinar del Río	Pinar del Río	PR
+COPY public.provincia (nombre, capital, codigoprovincia, id) FROM stdin;
+Pinar del Río	Pinar del Río	PR	\N
 \.
 
 
@@ -3035,7 +3109,16 @@ COPY public.reports_savedreport (id, date_modified, date_created, report, report
 -- Data for Name: solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.solicitud (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones) FROM stdin;
+COPY public.solicitud (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado, productos) FROM stdin;
+220126	2022-04-08	20220001	Pendiente	\N	qwss22s	$50,000.00	\N
+\.
+
+
+--
+-- Data for Name: solicitud_oferta; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_oferta (numoferta, productos) FROM stdin;
 \.
 
 
@@ -3043,7 +3126,8 @@ COPY public.solicitud (numsolicitud, fechasol, numcontratocliente, estado, idesp
 -- Data for Name: solicitud_producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.solicitud_producto (numsolicitud, idproducto, cantidad) FROM stdin;
+COPY public.solicitud_producto (numsolicitud, idproducto, cantidad, codmincex, id) FROM stdin;
+220126	647386006	5	\N	\N
 \.
 
 
@@ -3129,7 +3213,7 @@ SELECT pg_catalog.setval('public.auth_group_id_seq', 8, true);
 -- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 537, true);
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 539, true);
 
 
 --
@@ -3178,7 +3262,7 @@ SELECT pg_catalog.setval('public.dashboard_stats_id_seq', 2, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 766, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 772, true);
 
 
 --
@@ -3192,7 +3276,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 91, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 127, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 131, true);
 
 
 --
@@ -3220,7 +3304,7 @@ SELECT pg_catalog.setval('public.reports_savedreport_id_seq', 1, true);
 -- Name: solicitud_numsolicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.solicitud_numsolicitud_seq', 220110, true);
+SELECT pg_catalog.setval('public.solicitud_numsolicitud_seq', 220128, true);
 
 
 --
@@ -3381,6 +3465,14 @@ ALTER TABLE ONLY public.auth_user
 
 
 --
+-- Name: casa_matriz casa_matriz_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.casa_matriz
+    ADD CONSTRAINT casa_matriz_pkey PRIMARY KEY (identificador);
+
+
+--
 -- Name: provincia codigoprovincia; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3493,6 +3585,14 @@ ALTER TABLE ONLY public.notifications_notification
 
 
 --
+-- Name: solicitud_oferta numoferta; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_oferta
+    ADD CONSTRAINT numoferta UNIQUE (numoferta);
+
+
+--
 -- Name: solicitud numsolicitud; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3597,11 +3697,43 @@ ALTER TABLE ONLY public.reports_savedreport
 
 
 --
+-- Name: solicitud_producto soicitud_producto_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT soicitud_producto_unique UNIQUE (idproducto) INCLUDE (numsolicitud);
+
+
+--
+-- Name: solicitud_oferta solicitud_oferta_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_oferta
+    ADD CONSTRAINT solicitud_oferta_pk PRIMARY KEY (numoferta);
+
+
+--
 -- Name: solicitud solicitud_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.solicitud
     ADD CONSTRAINT solicitud_pk PRIMARY KEY (numsolicitud, numcontratocliente);
+
+
+--
+-- Name: solicitud_producto solicitud_producto_idproducto_a7faf533_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT solicitud_producto_idproducto_a7faf533_uniq UNIQUE (idproducto);
+
+
+--
+-- Name: solicitud_producto solicitud_producto_numsolicitud_a0709dd6_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_uniq UNIQUE (numsolicitud);
 
 
 --
@@ -3728,6 +3860,20 @@ CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_use
 --
 
 CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: casa_matriz_codmincex_bd5fc4f6; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX casa_matriz_codmincex_bd5fc4f6 ON public.casa_matriz USING btree (codmincex);
+
+
+--
+-- Name: casa_matriz_codmincex_bd5fc4f6_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX casa_matriz_codmincex_bd5fc4f6_like ON public.casa_matriz USING btree (codmincex varchar_pattern_ops);
 
 
 --
@@ -4011,6 +4157,14 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
+-- Name: casa_matriz casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.casa_matriz
+    ADD CONSTRAINT casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: solicitud cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -4031,7 +4185,15 @@ ALTER TABLE ONLY public.proveedor_sucursal
 --
 
 ALTER TABLE ONLY public.proveedor_producto
-    ADD CONSTRAINT codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex) NOT VALID;
+    ADD CONSTRAINT codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex);
+
+
+--
+-- Name: solicitud_producto codmincex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex);
 
 
 --
@@ -4091,14 +4253,6 @@ ALTER TABLE ONLY public.proveedor_producto
 
 
 --
--- Name: solicitud_producto idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT idproducto FOREIGN KEY (idproducto) REFERENCES public.producto(idproducto);
-
-
---
 -- Name: notifications_notification notifications_notifi_action_object_conten_7d2b8ee9_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
@@ -4131,11 +4285,27 @@ ALTER TABLE ONLY public.notifications_notification
 
 
 --
--- Name: solicitud_producto numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_oferta productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud(numsolicitud);
+ALTER TABLE ONLY public.solicitud_oferta
+    ADD CONSTRAINT productos FOREIGN KEY (productos) REFERENCES public.solicitud_producto(idproducto);
+
+
+--
+-- Name: solicitud productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud
+    ADD CONSTRAINT productos FOREIGN KEY (productos) REFERENCES public.solicitud_producto(idproducto);
+
+
+--
+-- Name: casa_matriz proveedor; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.casa_matriz
+    ADD CONSTRAINT proveedor FOREIGN KEY (proveedor) REFERENCES public.proveedor(codmincex);
 
 
 --
@@ -4144,6 +4314,22 @@ ALTER TABLE ONLY public.solicitud_producto
 
 ALTER TABLE ONLY public.reports_savedreport
     ADD CONSTRAINT reports_savedreport_run_by_id_0e49a3ac_fk_auth_user_id FOREIGN KEY (run_by_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: solicitud_producto solicitud_producto_idproducto_a7faf533_fk_producto_idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT solicitud_producto_idproducto_a7faf533_fk_producto_idproducto FOREIGN KEY (idproducto) REFERENCES public.producto(idproducto) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: solicitud_producto solicitud_producto_numsolicitud_a0709dd6_fk_solicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_producto
+    ADD CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_fk_solicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud(numsolicitud) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

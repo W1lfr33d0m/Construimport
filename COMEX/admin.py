@@ -1,5 +1,5 @@
 from unicodedata import name
-from django.db import connection
+from django.db import connection, reset_queries
 from requests import request
 import psycopg2
 from colorama import Cursor
@@ -32,8 +32,11 @@ class EspecialistaCOMEXAdmin(ImportExportModelAdmin):
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)   
         form.base_fields['idespecialista'].widget.can_delete_related = False
+        #usuario = 'SELECT * FROM auth_user'
+        #self.fields['idespecialista'].queryset = User.has_module_perms(usuario, app_label='COMEX', ) 
         return form
     
     #def __init__(self, *args, **kwargs):
-    #    super().__init__(*args, **kwargs)
-    #    self.fields['idespecialista'].queryset = User.has_module_perms(self, app_label='COMEX', ) 
+     #   super().__init__(*args, **kwargs)
+      #  user = 
+       # self.fields['idespecialista'].queryset = User.has_module_perms(user, app_label='COMEX', ) 
