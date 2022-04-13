@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'import_export',
     'easy_pdf',
+    'User',
     
     
 ]

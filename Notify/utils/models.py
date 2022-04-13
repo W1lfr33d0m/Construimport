@@ -1,5 +1,6 @@
 from ast import arguments
 from email.headerregistry import Group
+#from termios import VERASE
 from tkinter import N
 from django.db import models
 #ContentType
@@ -82,7 +83,8 @@ class AbstractNotification(models.Model):
     level = models.CharField(
         choices = Levels.LEVEL_CHOICES, 
         max_length=20, 
-        default=Levels.info
+        default=Levels.info,
+        verbose_name=('Tipo')
         )
     
     receiver = models.ForeignKey(
@@ -90,16 +92,20 @@ class AbstractNotification(models.Model):
         models.CASCADE, 
         related_name='notificaciones', 
         blank=True, 
-        null=True
+        null=True,
+        verbose_name=('Receptor')
         )
     
     actor_content_type = models.ForeignKey(
         ContentType, 
         related_name='notificar_actor', 
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        verbose_name=('Contenido')
         )
     
-    object_id_actor = models.PositiveBigIntegerField()
+    object_id_actor = models.PositiveBigIntegerField(
+        verbose_name=('Actor')
+    )
     
     actor = GenericForeignKey(
         'actor_content_type', 
@@ -108,32 +114,41 @@ class AbstractNotification(models.Model):
     
     verb = models.CharField(
         max_length= 220,
+        verbose_name=('Mensaje')
         )
     
     timestamp = models.DateTimeField(
         default=timezone.now,
         #deb_index = True
+        verbose_name = ('Fecha y Hora')
         )
     
     read = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name= ('Leída')
         )
     
     public_notification = models.BooleanField(
-        default=True
+        default=True,
+        verbose_name= ('Pública')
         )
     
     deleted = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name= ('Eliminada')
         )
         
     class Meta:
         abstract = True 
+    
+    #def __str__(self):
+    #		return "actor: {} --- receiver: {} --- verb: {} ".format(self.actor.username, self.receiver.username, self.verbo)
+
 
 
 def notify_signals(verb, **kwargs):
     """
-    Controlador para crear instancia de ntificación
+    Controlador para crear instancia de notificación
     tras llamada de señal de acción
     
     """
@@ -146,7 +161,8 @@ def notify_signals(verb, **kwargs):
     timestamp = kwargs.pop('timestamp', timezone.now())
     
     Notify = load_model('Notify', 'Notification')
-    levels = kwargs.pop('level', Notify.levels.info)
+    
+    level = kwargs.pop('level', Notify.level)
     
     if isinstance(receiver,Group):
         receiver = receiver.user_set.all()    
@@ -157,15 +173,16 @@ def notify_signals(verb, **kwargs):
         
     new_notification = []
     for r in receivers:
-        notification = notification(
+        notification = Notify(
             receiver = r,
-            actor_content_type = ContentType.objects.get_for_model('actor'),
+            actor_content_type = ContentType.objects.get_for_model(actor),
             object_id_actor = actor.pk,
             verb = str(verb),
-            public = public,
+            public_notification = public,
             timestamp = timestamp,
-            level = levels   
-            )
+            level = level   
+        
+        )
     
         notification.save()
         new_notification.append(notification)
