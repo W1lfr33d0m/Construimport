@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'COMEX',
     'Nomencladores',
     'Trazas',
-    'Notify',
     #'charts_dashboard',
     'djangobower',
     #'django_pdf',
@@ -59,8 +58,6 @@ INSTALLED_APPS = [
     'multiselectfield',
     'import_export',
     'easy_pdf',
-    'User',
-    
     
 ]
 
