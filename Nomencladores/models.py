@@ -41,7 +41,7 @@ class Almacen(models.Model):
         db_table = 'almacen'
         
 class  Provincia(models.Model):
-    codigoprovincia = models.CharField(max_length=3, primary_key=True, unique=True, verbose_name='Abreviatura')
+    codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura')
     nombre = models.CharField(max_length=100)
     capital =  models.CharField(max_length=100, blank=True, null=True)
 
@@ -61,7 +61,7 @@ class Cliente(models.Model):
     numcontratocliente = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
-    #idprovincia = models.ForeignKey(Provincia, models.CASCADE, db_column='idprovincia', verbose_name='Provincia')
+    provincia = models.ForeignKey(Provincia, models.CASCADE, db_column='provincia', verbose_name='Provincia')
 
     class Meta:
         managed = False
@@ -94,37 +94,95 @@ def validate_idproducto(idproducto):
 class Producto(models.Model):
     
     desc_validator = UnicodenameValidator
-    
-    PPA = 'PZ'
-    Equipo = 'EQ'
-    Batería = 'Batería'
-    Neumático = 'Neumático'
-    TIPO_PRODUCTO_CHOICES = [ (PPA, 'PPA'), (Equipo, 'Equipo'), (Batería, 'Batería'), (Neumático, 'Neumático')]
+
     U = 'U'
     SET = 'SET'
     UM = [(U, 'U'), (SET, 'SET')]
     idproducto = models.IntegerField(primary_key=True, verbose_name = 'Código')
-    nombreproducto = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
-    tipo = models.CharField(max_length = 10, null= False, choices = TIPO_PRODUCTO_CHOICES, default = PPA)
+    descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
     #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
     
     class Meta:
+        abstract = True
         verbose_name = _('Producto')
         verbose_name_plural = _('Productos')
         managed = True
         db_table = 'producto'
         
     def __str__(self):
-        return '{}'.format(self.nombreproducto)
+        return '{}'.format(self.descripcion)
 
+class Equipo(Producto):
+    
+    marca = models.CharField(
+        max_length=30
+    )
+    
+    modelo = models.CharField(
+        max_length=30
+    )
+    
+    class Meta:
+        verbose_name = _('Equipo')
+        verbose_name_plural = _('Equipos')
+        managed = True
+        db_table = 'equipo'
+        
+    def __str__(self):
+        return '{}'.format(self.descripcion)
+    
+class PPA(Producto):
+    
+    equipo = models.ForeignKey(
+        Equipo,
+        models.CASCADE,
+        #db_column='idproducto'
+    )
+
+    class Meta:
+        verbose_name = _('Pieza')
+        verbose_name_plural = _('Piezas')
+        managed = True
+        db_table = 'ppa'
+        
+class Neumatico(Producto):
+    diametro = models.FloatField(
+        max_length=4
+    )
+    
+    grosor = models.FloatField(
+        max_length=4
+    )
+
+    class Meta:
+        verbose_name = _('Neumático')
+        verbose_name_plural = _('Neumáticos')
+        managed = True
+        db_table = 'neumatico'
+        
+class Bateria(Producto):
+    voltaje = models.FloatField(
+        max_length=4
+    )
+    
+    amperaje = models.FloatField(
+        max_length= 4
+    )
+
+    class Meta:
+        verbose_name = _('Batería')
+        verbose_name_plural = _('Baterías')
+        managed = True
+        db_table = 'bateria'
+        
 
 class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, max_length=4),
-    direccion = models.TextField(max_length=60, verbose_name='Dirección')
+    direccion = models.CharField(max_length=100, verbose_name='Dirección')
     email = models.EmailField(verbose_name='Correo Eléctronico')
     telefono = models.BigIntegerField(verbose_name='Teléfono')
-    contacto = models.TextField(verbose_name='Persona de Contacto')
+    contacto = models.CharField(max_length=150, verbose_name='Persona de Contacto')
     
     class Meta:
         abstract = True
@@ -154,11 +212,7 @@ class Proveedor(models.Model):
                                db_column='idpais', 
                                verbose_name = 'País'
                                )
-    productos = models.ManyToManyField(
-                                       Producto,
-                                       through= 'Proveedor_Producto', 
-                                       verbose_name='Producto'
-                                       )
+    
 
     clasificacion = models.TextField(
                                        choices = TIPO_PROVEEDOR_CHOICES,
@@ -179,12 +233,15 @@ class Proveedor(models.Model):
         return '{}'.format(self.nomproveedor)
     
 class Sucursal_Cuba(Datos):
-       
-    carnet_trabajo = models.TextField(
-                                      verbose_name='Carnet de Trabajo'
+    
+    
+           
+    carnet_trabajo = models.CharField(
+                                      verbose_name='Carnet de Trabajo',
+                                      max_length= 200,
                                       )
     
-    proveedor = models.ForeignKey(
+    codmincex = models.ForeignKey(
                                   Proveedor,
                                   models.CASCADE,
                                   db_column='codmincex',
@@ -198,7 +255,9 @@ class Sucursal_Cuba(Datos):
         
     
 class Casa_Matriz(Datos):
-    sitio_web = models.TextField(verbose_name='Página Web')
+    
+    
+    sitio_web = models.CharField(max_length=60, verbose_name='Página Web')
     
     proveedor = models.ForeignKey(
                                   Proveedor,
@@ -212,22 +271,3 @@ class Casa_Matriz(Datos):
         managed = True
         db_table = 'casa_matriz' 
     
-class Proveedor_Producto(models.Model):
-    
-    codmincex = models.ForeignKey(
-                                  Proveedor, 
-                                  models.CASCADE, 
-                                  db_column='codmincex', 
-                                  verbose_name = 'Proveedores'
-                                  )
-    
-    idproducto = models.ForeignKey(
-                                   Producto, 
-                                   models.CASCADE, 
-                                   db_column='idproducto', 
-                                   verbose_name = 'Productos'
-                                   )
-    
-    class Meta:
-        managed = True
-        db_table = 'proveedor_producto'
