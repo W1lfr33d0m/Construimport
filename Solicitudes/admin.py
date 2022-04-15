@@ -12,7 +12,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from attr import attributes, field
 from pydantic import Field
-from .models import Solicitud, RegistroControlSolicitud, Solicitud_Producto
+from .models import Solicitud, Solicitud_Equipo_Proveedor,  Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_Bateria_Proveedor, Solicitud_Equipo, Solicitud_Equipo_Proxy, Solicitud_PPA, Solicitud_PPA_Proxy, Solicitud_Neumatico, Solicitud_Neumatico_Proxy,Solicitud_Bateria, Solicitud_Bateria_Proxy
 from django.views.generic.base import TemplateView
 from Nomencladores.models import Producto, Cliente, Proveedor, Pais
 from COMEX.models import EspecialistaCOMEX
@@ -32,43 +32,60 @@ from django.db.models.signals import post_save
 from notifications.signals import notify
 from django.forms import forms, formset_factory
 from django.contrib import messages
+from django.utils.translation import ngettext
 
 # Register your models here.
 
 
-class Solicitud_ProductoResource(resources.ModelResource):
-    
-    idproducto = fields.Field(
-        column_name = 'idproducto',
-        attribute = 'idproducto',
-        widget = ManyToManyWidget(Solicitud_Producto, 'idproducto')
-    )
-    
-    codmincex = fields.Field(
-                             column_name= 'codmincex',
-                             attribute= 'codmincex',
-                             widget= ManyToManyWidget(Solicitud_Producto, 'codmincex')
-                            )
-    
-#admin.site.register(Solicitud_ProductoResource)
-    
-class Solicitud_ProductoInlineAdmin(admin.TabularInline):
-    resource_class = Solicitud_ProductoResource
-    model = Solicitud_Producto
+
+class Solicitud_Equipo_ProveedorInlineAdmin(admin.StackedInline):
+    model =  Solicitud_Equipo_Proveedor
     fk_name = 'numsolicitud'
-    extra = 2
-    fields = ('idproducto', 'cantidad', 'codmincex')
-    Autocomplete_fields = ['productos', ]
+    extra = 1
+    fields = ('codmincex',)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_ProductoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'idproducto' or db_field.name == 'codmincex' or db_field.name == 'proveedor':
-            formfield.widget.can_add_related = False
-            formfield.widget.can_change_related = False
+        formfield = super(Solicitud_Equipo_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield.widget.can_add_related = False
+        formfield.widget.can_change_related = False
         return formfield
     
+class Solicitud_PPA_ProveedorInlineAdmin(admin.StackedInline):
+    model =  Solicitud_PPA_Proveedor
+    fk_name = 'numsolicitud'
+    extra = 1
+    fields = ('codmincex',)
     
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_PPA_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield.widget.can_add_related = False
+        formfield.widget.can_change_related = False
+        return formfield
+
+class Solicitud_Neumatico_ProveedorInlineAdmin(admin.StackedInline):
+    model =  Solicitud_Neumatico_Proveedor
+    fk_name = 'numsolicitud'
+    extra = 1
+    fields = ('codmincex',)
     
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_Neumatico_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield.widget.can_add_related = False
+        formfield.widget.can_change_related = False
+        return formfield
+
+class Solicitud_Bateria_ProveedorInlineAdmin(admin.StackedInline):
+    model =  Solicitud_Bateria_Proveedor
+    fk_name = 'numsolicitud'
+    extra = 1
+    fields = ('codmincex',)
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_Bateria_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield.widget.can_add_related = False
+        formfield.widget.can_change_related = False
+        return formfield
+
 
 class SolicitudResource(resources.ModelResource):
     
@@ -78,26 +95,11 @@ class SolicitudResource(resources.ModelResource):
         widget= ForeignKeyWidget(Cliente, 'nomcliente')
     )
     
-    codmincex = fields.Field(
-        column_name= 'codmincex',
-        attribute= 'codmincex',
-        widget= ForeignKeyWidget(Proveedor, 'nomproveedor')
-    )
-    
     idespecialista = fields.Field(
        column_name= 'idespecialista',
        attribute= 'idespecialista',
        widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
     )
-   
-    
-    productos = fields.Field(
-        column_name='productos',
-        attribute='productos',
-        widget = ManyToManyWidget(Solicitud_Producto, 'idproducto', 'cantidad')
-    )
-    
-    
     
     class Meta:
         model = Solicitud
@@ -106,7 +108,7 @@ class SolicitudResource(resources.ModelResource):
         import_id_fields = (
                             'numcontratocliente', 
                             'codmincex', 
-                            'productos'
+                            
                             )
         readonly_fields = (
                           'numsolicitud', 
@@ -118,17 +120,80 @@ class SolicitudResource(resources.ModelResource):
                   'codmincex', 
                   'valor_estimado',
                   'estado', 
-                  'productos'
+                  
                   'idespecialista'
                   )
     
+class Solicitud_EquipoInlineAdmin(admin.StackedInline):
+    #resource_class = Solicitud_ProductoResource
+    model = Solicitud_Equipo_Proxy
+    fk_name = 'numsolicitud'
+    extra = 1
+    #readonly_fields = ('item',)
+    fields = ('idproducto', 'cantidad')
+    #Autocomplete_fields = ['', ]
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_EquipoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'idproducto':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
 
-@admin.register(Solicitud)
-class SolicitudAdmin(ImportExportModelAdmin):
-    resource_class = SolicitudResource
+class Solicitud_PPAInlineAdmin(admin.StackedInline):
+    #resource_class = Solicitud_ProductoResource
+    model = Solicitud_PPA_Proxy
+    fk_name = 'numsolicitud'
+    extra = 1
+    #readonly_fields = ('item',)
+    fields = ('idproducto', 'cantidad')
+    Autocomplete_fields = ['productos', ]
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_PPAInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'idproducto' or db_field.name == 'proveedor':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
+    
+class Solicitud_NeumaticoInlineAdmin(admin.StackedInline):
+    #resource_class = Solicitud_ProductoResource
+    model = Solicitud_Neumatico_Proxy
+    fk_name = 'numsolicitud'
+    extra = 1
+    #readonly_fields = ('item',)
+    fields = ('idproducto', 'cantidad')
+    Autocomplete_fields = ['productos', ]
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_NeumaticoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'idproducto' or db_field.name == 'proveedor':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
+    
+class Solicitud_BateriaInlineAdmin(admin.StackedInline):
+    #resource_class = Solicitud_ProductoResource
+    model = Solicitud_Bateria_Proxy
+    fk_name = 'numsolicitud'
+    extra = 1
+    #readonly_fields = ('item',)
+    fields = ('idproducto', 'cantidad')
+    Autocomplete_fields = ['productos', ]
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(Solicitud_BateriaInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'idproducto' or db_field.name == 'proveedor':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
+
+@admin.register(Solicitud_Equipo)
+class Solicitud_EquipoAdmin(ImportExportModelAdmin):
+    #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = (Solicitud_ProductoInlineAdmin,)
+    inlines = ( Solicitud_Equipo_ProveedorInlineAdmin, Solicitud_EquipoInlineAdmin)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -138,27 +203,30 @@ class SolicitudAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
-    filter_horizontal = ('productos', )    
+    #filter_horizontal = ('productos', )    
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        fields = ['numcontratocliente', 'estado', 'productos']
+        fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
         form.base_fields['numcontratocliente'].widget.can_add_related = False
         form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        form.base_fields['numcontratocliente'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_add_related = False
+        form.base_fields['idespecialista'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_delete_related = False  
         #form.base_fields['productos'].widget.can_add_related = False
         #form.base_fields['productos'].widget.can_add_related = False
         return form
     
     
-    def save(self, request, obj=None):
-        try:
-            messages.success(request, "La Solicitud se agregó correctamente")
-            super(Solicitud, self).save_model(request, obj)
-        except:
-            message.error(request, "Error agregando Solicitud")
-        return super().save(self, request)
-    
+    def post_save(self, request, queryset):
+        s = queryset.get(estado = 'Pendiente')
+        if request.user.username == 'director_desarrollo':
+            self.message_user(request, ngettext(
+                '%d Se añadieron nuevas solicitudes.', s,
+            ) %s, messages.SUCCESS)
+        
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
     
@@ -176,14 +244,172 @@ class SolicitudAdmin(ImportExportModelAdmin):
             if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
                 messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
         
+@admin.register(Solicitud_PPA)
+class Solicitud_PPAAdmin(ImportExportModelAdmin):
+    resource_class = SolicitudResource
+    #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-@admin.register(RegistroControlSolicitud)
-class RegistroControlSolicitudAdmin(admin.ModelAdmin):
-    #list_display = ('numsolicitud', 'numcontratocliente','fechasol', 'idproducto', 'cantidad','codmincex', 'estado') 
-
-    class Meta:
-        model = RegistroControlSolicitud
-        skip_unchanged = True
-        report_skipped = False
+    inlines = ( Solicitud_PPA_ProveedorInlineAdmin, Solicitud_PPAInlineAdmin)
+    list_display = (
+                   'numsolicitud', 
+                   'numcontratocliente', 
+                   'fechasol', 
+                   'estado',
+                   'valor_estimado',
+                   'edit_link'
+                   )
+    
+    #filter_horizontal = ('productos', )    
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['numcontratocliente', 'estado']
+        #form.base_fields['fechasol' ].readonly = True
+        form.base_fields['numcontratocliente'].widget.can_add_related = False
+        form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        form.base_fields['numcontratocliente'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_add_related = False
+        form.base_fields['idespecialista'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_delete_related = False  
+        #form.base_fields['productos'].widget.can_add_related = False
+        #form.base_fields['productos'].widget.can_add_related = False
+        return form
+    
+    
+    def post_save(self, request, queryset):
+        s = queryset.get(estado = 'Pendiente')
+        if request.user.username == 'director_desarrollo':
+            self.message_user(request, ngettext(
+                '%d Se añadieron nuevas solicitudes.', s,
+            ) %s, messages.SUCCESS)
+        
+    def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
+        return super().get_inline_formsets(request, formsets, inline_instances, obj)
+    
+                
+    #jazzmin_section_order = ('solicitud', 'Productos')
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Editar"
+    
+    def pending_alert(self, request):
+        for sol in self:
+            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
+                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
+        
+@admin.register(Solicitud_Neumatico)
+class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
+    #resource_class = SolicitudResource
+    #productos_display = Solicitud_ProductoInlineAdmin.productos_display
+    
+    inlines = ( Solicitud_Neumatico_ProveedorInlineAdmin, Solicitud_NeumaticoInlineAdmin)
+    list_display = (
+                   'numsolicitud', 
+                   'numcontratocliente', 
+                   'fechasol', 
+                   'estado',
+                   'valor_estimado',
+                   'edit_link'
+                   )
+    
+    #filter_horizontal = ('productos', )    
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['numcontratocliente', 'estado']
+        #form.base_fields['fechasol' ].readonly = True
+        form.base_fields['numcontratocliente'].widget.can_add_related = False
+        form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        form.base_fields['numcontratocliente'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_add_related = False
+        form.base_fields['idespecialista'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_delete_related = False  
+        #form.base_fields['productos'].widget.can_add_related = False
+        #form.base_fields['productos'].widget.can_add_related = False
+        return form
+    
+    
+    def post_save(self, request, queryset):
+        s = queryset.get(estado = 'Pendiente')
+        if request.user.username == 'director_desarrollo':
+            self.message_user(request, ngettext(
+                '%d Se añadieron nuevas solicitudes.', s,
+            ) %s, messages.SUCCESS)
+        
+    def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
+        return super().get_inline_formsets(request, formsets, inline_instances, obj)
+    
+                
+    #jazzmin_section_order = ('solicitud', 'Productos')
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Editar"
+    
+    def pending_alert(self, request):
+        for sol in self:
+            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
+                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
+        
+@admin.register(Solicitud_Bateria)
+class Solicitud_BateriaAdmin(ImportExportModelAdmin):
+    #resource_class = SolicitudResource
+    #productos_display = Solicitud_ProductoInlineAdmin.productos_display
+    
+    inlines = ( Solicitud_Bateria_ProveedorInlineAdmin, Solicitud_BateriaInlineAdmin)
+    list_display = (
+                   'numsolicitud', 
+                   'numcontratocliente', 
+                   'fechasol', 
+                   'estado',
+                   'valor_estimado',
+                   'edit_link'
+                   )
+    
+    #filter_horizontal = ('productos', )    
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['numcontratocliente', 'estado']
+        #form.base_fields['fechasol' ].readonly = True
+        form.base_fields['numcontratocliente'].widget.can_add_related = False
+        form.base_fields['numcontratocliente'].widget.can_delete_related = False
+        form.base_fields['numcontratocliente'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_add_related = False
+        form.base_fields['idespecialista'].widget.can_change_related = False
+        form.base_fields['idespecialista'].widget.can_delete_related = False  
+        #form.base_fields['productos'].widget.can_add_related = False
+        #form.base_fields['productos'].widget.can_add_related = False
+        return form
+    
+    
+    def post_save(self, request, queryset):
+        s = queryset.get(estado = 'Pendiente')
+        if request.user.username == 'director_desarrollo':
+            self.message_user(request, ngettext(
+                '%d Se añadieron nuevas solicitudes.', s,
+            ) %s, messages.SUCCESS)
+        
+    def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
+        return super().get_inline_formsets(request, formsets, inline_instances, obj)
+    
+                
+    #jazzmin_section_order = ('solicitud', 'Productos')
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Editar"
+    
+    def pending_alert(self, request):
+        for sol in self:
+            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
+                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
         
     

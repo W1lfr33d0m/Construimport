@@ -52,15 +52,10 @@ class EspecialistaCOMEX(models.Model):
         
         return '{}'.format(self.idespecialista)
     
-class SolicitudOferta(models.Model):
+class Oferta(models.Model):
     
     numoferta = models.IntegerField(
                                       primary_key=True
                                       )
     
-    productos = models.ForeignKey(
-                                  "Solicitudes.Solicitud_Producto",
-                                  models.CASCADE,
-                                  related_name= 'Productos',
-                                  db_column='idproducto',  
-                                 )
+   

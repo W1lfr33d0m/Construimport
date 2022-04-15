@@ -28,7 +28,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
-from Nomencladores.models import Cliente, Pais, Producto, Proveedor
+from Nomencladores.models import Cliente, Pais, Proveedor, Producto, Equipo, PPA, Neumatico, Bateria 
 from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import User, UserManager
 from django.utils.timezone import now
@@ -75,6 +75,19 @@ class Solicitud(models.Model):
                       (Cancelada, 'Cancelada'), 
                       (Pendiente, 'Pendiente')
                       ]
+    
+    Equipo = 'Equipo'
+    PPA = 'Partes, piezas y accesorios'
+    Bateria = 'Batería'
+    Neumatico = 'Neumático'
+    TIPO_CHOICES = [
+                    (Equipo, 'Equipo'), 
+                    (PPA, 'Partes, piezas y accesorios'), 
+                    (Bateria, 'Batería'),
+                    (Neumatico, 'Neumático'),
+                    ]
+    
+    
     numsolicitud = models.AutoField(
         primary_key=True, 
         editable = False, 
@@ -86,22 +99,20 @@ class Solicitud(models.Model):
         db_column='numcontratocliente', 
         verbose_name = 'Cliente'
         )
-    productos = models.ManyToManyField(
-        Producto,
-        through='Solicitud_Producto',
-        verbose_name = 'Producto'
-        )
+    
     fechasol = models.DateField(
         default= date.today(), 
         validators=[validate_fecha], 
         verbose_name = 'Fecha'
         )
+    
     estado = models.CharField(
         max_length = 10, 
         null= True, 
         choices = ESTADO_CHOICES, 
         default='Pendiente'
         )
+    
     observaciones = models.TextField(
         max_length=150, 
         null=True, 
@@ -123,17 +134,10 @@ class Solicitud(models.Model):
         blank=True, 
         verbose_name='Especialista COMEX'
         )
-    #tag = TaggableManager()
-    #@receiver(pre_delete)
     
-   
-    def has_change_permission(self, *args, **kwargs):
-        if self.estado == 'Aprobada' or self.estado == 'Denegada':
-            return False
-        else:
-            super().edit(*args, **kwargs)
-        
+    
     class Meta:
+        abstract = True
         app_label = ('Solicitudes')
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
@@ -145,22 +149,110 @@ class Solicitud(models.Model):
     def __str__(self):
         return '{}'.format(self.numsolicitud)
         
-class Solicitud_Producto(models.Model):
+class Solicitud_Equipo(Solicitud):
+    
+    equipo = models.ForeignKey(
+        Equipo,
+        models.CASCADE,
+        db_column='idproducto'
+    )
+
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Equipo_Proveedor',
+        verbose_name='Proveedores'
+    )
+
+    class Meta:
+        verbose_name = _('Equipo')
+        verbose_name_plural = _('Equipos')
+        managed = False
+        db_table = 'solicitud_equipo'
+        
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+       
+class Solicitud_PPA(Solicitud):
+    
+    ppa = models.ManyToManyField(
+        PPA,
+        through= 'Solicitud_PPA_proxy'
+    )
+    
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_PPA_Proveedor',
+        verbose_name='Proveedores'
+    )
+    
+    class Meta:
+        verbose_name = _('Partes, Piezas y Accesorios')
+        verbose_name_plural = _('Partes, Piezas y Accesorios')
+        managed = False
+        db_table = 'solicitud_ppa'
+        
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+    
+    
+class Solicitud_Neumatico(Solicitud):
+    
+    neumatico = models.ManyToManyField(
+        Neumatico,
+        through= 'Solicitud_Neumatico_Proxy'
+    )
+    
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Neumatico_Proveedor',
+        verbose_name='Proveedores'
+    )
+    
+    class Meta:
+        verbose_name = _('Neumático')
+        verbose_name_plural = _('Neumáticos')
+        managed = False
+        db_table = 'solicitud_neumatico'
+    
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+    
+    
+class Solicitud_Bateria(Solicitud):
+    
+    bateria = models.ManyToManyField(
+        Bateria,
+        through= 'Solicitud_Bateria_Proxy'
+    )
+    
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Bateria_Proveedor',
+        verbose_name='Proveedores'
+    )
+    
+    class Meta:
+        verbose_name = _('Batería')
+        verbose_name_plural = _('Baterías')
+        managed = False
+        db_table = 'solicitud_bateria'
+    
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+    
+class Solicitud_Equipo_Proxy(models.Model):
     
     numsolicitud = models.ForeignKey(
-        Solicitud, 
+        Solicitud_Equipo, 
         models.CASCADE, 
         db_column='numsolicitud',
         )
-    idproducto = models.ForeignKey(
-        Producto, 
+    
+    equipo = models.ForeignKey(
+        Equipo, 
         models.CASCADE, 
         db_column='idproducto',
-        verbose_name= 'Producto',
-        )
-    codmincex = models.ManyToManyField(
-        Proveedor,
-        verbose_name = 'Proveedor',
+        verbose_name= 'Equipo',
         )
     
     cantidad = models.IntegerField(
@@ -169,36 +261,207 @@ class Solicitud_Producto(models.Model):
         validators=[validate_cantidad]
         )
     
+    
     class Meta:
-        verbose_name = 'Producto'
-        verbose_name_plural = 'Productos'
+        verbose_name = 'Equipo'
+        verbose_name_plural = 'Equipos'
         managed = True
-        db_table = 'solicitud_producto'
+        db_table = 'solicitud_equipo_proxy'
     
     
     def __str__(self):
            return '{}'.format(self.idproducto)
 
-class RegistroControlSolicitud(models.Model):
-    Aprobada = 'Aprobada'
-    Denegada = 'Denegada'
-    Pendiente = 'Pendiente'
-    ESTADO_CHOICES = [(Aprobada, 'Aprobada'), (Denegada, 'Denegada'), (Pendiente, 'Pendiente')]
-    numsolicitud = models.AutoField(primary_key=True, editable = False, verbose_name = 'Número')
-    numcontratocliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='numcontratocliente', verbose_name = 'Cliente')
-    idproducto = models.ForeignKey(Producto, models.DO_NOTHING, db_column='idproducto', verbose_name = 'Producto')
-    fechasol = models.DateField(default= date.today(), validators=[validate_fecha], verbose_name = 'Fecha')
-    codmincex = models.ForeignKey(Proveedor, models.DO_NOTHING, db_column='codmincex', blank=True, null=True, verbose_name = 'Proveedor')
-    cantidad = models.IntegerField(blank=False, null=False, validators=[validate_cantidad])
-    estado = models.CharField(max_length = 10, null= True, choices = ESTADO_CHOICES, default='Pendiente')
+
+class Solicitud_PPA_Proxy(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_PPA, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    idproducto = models.ForeignKey(
+        PPA, 
+        models.CASCADE, 
+        db_column='idproducto',
+        verbose_name= 'Producto',
+        )
+    
+    cantidad = models.IntegerField(
+        blank=False, 
+        null=False, 
+        validators=[validate_cantidad]
+        )
     
     
     class Meta:
-        managed = False
-        db_table = 'registro_control_solicitud'
-        verbose_name = ('Registro de Solicitud')
-        verbose_name_plural = ('Registro de Solicitudes')
+        verbose_name = 'Partes, Piezas y Accesorios'
+        verbose_name_plural = 'Partes, Piezas y Accesorios'
+        managed = True
+        db_table = 'solicitud_ppa_proxy'
+    
+    
+    def __str__(self):
+           return '{}'.format(self.idproducto)
+       
+       
+class Solicitud_Neumatico_Proxy(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Neumatico, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    idproducto = models.ForeignKey(
+        Neumatico, 
+        models.CASCADE, 
+        db_column='idproducto',
+        verbose_name= 'Neumático',
+        )
+    
+    cantidad = models.IntegerField(
+        blank=False, 
+        null=False, 
+        validators=[validate_cantidad]
+        )
+    
+    
+    class Meta:
+        verbose_name = 'Neumático'
+        verbose_name_plural = 'Neumáticos'
+        managed = True
+        db_table = 'solicitud_neumatico_proxy'
+    
+    
+    def __str__(self):
+           return '{}'.format(self.idproducto)
+       
+class Solicitud_Bateria_Proxy(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Bateria, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    idproducto = models.ForeignKey(
+        Bateria, 
+        models.CASCADE, 
+        db_column='idproducto',
+        verbose_name= 'Batería',
+        )
+    
+    cantidad = models.IntegerField(
+        blank=False, 
+        null=False, 
+        validators=[validate_cantidad]
+        )
+    
+    
+    class Meta:
+        verbose_name = 'Batería'
+        verbose_name_plural = 'Baterías'
+        managed = True
+        db_table = 'solicitud_bateria_proxy'
+    
+    
+    def __str__(self):
+           return '{}'.format(self.idproducto)
+    
+
+class Solicitud_Equipo_Proveedor(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Equipo, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_equipo_poveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
+
+
+class Solicitud_PPA_Proveedor(models.Model):
         
-        
-    def save(self, request, object = None):
-        return super().save()
+    numsolicitud = models.ForeignKey(
+        Solicitud_PPA, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_ppa_poveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
+       
+    
+class Solicitud_Neumatico_Proveedor(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Neumatico, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_neumatico_poveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
+
+
+class Solicitud_Bateria_Proveedor(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Bateria, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_bateria_poveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
