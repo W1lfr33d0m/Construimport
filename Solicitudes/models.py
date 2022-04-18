@@ -30,7 +30,7 @@ from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
 from Nomencladores.models import Cliente, Pais, Proveedor, Producto, Equipo, PPA, Neumatico, Bateria 
 from COMEX.models import EspecialistaCOMEX
-from django.contrib.auth.models import User, UserManager
+from django.contrib.auth.models import User, UserManager, AbstractBaseUser, AbstractUser
 from django.utils.timezone import now
 
 
@@ -108,7 +108,6 @@ class Solicitud(models.Model):
     
     estado = models.CharField(
         max_length = 10, 
-        null= True, 
         choices = ESTADO_CHOICES, 
         default='Pendiente'
         )
@@ -141,7 +140,7 @@ class Solicitud(models.Model):
         app_label = ('Solicitudes')
         verbose_name = _('Solicitud')
         verbose_name_plural = _('Solicitudes')
-        managed = False
+        managed = True
         db_table = 'solicitud'
         unique_together = (('numsolicitud', 'numcontratocliente'),)
         ordering = ['numsolicitud', 'fechasol']
@@ -151,10 +150,10 @@ class Solicitud(models.Model):
         
 class Solicitud_Equipo(Solicitud):
     
-    equipo = models.ForeignKey(
+    equipo = models.ManyToManyField(
         Equipo,
-        models.CASCADE,
-        db_column='idproducto'
+        through='Solicitud_Equipo_Proxy',
+        verbose_name= 'Equipos'
     )
 
     proveedores = models.ManyToManyField(
@@ -164,8 +163,8 @@ class Solicitud_Equipo(Solicitud):
     )
 
     class Meta:
-        verbose_name = _('Equipo')
-        verbose_name_plural = _('Equipos')
+        verbose_name = _('Solicitud de Equipo')
+        verbose_name_plural = _('Solicitudes de Equipos')
         managed = False
         db_table = 'solicitud_equipo'
         
@@ -179,6 +178,12 @@ class Solicitud_PPA(Solicitud):
         through= 'Solicitud_PPA_proxy'
     )
     
+    equipo = models.ForeignKey(
+        Equipo,
+        models.CASCADE,
+        db_column='idproducto'
+    )
+    
     proveedores = models.ManyToManyField(
         Proveedor,
         through='Solicitud_PPA_Proveedor',
@@ -186,8 +191,8 @@ class Solicitud_PPA(Solicitud):
     )
     
     class Meta:
-        verbose_name = _('Partes, Piezas y Accesorios')
-        verbose_name_plural = _('Partes, Piezas y Accesorios')
+        verbose_name = _('Solicitud de Partes, Piezas y Accesorios')
+        verbose_name_plural = _('Solicitudes de Partes, Piezas y Accesorios')
         managed = False
         db_table = 'solicitud_ppa'
         
@@ -209,8 +214,8 @@ class Solicitud_Neumatico(Solicitud):
     )
     
     class Meta:
-        verbose_name = _('Neumático')
-        verbose_name_plural = _('Neumáticos')
+        verbose_name = _('Solicitud de Neumático')
+        verbose_name_plural = _('Solicitudes de Neumáticos')
         managed = False
         db_table = 'solicitud_neumatico'
     
@@ -232,8 +237,8 @@ class Solicitud_Bateria(Solicitud):
     )
     
     class Meta:
-        verbose_name = _('Batería')
-        verbose_name_plural = _('Baterías')
+        verbose_name = _('Solicitud de Batería')
+        verbose_name_plural = _('Solicitudes de Baterías')
         managed = False
         db_table = 'solicitud_bateria'
     
@@ -248,11 +253,10 @@ class Solicitud_Equipo_Proxy(models.Model):
         db_column='numsolicitud',
         )
     
-    equipo = models.ForeignKey(
+    idproducto = models.ForeignKey(
         Equipo, 
         models.CASCADE, 
         db_column='idproducto',
-        verbose_name= 'Equipo',
         )
     
     cantidad = models.IntegerField(
@@ -465,3 +469,23 @@ class Solicitud_Bateria_Proveedor(models.Model):
     
     def __str__(self):
            return '{}'.format(self.codmincex)
+
+class Usuario(User):
+    
+    DIRECTOR_COMEX = 'DIRECTOR_COMEX'
+    DIRECTOR_DESARROLLO = 'DIRECTOR_DESARROLLO'
+    ESPECIALISTA_COMEX = 'ESPECIALISTA_COMEX'
+    ESPECIALISTA_MARKETING = 'ESPECIALISTA_MARKETING'
+    SUPERVISOR = 'SUPERVISOR'
+    CONSULTOR = 'CONSULTOR'
+
+    ROLES = [
+        (DIRECTOR_COMEX, _('Director COMEX')),
+        (DIRECTOR_DESARROLLO, _('Director Desarrollo')),
+        (ESPECIALISTA_COMEX, _('Especialista COMEX')),
+        (ESPECIALISTA_MARKETING, _('Especialista Marketing')),
+        (SUPERVISOR, _('Supervisor')),
+        (CONSULTOR, _('Consultor')),
+    ]
+    #website = models.URLField(blank=True, null=True)
+    rol = models.CharField(verbose_name=_('Rol'), max_length=250, choices=ROLES, default=CONSULTOR)

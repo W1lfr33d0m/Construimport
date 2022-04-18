@@ -12,7 +12,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from attr import attributes, field
 from pydantic import Field
-from .models import Solicitud, Solicitud_Equipo_Proveedor,  Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_Bateria_Proveedor, Solicitud_Equipo, Solicitud_Equipo_Proxy, Solicitud_PPA, Solicitud_PPA_Proxy, Solicitud_Neumatico, Solicitud_Neumatico_Proxy,Solicitud_Bateria, Solicitud_Bateria_Proxy
+from .models import Solicitud, Solicitud_Equipo_Proveedor,  Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_Bateria_Proveedor, Solicitud_Equipo, Solicitud_Equipo_Proxy, Solicitud_PPA, Solicitud_PPA_Proxy, Solicitud_Neumatico, Solicitud_Neumatico_Proxy,Solicitud_Bateria, Solicitud_Bateria_Proxy, Usuario
 from django.views.generic.base import TemplateView
 from Nomencladores.models import Producto, Cliente, Proveedor, Pais
 from COMEX.models import EspecialistaCOMEX
@@ -27,7 +27,6 @@ from django.urls import reverse, URLPattern, URLResolver, get_urlconf, set_urlco
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from notifications.signals import notify
 from django.forms import forms, formset_factory
@@ -129,6 +128,7 @@ class Solicitud_EquipoInlineAdmin(admin.StackedInline):
     model = Solicitud_Equipo_Proxy
     fk_name = 'numsolicitud'
     extra = 1
+    max_num = 1
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['', ]
@@ -147,7 +147,7 @@ class Solicitud_PPAInlineAdmin(admin.StackedInline):
     extra = 1
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
-    Autocomplete_fields = ['productos', ]
+    #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_PPAInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -163,7 +163,7 @@ class Solicitud_NeumaticoInlineAdmin(admin.StackedInline):
     extra = 1
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
-    Autocomplete_fields = ['productos', ]
+    #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_NeumaticoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -179,7 +179,7 @@ class Solicitud_BateriaInlineAdmin(admin.StackedInline):
     extra = 1
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
-    Autocomplete_fields = ['productos', ]
+    #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_BateriaInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -205,20 +205,28 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     
     #filter_horizontal = ('productos', )    
         
+    def get_fields(self, request, obj=None):
+        if request.user.role == Usuario.ESPECIALISTA_MARKETING and obj is None:
+            return  ['estado']
+        elif request.user.role == Usuario.DIRECTOR_COMEX and obj is None:
+            return ['idespecialista']
+        elif request.user.role == Usuario.ESPECIALISTA_MARKETING and obj is None:
+            return ['numcontratocliente', 'fechasol', 'observaciones', 'valor_estimado', 'marca', 'modelo']
+        return super().get_fields(request, obj)
+        
     def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
+        form = super(Solicitud_EquipoAdmin, self).get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
+        form.base_fields['estado'].required = False
         form.base_fields['numcontratocliente'].widget.can_add_related = False
         form.base_fields['numcontratocliente'].widget.can_delete_related = False
         form.base_fields['numcontratocliente'].widget.can_change_related = False
         form.base_fields['idespecialista'].widget.can_add_related = False
         form.base_fields['idespecialista'].widget.can_change_related = False
         form.base_fields['idespecialista'].widget.can_delete_related = False  
-        #form.base_fields['productos'].widget.can_add_related = False
-        #form.base_fields['productos'].widget.can_add_related = False
+        
         return form
-    
     
     def post_save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')

@@ -18,31 +18,41 @@ SET row_security = off;
 
 ALTER TABLE ONLY public.taggit_taggeditem DROP CONSTRAINT taggit_taggeditem_tag_id_f4f5b767_fk_taggit_tag_id;
 ALTER TABLE ONLY public.taggit_taggeditem DROP CONSTRAINT taggit_taggeditem_content_type_id_9957a03c_fk_django_co;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_fk_solicitud;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_idproducto_a7faf533_fk_producto_idproducto;
 ALTER TABLE ONLY public.reports_savedreport DROP CONSTRAINT reports_savedreport_run_by_id_0e49a3ac_fk_auth_user_id;
 ALTER TABLE ONLY public.abstractnotification DROP CONSTRAINT receiver;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT provincia;
 ALTER TABLE ONLY public.sucursal_cuba DROP CONSTRAINT proveedor;
 ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT proveedor;
-ALTER TABLE ONLY public.solicitud DROP CONSTRAINT productos;
-ALTER TABLE ONLY public.oferta DROP CONSTRAINT productos;
-ALTER TABLE ONLY public.solicitud_proveedor DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.solicitud_equipo_proxy DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.solicitud_bateria_proxy DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.solicitud_neumatico_proxy DROP CONSTRAINT numsolicitud;
+ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT numsolicitud;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_target_content_type__ccb24d88_fk_django_co;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_recipient_id_d055f3f0_fk_auth_user;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_actor_content_type_i_0c69d7b7_fk_django_co;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notifi_action_object_conten_7d2b8ee9_fk_django_co;
+ALTER TABLE ONLY public.solicitud_neumatico_proxy DROP CONSTRAINT idproducto;
+ALTER TABLE ONLY public.solicitud_bateria_proxy DROP CONSTRAINT idproducto;
+ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT idproducto;
+ALTER TABLE ONLY public.solicitud_equipo_proxy DROP CONSTRAINT idproducto;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT idproducto;
 ALTER TABLE ONLY public.especialista_comex DROP CONSTRAINT idespecialista;
 ALTER TABLE ONLY public.proveedor_sucursal DROP CONSTRAINT identificador;
 ALTER TABLE ONLY public.proveedor DROP CONSTRAINT fk_table1_pais1;
 ALTER TABLE ONLY public.factura_proveedor DROP CONSTRAINT fk_proveedor_has_producto_producto1;
+ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT especialista_comex;
+ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT especialista_comex;
+ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT especialista_comex;
+ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT especialista_comex;
+ALTER TABLE ONLY public.ppa DROP CONSTRAINT equipo;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co;
-ALTER TABLE ONLY public.solicitud_proveedor DROP CONSTRAINT codmincex;
-ALTER TABLE ONLY public.solicitud DROP CONSTRAINT codmincex;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT codmincex;
 ALTER TABLE ONLY public.proveedor_sucursal DROP CONSTRAINT codmincex;
-ALTER TABLE ONLY public.cliente DROP CONSTRAINT codigoprovincia;
+ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT cliente;
+ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT cliente;
+ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT cliente;
+ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT cliente;
 ALTER TABLE ONLY public.solicitud DROP CONSTRAINT cliente;
 ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id;
@@ -63,8 +73,14 @@ DROP INDEX public.taggit_taggeditem_content_type_id_object_id_196cc965_idx;
 DROP INDEX public.taggit_taggeditem_content_type_id_9957a03c;
 DROP INDEX public.taggit_tag_slug_6be58b2c_like;
 DROP INDEX public.taggit_tag_name_58eb2ed9_like;
+DROP INDEX public.solicitud_ppa_numsolicitud_idx;
+DROP INDEX public.solicitud_neumatico_numsolicitud_idx;
+DROP INDEX public.solicitud_equipo_proxy_idproducto_08c7c6e0;
+DROP INDEX public.solicitud_equipo_numsolicitud_idx;
+DROP INDEX public.solicitu_bateria_numsolicitud_idx;
 DROP INDEX public.reports_savedreport_run_by_id_0e49a3ac;
 DROP INDEX public.provincia_idprovincia_aa96c8e0_like;
+DROP INDEX public.ppa_equipo_id_968edb4c;
 DROP INDEX public.notifications_notification_unread_cce4be30;
 DROP INDEX public.notifications_notification_timestamp_6a797bad;
 DROP INDEX public.notifications_notification_target_content_type_id_ccb24d88;
@@ -114,17 +130,23 @@ ALTER TABLE ONLY public.taggit_tag DROP CONSTRAINT taggit_tag_slug_key;
 ALTER TABLE ONLY public.taggit_tag DROP CONSTRAINT taggit_tag_pkey;
 ALTER TABLE ONLY public.taggit_tag DROP CONSTRAINT taggit_tag_name_key;
 ALTER TABLE ONLY public.sucursal_cuba DROP CONSTRAINT sucursal_cuba_pkey;
-ALTER TABLE ONLY public.solicitud_proveedor DROP CONSTRAINT solicitud_proveedor_pk;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_pkey;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_uniq;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT solicitud_producto_idproducto_a7faf533_uniq;
+ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT solicitud_ppa_pkey;
+ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT solicitud_ppa_numsolicitud_key;
 ALTER TABLE ONLY public.solicitud DROP CONSTRAINT solicitud_pk;
 ALTER TABLE ONLY public.oferta DROP CONSTRAINT solicitud_oferta_pk;
-ALTER TABLE ONLY public.solicitud_producto DROP CONSTRAINT soicitud_producto_unique;
+ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT solicitud_neumatico_pkey;
+ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT solicitud_neumatico_numsolicitud_key;
+ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT solicitud_equipo_pkey;
+ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT solicitud_equipo_numsolicitud_key;
+ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT solicitu_bateria_pkey;
+ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT solicitu_bateria_numsolicitud_key;
 ALTER TABLE ONLY public.reports_savedreport DROP CONSTRAINT reports_savedreport_pkey;
 ALTER TABLE ONLY public.provincia DROP CONSTRAINT provincia_pk;
 ALTER TABLE ONLY public.proveedor_producto DROP CONSTRAINT proveedor_producto_pk;
 ALTER TABLE ONLY public.proveedor DROP CONSTRAINT proveedor_pk;
+ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT ppa_proxy;
+ALTER TABLE ONLY public.ppa DROP CONSTRAINT ppa_pkey;
+ALTER TABLE ONLY public.ppa DROP CONSTRAINT ppa_nombreproducto_key;
 ALTER TABLE ONLY public.usuarios DROP CONSTRAINT pk_usuarios;
 ALTER TABLE ONLY public."user" DROP CONSTRAINT pk_user;
 ALTER TABLE ONLY public.producto DROP CONSTRAINT pk_producto;
@@ -138,7 +160,13 @@ ALTER TABLE ONLY public.oferta DROP CONSTRAINT numoferta;
 ALTER TABLE ONLY public.notifications_notification DROP CONSTRAINT notifications_notification_pkey;
 ALTER TABLE ONLY public.proveedor DROP CONSTRAINT nomproveedor;
 ALTER TABLE ONLY public.producto DROP CONSTRAINT nombreproducto;
+ALTER TABLE ONLY public.solicitud_neumatico_proxy DROP CONSTRAINT neumatico_proxy;
+ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_pkey;
+ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_nombreproducto_key;
 ALTER TABLE ONLY public.especialista_comex DROP CONSTRAINT especialista_pk;
+ALTER TABLE ONLY public.solicitud_equipo_proxy DROP CONSTRAINT equipo_proxy;
+ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_pkey;
+ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_nombreproducto_key;
 ALTER TABLE ONLY public.django_session DROP CONSTRAINT django_session_pkey;
 ALTER TABLE ONLY public.django_migrations DROP CONSTRAINT django_migrations_pkey;
 ALTER TABLE ONLY public.django_content_type DROP CONSTRAINT django_content_type_pkey;
@@ -149,6 +177,9 @@ ALTER TABLE ONLY public.dashboard_stats DROP CONSTRAINT dashboard_stats_graph_ke
 ALTER TABLE ONLY public.dash_stats_criteria DROP CONSTRAINT dash_stats_criteria_pkey;
 ALTER TABLE ONLY public.datos DROP CONSTRAINT contacto_pk;
 ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_pkey;
+ALTER TABLE ONLY public.solicitud_bateria_proxy DROP CONSTRAINT bateria_proxy;
+ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_pkey;
+ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_nombreproducto_key;
 ALTER TABLE ONLY public.auth_user DROP CONSTRAINT auth_user_username_key;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_pkey;
@@ -204,8 +235,14 @@ DROP TABLE public.taggit_taggeditem;
 DROP SEQUENCE public.taggit_tag_id_seq;
 DROP TABLE public.taggit_tag;
 DROP TABLE public.sucursal_cuba;
-DROP TABLE public.solicitud_proveedor;
-DROP TABLE public.solicitud_producto;
+DROP TABLE public.solicitud_ppa_proxy;
+DROP TABLE public.solicitud_ppa;
+DROP TABLE public.solicitud_neumatico_proxy;
+DROP TABLE public.solicitud_neumatico;
+DROP TABLE public.solicitud_equipo_proxy;
+DROP TABLE public.solicitud_equipo;
+DROP TABLE public.solicitud_bateria_proxy;
+DROP TABLE public.solicitud_bateria;
 DROP TABLE public.solicitud;
 DROP SEQUENCE public.reports_savedreport_id_seq;
 DROP TABLE public.reports_savedreport;
@@ -215,14 +252,17 @@ DROP TABLE public.proveedor_sucursal;
 DROP TABLE public.proveedor_producto;
 DROP TABLE public.proveedor;
 DROP TABLE public.producto;
+DROP TABLE public.ppa;
 DROP TABLE public.pais;
 DROP TABLE public.oferta;
 DROP SEQUENCE public.notifications_notification_id_seq;
 DROP TABLE public.notifications_notification;
+DROP TABLE public.neumatico;
 DROP SEQUENCE public.historial_idhistorial_seq;
 DROP TABLE public.historial;
 DROP TABLE public.factura_proveedor;
 DROP TABLE public.especialista_comex;
+DROP TABLE public.equipo;
 DROP TABLE public.django_session;
 DROP SEQUENCE public.django_migrations_id_seq;
 DROP TABLE public.django_migrations;
@@ -237,6 +277,7 @@ DROP SEQUENCE public.dash_stats_criteria_id_seq;
 DROP TABLE public.dash_stats_criteria;
 DROP TABLE public.cliente;
 DROP TABLE public.casa_matriz;
+DROP TABLE public.bateria;
 DROP SEQUENCE public.auth_user_user_permissions_id_seq;
 DROP TABLE public.auth_user_user_permissions;
 DROP SEQUENCE public.auth_user_id_seq;
@@ -871,6 +912,36 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 
 
 --
+-- Name: bateria; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.bateria (
+    idproducto integer NOT NULL,
+    descripcion character varying(30) NOT NULL,
+    "UM" character varying(20) NOT NULL,
+    marca character varying(20) NOT NULL,
+    voltaje numeric(4,0) NOT NULL,
+    amperaje numeric(4,0) NOT NULL
+);
+
+
+ALTER TABLE public.bateria OWNER TO postgres;
+
+--
+-- Name: COLUMN bateria.idproducto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.bateria.idproducto IS 'TRIAL';
+
+
+--
+-- Name: COLUMN bateria.descripcion; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.bateria.descripcion IS 'TRIAL';
+
+
+--
 -- Name: casa_matriz; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -911,7 +982,7 @@ CREATE TABLE public.cliente (
     numcontratocliente bigint NOT NULL,
     nomcliente character varying(100) NOT NULL,
     "OSDE" character varying(45),
-    codigoprovincia character varying(3)
+    provincia character varying(3)
 );
 
 
@@ -1166,6 +1237,35 @@ CREATE TABLE public.django_session (
 ALTER TABLE public.django_session OWNER TO const;
 
 --
+-- Name: equipo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipo (
+    idproducto integer NOT NULL,
+    descripcion character varying(30) NOT NULL,
+    "UM" character varying(20) NOT NULL,
+    marca character varying(20) NOT NULL,
+    modelo character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.equipo OWNER TO postgres;
+
+--
+-- Name: COLUMN equipo.idproducto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.equipo.idproducto IS 'TRIAL';
+
+
+--
+-- Name: COLUMN equipo.descripcion; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.equipo.descripcion IS 'TRIAL';
+
+
+--
 -- Name: especialista_comex; Type: TABLE; Schema: public; Owner: const
 --
 
@@ -1306,6 +1406,36 @@ ALTER SEQUENCE public.historial_idhistorial_seq OWNED BY public.historial.idhist
 
 
 --
+-- Name: neumatico; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.neumatico (
+    idproducto integer NOT NULL,
+    descripcion character varying(30) NOT NULL,
+    "UM" character varying(20) NOT NULL,
+    marca character varying(20) NOT NULL,
+    diametro numeric(4,0) NOT NULL,
+    grosor numeric(4,0) NOT NULL
+);
+
+
+ALTER TABLE public.neumatico OWNER TO postgres;
+
+--
+-- Name: COLUMN neumatico.idproducto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.neumatico.idproducto IS 'TRIAL';
+
+
+--
+-- Name: COLUMN neumatico.descripcion; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.neumatico.descripcion IS 'TRIAL';
+
+
+--
 -- Name: notifications_notification; Type: TABLE; Schema: public; Owner: const
 --
 
@@ -1399,14 +1529,43 @@ COMMENT ON COLUMN public.pais.pais IS 'TRIAL';
 
 
 --
+-- Name: ppa; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ppa (
+    idproducto integer NOT NULL,
+    descripcion character varying(30) NOT NULL,
+    "UM" character varying(20) NOT NULL,
+    marca character varying(20) NOT NULL,
+    equipo integer NOT NULL
+);
+
+
+ALTER TABLE public.ppa OWNER TO postgres;
+
+--
+-- Name: COLUMN ppa.idproducto; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.ppa.idproducto IS 'TRIAL';
+
+
+--
+-- Name: COLUMN ppa.descripcion; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.ppa.descripcion IS 'TRIAL';
+
+
+--
 -- Name: producto; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.producto (
     idproducto integer NOT NULL,
-    nombreproducto character varying(30) NOT NULL,
-    tipo character varying(10),
-    "UM" character varying
+    descripcion character varying(30) NOT NULL,
+    "UM" character varying(20) NOT NULL,
+    marca character varying(20) NOT NULL
 );
 
 
@@ -1427,10 +1586,10 @@ COMMENT ON COLUMN public.producto.idproducto IS 'TRIAL';
 
 
 --
--- Name: COLUMN producto.nombreproducto; Type: COMMENT; Schema: public; Owner: postgres
+-- Name: COLUMN producto.descripcion; Type: COMMENT; Schema: public; Owner: postgres
 --
 
-COMMENT ON COLUMN public.producto.nombreproducto IS 'TRIAL';
+COMMENT ON COLUMN public.producto.descripcion IS 'TRIAL';
 
 
 --
@@ -1572,13 +1731,101 @@ CREATE TABLE public.solicitud (
     estado character varying NOT NULL,
     idespecialista integer,
     observaciones text,
-    valor_estimado money NOT NULL,
-    productos integer,
-    codmincex character varying NOT NULL
+    valor_estimado money NOT NULL
 );
 
 
 ALTER TABLE public.solicitud OWNER TO postgres;
+
+--
+-- Name: solicitud_bateria; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_bateria (
+    numsolicitud integer NOT NULL,
+    fechasol date NOT NULL,
+    numcontratocliente bigint NOT NULL,
+    estado character varying NOT NULL,
+    idespecialista integer,
+    observaciones text,
+    valor_estimado money NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_bateria OWNER TO postgres;
+
+--
+-- Name: solicitud_bateria_proxy; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_bateria_proxy (
+    numsolicitud integer NOT NULL,
+    idproducto integer NOT NULL,
+    cantidad integer NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_bateria_proxy OWNER TO postgres;
+
+--
+-- Name: solicitud_equipo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_equipo (
+    numsolicitud integer NOT NULL,
+    fechasol date NOT NULL,
+    numcontratocliente bigint NOT NULL,
+    estado character varying NOT NULL,
+    idespecialista integer,
+    observaciones text,
+    valor_estimado money NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_equipo OWNER TO postgres;
+
+--
+-- Name: solicitud_equipo_proxy; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_equipo_proxy (
+    numsolicitud integer NOT NULL,
+    cantidad integer NOT NULL,
+    idproducto integer NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_equipo_proxy OWNER TO postgres;
+
+--
+-- Name: solicitud_neumatico; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_neumatico (
+    numsolicitud integer NOT NULL,
+    fechasol date NOT NULL,
+    numcontratocliente bigint NOT NULL,
+    estado character varying NOT NULL,
+    idespecialista integer,
+    observaciones text,
+    valor_estimado money NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_neumatico OWNER TO postgres;
+
+--
+-- Name: solicitud_neumatico_proxy; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_neumatico_proxy (
+    numsolicitud integer NOT NULL,
+    idproducto integer NOT NULL,
+    cantidad integer NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_neumatico_proxy OWNER TO postgres;
 
 --
 -- Name: solicitud_numsolicitud_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1596,59 +1843,35 @@ ALTER TABLE public.solicitud ALTER COLUMN numsolicitud ADD GENERATED BY DEFAULT 
 
 
 --
--- Name: solicitud_producto; Type: TABLE; Schema: public; Owner: postgres
+-- Name: solicitud_ppa; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.solicitud_producto (
+CREATE TABLE public.solicitud_ppa (
+    numsolicitud integer NOT NULL,
+    fechasol date NOT NULL,
+    numcontratocliente bigint NOT NULL,
+    estado character varying NOT NULL,
+    idespecialista integer,
+    observaciones text,
+    valor_estimado money NOT NULL,
+    equipo integer NOT NULL
+);
+
+
+ALTER TABLE public.solicitud_ppa OWNER TO postgres;
+
+--
+-- Name: solicitud_ppa_proxy; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.solicitud_ppa_proxy (
     numsolicitud integer NOT NULL,
     idproducto integer NOT NULL,
-    cantidad integer NOT NULL,
-    id integer NOT NULL,
-    item integer NOT NULL
+    cantidad integer NOT NULL
 );
 
 
-ALTER TABLE public.solicitud_producto OWNER TO postgres;
-
---
--- Name: solicitud_producto_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE public.solicitud_producto ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.solicitud_producto_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: solicitud_producto_item_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE public.solicitud_producto ALTER COLUMN item ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.solicitud_producto_item_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: solicitud_proveedor; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.solicitud_proveedor (
-    numsolicitud integer NOT NULL,
-    codmincex character varying NOT NULL
-);
-
-
-ALTER TABLE public.solicitud_proveedor OWNER TO postgres;
+ALTER TABLE public.solicitud_ppa_proxy OWNER TO postgres;
 
 --
 -- Name: sucursal_cuba; Type: TABLE; Schema: public; Owner: postgres
@@ -2680,6 +2903,70 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 382	Can change solicitud_ proveedor	95	change_solicitud_proveedor
 383	Can delete solicitud_ proveedor	95	delete_solicitud_proveedor
 384	Can view solicitud_ proveedor	95	view_solicitud_proveedor
+385	Can add Batería	96	add_bateria
+386	Can change Batería	96	change_bateria
+387	Can delete Batería	96	delete_bateria
+388	Can view Batería	96	view_bateria
+389	Can add Equipo	97	add_equipo
+390	Can change Equipo	97	change_equipo
+391	Can delete Equipo	97	delete_equipo
+392	Can view Equipo	97	view_equipo
+393	Can add Neumático	98	add_neumatico
+394	Can change Neumático	98	change_neumatico
+395	Can delete Neumático	98	delete_neumatico
+396	Can view Neumático	98	view_neumatico
+397	Can add Pieza	99	add_ppa
+398	Can change Pieza	99	change_ppa
+399	Can delete Pieza	99	delete_ppa
+400	Can view Pieza	99	view_ppa
+401	Can add Batería	100	add_solicitud_bateria
+402	Can change Batería	100	change_solicitud_bateria
+403	Can delete Batería	100	delete_solicitud_bateria
+404	Can view Batería	100	view_solicitud_bateria
+405	Can add Equipo	101	add_solicitud_equipo
+406	Can change Equipo	101	change_solicitud_equipo
+407	Can delete Equipo	101	delete_solicitud_equipo
+408	Can view Equipo	101	view_solicitud_equipo
+409	Can add Neumático	102	add_solicitud_neumatico
+410	Can change Neumático	102	change_solicitud_neumatico
+411	Can delete Neumático	102	delete_solicitud_neumatico
+412	Can view Neumático	102	view_solicitud_neumatico
+413	Can add Partes, Piezas y Accesorios	103	add_solicitud_ppa
+414	Can change Partes, Piezas y Accesorios	103	change_solicitud_ppa
+415	Can delete Partes, Piezas y Accesorios	103	delete_solicitud_ppa
+416	Can view Partes, Piezas y Accesorios	103	view_solicitud_ppa
+417	Can add Partes, Piezas y Accesorios	104	add_solicitud_ppa_proxy
+418	Can change Partes, Piezas y Accesorios	104	change_solicitud_ppa_proxy
+419	Can delete Partes, Piezas y Accesorios	104	delete_solicitud_ppa_proxy
+420	Can view Partes, Piezas y Accesorios	104	view_solicitud_ppa_proxy
+421	Can add Proveedor	105	add_solicitud_ppa_proveedor
+422	Can change Proveedor	105	change_solicitud_ppa_proveedor
+423	Can delete Proveedor	105	delete_solicitud_ppa_proveedor
+424	Can view Proveedor	105	view_solicitud_ppa_proveedor
+425	Can add Neumático	106	add_solicitud_neumatico_proxy
+426	Can change Neumático	106	change_solicitud_neumatico_proxy
+427	Can delete Neumático	106	delete_solicitud_neumatico_proxy
+428	Can view Neumático	106	view_solicitud_neumatico_proxy
+429	Can add Proveedor	107	add_solicitud_neumatico_proveedor
+430	Can change Proveedor	107	change_solicitud_neumatico_proveedor
+431	Can delete Proveedor	107	delete_solicitud_neumatico_proveedor
+432	Can view Proveedor	107	view_solicitud_neumatico_proveedor
+433	Can add Equipo	108	add_solicitud_equipo_proxy
+434	Can change Equipo	108	change_solicitud_equipo_proxy
+435	Can delete Equipo	108	delete_solicitud_equipo_proxy
+436	Can view Equipo	108	view_solicitud_equipo_proxy
+437	Can add Proveedor	109	add_solicitud_equipo_proveedor
+438	Can change Proveedor	109	change_solicitud_equipo_proveedor
+439	Can delete Proveedor	109	delete_solicitud_equipo_proveedor
+440	Can view Proveedor	109	view_solicitud_equipo_proveedor
+441	Can add Batería	110	add_solicitud_bateria_proxy
+442	Can change Batería	110	change_solicitud_bateria_proxy
+443	Can delete Batería	110	delete_solicitud_bateria_proxy
+444	Can view Batería	110	view_solicitud_bateria_proxy
+445	Can add Proveedor	111	add_solicitud_bateria_proveedor
+446	Can change Proveedor	111	change_solicitud_bateria_proveedor
+447	Can delete Proveedor	111	delete_solicitud_bateria_proveedor
+448	Can view Proveedor	111	view_solicitud_bateria_proveedor
 \.
 
 
@@ -2690,11 +2977,11 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
 65	pbkdf2_sha256$320000$QA56N9hfcBXXiTfCu6kEPC$Co/wNAmQiHvQa664ewgWzfq6wkkxfv6yBzT2LS4BTTc=	2022-03-20 18:03:09.429783-04	f	cecilia.valdes	Cecilia	Valdes Rodriguez		t	t	2022-03-20 17:49:02.521352-04
 66	pbkdf2_sha256$320000$pUhAEPeFfjFjboromojwno$L/jhxtNPixvZ4lUD2EqyMPVVUDzqjnKjAoWZ8ePDyS0=	\N	f	roberto.garcia	Roberto	García Marrero		t	t	2022-03-21 14:13:09.13163-04
-61	pbkdf2_sha256$320000$y6b6IqgBHKHLbutJfmCDBN$k9DEXHZb0+o4o7UXtfW2qa7mJDjGmmRTqGMufQvYgac=	2022-04-09 10:11:31.628302-04	f	supervisor	Wilfredo	Ferreira Rabí		t	t	2022-02-08 23:36:02.741995-05
 64	pbkdf2_sha256$320000$08xEuZ8lsMHksO5L316zkw$vYzDuvObRxTG4lxr7ryJxG2do6UJ5pAKb2X5TQ2Lhbc=	2022-04-09 10:33:31.857932-04	f	director_comex	Cecilia	Lopez Hernandez		t	t	2022-03-20 12:07:42.988552-04
 60	pbkdf2_sha256$320000$H2Ukt52h45iphVouuie1hE$wgmHUJeZeDPLXKoNm3FXJZej/FLKoPRgKgnf9iHb+2k=	2022-04-13 19:35:12.327103-04	f	director_desarrollo	Ana	Rodriguez Perez		t	t	2022-02-05 12:35:55.86176-05
-40	pbkdf2_sha256$320000$dW1yo6VBZFD6uzj9CErZn2$I3hpORHscXCmV7RxN1X6BYbpxB0/Jt6eTt3RbQiS2D0=	2022-04-13 19:35:29.834615-04	f	Marketing	Maria	Perez Fernandez		t	t	2022-01-28 09:05:38.381-05
-59	pbkdf2_sha256$320000$1XOywMPWL0xse2x6ePX1rk$LMuYbHso7Mmtyk0buoZs5MKVqsu/t2lXIdltqVgjxNY=	2022-04-13 21:12:33.6634-04	t	admin	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-02-04 21:15:08.37-05
+61	pbkdf2_sha256$320000$y6b6IqgBHKHLbutJfmCDBN$k9DEXHZb0+o4o7UXtfW2qa7mJDjGmmRTqGMufQvYgac=	2022-04-16 11:30:11.33725-04	f	supervisor	Wilfredo	Ferreira Rabí		t	t	2022-02-08 23:36:02.741995-05
+40	pbkdf2_sha256$320000$dW1yo6VBZFD6uzj9CErZn2$I3hpORHscXCmV7RxN1X6BYbpxB0/Jt6eTt3RbQiS2D0=	2022-04-16 11:57:32.304002-04	f	Marketing	Maria	Perez Fernandez		t	t	2022-01-28 09:05:38.381-05
+59	pbkdf2_sha256$320000$1XOywMPWL0xse2x6ePX1rk$LMuYbHso7Mmtyk0buoZs5MKVqsu/t2lXIdltqVgjxNY=	2022-04-16 12:02:00.973182-04	t	admin	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-02-04 21:15:08.37-05
 \.
 
 
@@ -2722,6 +3009,14 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 
 
 --
+-- Data for Name: bateria; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.bateria (idproducto, descripcion, "UM", marca, voltaje, amperaje) FROM stdin;
+\.
+
+
+--
 -- Data for Name: casa_matriz; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2734,7 +3029,7 @@ COPY public.casa_matriz (identificador, direccion, email, telefono, contacto, id
 -- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.cliente (numcontratocliente, nomcliente, "OSDE", codigoprovincia) FROM stdin;
+COPY public.cliente (numcontratocliente, nomcliente, "OSDE", provincia) FROM stdin;
 20181221	CIDC	GEDIC	HB
 20160428	DINVAI	GEDIC	HB
 20220003	Empresa de Inversiones de la Construcción	GEICON	HB
@@ -3234,6 +3529,22 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 94	User	post
 90	COMEX	oferta
 95	Solicitudes	solicitud_proveedor
+96	Nomencladores	bateria
+97	Nomencladores	equipo
+98	Nomencladores	neumatico
+99	Nomencladores	ppa
+100	Solicitudes	solicitud_bateria
+101	Solicitudes	solicitud_equipo
+102	Solicitudes	solicitud_neumatico
+103	Solicitudes	solicitud_ppa
+104	Solicitudes	solicitud_ppa_proxy
+105	Solicitudes	solicitud_ppa_proveedor
+106	Solicitudes	solicitud_neumatico_proxy
+107	Solicitudes	solicitud_neumatico_proveedor
+108	Solicitudes	solicitud_equipo_proxy
+109	Solicitudes	solicitud_equipo_proveedor
+110	Solicitudes	solicitud_bateria_proxy
+111	Solicitudes	solicitud_bateria_proveedor
 \.
 
 
@@ -3385,6 +3696,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 141	Nomencladores	0002_rename_proveedor_sucursal_cuba_codmincex	2022-04-14 11:10:26.592476-04
 142	Nomencladores	0003_alter_casa_matriz_contacto_and_more	2022-04-14 14:57:41.351644-04
 143	Solicitudes	0002_solicitud_proveedor	2022-04-14 15:16:36.998588-04
+144	Nomencladores	0002_equipo_marca_equipo_modelo	2022-04-15 18:06:42.021335-04
+145	Solicitudes	0002_alter_solicitud_bateria_options_and_more	2022-04-15 22:24:11.163845-04
+146	Nomencladores	0002_ppa_equipo	2022-04-16 09:06:45.332273-04
 \.
 
 
@@ -3424,7 +3738,15 @@ u5fz3nnwveyza7t1i7jqstpntyfh3hch	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765Nut
 kpa736tvfdr5b4g8yc4zhpu86hskin2h	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765NutDtf-_9lwi0rTVsnZcwZXEWVonT7xgpPbjtJN-p3WaZ5rYuU5S7Ig_a5XXO_Lwc7t9BpV6_tcYSHfpCbCIqHNDGTOiTS0DKFwejVoYASBu2NCTI1jEwWTuyB6XF-wMGTjfE:1nUwKE:yBdsoRHMsy50F4HeJr2M3dhtSuR8H6dcxa6lgnjaS-A	2022-03-31 16:02:22.709735-04
 vwi42w6vksozi221548k3nnyhoqa2c80	.eJxVjDsOwjAQBe_iGlmxN3YcSvqcIdr1W3AAJVI-FeLuECkFtG9m3sv0vK2l3xad-wHmbGJtTr-jcH7ouBPcebxNNk_jOg9id8UedLHdBH1eDvfvoPBSvvW1CtAQfQPS5KllUNUgChITfE21sFBWrsh759pIoW0AZBUXXGJv3h8O-jgl:1naJOE:jg93dKJJBmyOmIE4hDFueKlDCmloMnGy38kIKj4nBwY	2022-04-15 11:40:42.992178-04
 mrrxqqi68x3h7lwv1iowua81k80v6fcg	.eJxVjEEOwiAQRe_C2hBgmEJduvcMZIBBqoYmpV0Z765NutDtf-_9lwi0rTVsnZcwZXEWVonT7xgpPbjtJN-p3WaZ5rYuU5S7Ig_a5XXO_Lwc7t9BpV6_tcYSHfpCbCIqHNDGTOiTS0DKFwejVoYASBu2NCTI1jEwWTuyB6XF-wMGTjfE:1nXLmL:ipAKd_-aIbDVNnbDscJI9J6qVCGn61k768Rc0nf4eYE	2022-04-07 07:37:21.199439-04
-4ln6ilz4d93noimnyqxrestm6pi12hrq	.eJxVjDsOwjAQBe_iGllxYrNZSnrOEO3POIAcKZ8KcXcUKQW0b2be2w20rWXYFpuHUd3FJXSn35FJnlZ3og-q98nLVNd5ZL8r_qCLv01qr-vh_h0UWspec0xNJ02SqNgpCmbjCALhnHtlCUFyaHsFAmAWBDAJEVPbmxFQdp8vKL85EA:1neo2D:yUec_Z489W-YUerH3hZ-KxjvNs7CR1_kLnXHAK0D__g	2022-04-27 21:12:33.6634-04
+svtol8mvxjdekvtf32j0y6tdpnkz3bir	.eJxVjDsOwjAQBe_iGllxYrNZSnrOEO3POIAcKZ8KcXcUKQW0b2be2w20rWXYFpuHUd3FJXSn35FJnlZ3og-q98nLVNd5ZL8r_qCLv01qr-vh_h0UWspec0xNJ02SqNgpCmbjCALhnHtlCUFyaHsFAmAWBDAJEVPbmxFQdp8vKL85EA:1nfks4:y7GjlQfX8-gzKatqfBk3GXTr-UbX0b7xxm3nWPOlt2g	2022-04-30 12:02:00.978227-04
+\.
+
+
+--
+-- Data for Name: equipo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.equipo (idproducto, descripcion, "UM", marca, modelo) FROM stdin;
 \.
 
 
@@ -3451,6 +3773,14 @@ COPY public.factura_proveedor (codfacturaprov, idproducto, precio, cantidad, fec
 --
 
 COPY public.historial (idhistorial, fecha, codfacturaprov, idproducto) FROM stdin;
+\.
+
+
+--
+-- Data for Name: neumatico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.neumatico (idproducto, descripcion, "UM", marca, diametro, grosor) FROM stdin;
 \.
 
 
@@ -3489,14 +3819,18 @@ HL	Holanda
 
 
 --
+-- Data for Name: ppa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ppa (idproducto, descripcion, "UM", marca, equipo) FROM stdin;
+\.
+
+
+--
 -- Data for Name: producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.producto (idproducto, nombreproducto, tipo, "UM") FROM stdin;
-654284009	Motoniveladora KAMAZ	EQ	U
-647386006	Grua Kamaz	EQ	U
-647386004	Neumáticos R16	Neumático	U
-594284002	Baterías Camión	Batería	U
+COPY public.producto (idproducto, descripcion, "UM", marca) FROM stdin;
 \.
 
 
@@ -3514,9 +3848,6 @@ CHINA AUTO CAIEC  LTD	CH	CN-0132	Comercializador	\N
 --
 
 COPY public.proveedor_producto (idproducto, codmincex, id) FROM stdin;
-654284009	CN-0132	\N
-647386006	CN-0132	\N
-647386004	CN-0132	\N
 \.
 
 
@@ -3571,23 +3902,71 @@ COPY public.reports_savedreport (id, date_modified, date_created, report, report
 -- Data for Name: solicitud; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.solicitud (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado, productos, codmincex) FROM stdin;
+COPY public.solicitud (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado) FROM stdin;
 \.
 
 
 --
--- Data for Name: solicitud_producto; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: solicitud_bateria; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.solicitud_producto (numsolicitud, idproducto, cantidad, id, item) FROM stdin;
+COPY public.solicitud_bateria (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado) FROM stdin;
 \.
 
 
 --
--- Data for Name: solicitud_proveedor; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: solicitud_bateria_proxy; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.solicitud_proveedor (numsolicitud, codmincex) FROM stdin;
+COPY public.solicitud_bateria_proxy (numsolicitud, idproducto, cantidad) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_equipo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_equipo (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_equipo_proxy; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_equipo_proxy (numsolicitud, cantidad, idproducto) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_neumatico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_neumatico (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_neumatico_proxy; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_neumatico_proxy (numsolicitud, idproducto, cantidad) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_ppa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_ppa (numsolicitud, fechasol, numcontratocliente, estado, idespecialista, observaciones, valor_estimado, equipo) FROM stdin;
+\.
+
+
+--
+-- Data for Name: solicitud_ppa_proxy; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.solicitud_ppa_proxy (numsolicitud, idproducto, cantidad) FROM stdin;
 \.
 
 
@@ -3716,7 +4095,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 539, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 384, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 448, true);
 
 
 --
@@ -3772,14 +4151,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 812, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 95, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 111, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 143, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 146, true);
 
 
 --
@@ -3807,21 +4186,7 @@ SELECT pg_catalog.setval('public.reports_savedreport_id_seq', 2, true);
 -- Name: solicitud_numsolicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.solicitud_numsolicitud_seq', 220167, true);
-
-
---
--- Name: solicitud_producto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.solicitud_producto_id_seq', 1, true);
-
-
---
--- Name: solicitud_producto_item_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.solicitud_producto_item_seq', 2, true);
+SELECT pg_catalog.setval('public.solicitud_numsolicitud_seq', 220170, true);
 
 
 --
@@ -4029,6 +4394,30 @@ ALTER TABLE ONLY public.auth_user
 
 
 --
+-- Name: bateria bateria_nombreproducto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bateria
+    ADD CONSTRAINT bateria_nombreproducto_key UNIQUE (descripcion);
+
+
+--
+-- Name: bateria bateria_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bateria
+    ADD CONSTRAINT bateria_pkey PRIMARY KEY (idproducto);
+
+
+--
+-- Name: solicitud_bateria_proxy bateria_proxy; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria_proxy
+    ADD CONSTRAINT bateria_proxy PRIMARY KEY (numsolicitud, idproducto);
+
+
+--
 -- Name: casa_matriz casa_matriz_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -4109,6 +4498,30 @@ ALTER TABLE ONLY public.django_session
 
 
 --
+-- Name: equipo equipo_nombreproducto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipo
+    ADD CONSTRAINT equipo_nombreproducto_key UNIQUE (descripcion);
+
+
+--
+-- Name: equipo equipo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipo
+    ADD CONSTRAINT equipo_pkey PRIMARY KEY (idproducto);
+
+
+--
+-- Name: solicitud_equipo_proxy equipo_proxy; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo_proxy
+    ADD CONSTRAINT equipo_proxy PRIMARY KEY (numsolicitud, idproducto);
+
+
+--
 -- Name: especialista_comex especialista_pk; Type: CONSTRAINT; Schema: public; Owner: const
 --
 
@@ -4117,11 +4530,35 @@ ALTER TABLE ONLY public.especialista_comex
 
 
 --
+-- Name: neumatico neumatico_nombreproducto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.neumatico
+    ADD CONSTRAINT neumatico_nombreproducto_key UNIQUE (descripcion);
+
+
+--
+-- Name: neumatico neumatico_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.neumatico
+    ADD CONSTRAINT neumatico_pkey PRIMARY KEY (idproducto);
+
+
+--
+-- Name: solicitud_neumatico_proxy neumatico_proxy; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico_proxy
+    ADD CONSTRAINT neumatico_proxy PRIMARY KEY (numsolicitud, idproducto);
+
+
+--
 -- Name: producto nombreproducto; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.producto
-    ADD CONSTRAINT nombreproducto UNIQUE (nombreproducto);
+    ADD CONSTRAINT nombreproducto UNIQUE (descripcion);
 
 
 --
@@ -4221,6 +4658,30 @@ ALTER TABLE ONLY public.usuarios
 
 
 --
+-- Name: ppa ppa_nombreproducto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ppa
+    ADD CONSTRAINT ppa_nombreproducto_key UNIQUE (descripcion);
+
+
+--
+-- Name: ppa ppa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ppa
+    ADD CONSTRAINT ppa_pkey PRIMARY KEY (idproducto);
+
+
+--
+-- Name: solicitud_ppa_proxy ppa_proxy; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_ppa_proxy
+    ADD CONSTRAINT ppa_proxy PRIMARY KEY (numsolicitud, idproducto);
+
+
+--
 -- Name: proveedor proveedor_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -4253,11 +4714,51 @@ ALTER TABLE ONLY public.reports_savedreport
 
 
 --
--- Name: solicitud_producto soicitud_producto_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_bateria solicitu_bateria_numsolicitud_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT soicitud_producto_unique UNIQUE (idproducto) INCLUDE (numsolicitud);
+ALTER TABLE ONLY public.solicitud_bateria
+    ADD CONSTRAINT solicitu_bateria_numsolicitud_key UNIQUE (numsolicitud);
+
+
+--
+-- Name: solicitud_bateria solicitu_bateria_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria
+    ADD CONSTRAINT solicitu_bateria_pkey PRIMARY KEY (numsolicitud, numcontratocliente);
+
+
+--
+-- Name: solicitud_equipo solicitud_equipo_numsolicitud_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo
+    ADD CONSTRAINT solicitud_equipo_numsolicitud_key UNIQUE (numsolicitud);
+
+
+--
+-- Name: solicitud_equipo solicitud_equipo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo
+    ADD CONSTRAINT solicitud_equipo_pkey PRIMARY KEY (numsolicitud, numcontratocliente);
+
+
+--
+-- Name: solicitud_neumatico solicitud_neumatico_numsolicitud_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico
+    ADD CONSTRAINT solicitud_neumatico_numsolicitud_key UNIQUE (numsolicitud);
+
+
+--
+-- Name: solicitud_neumatico solicitud_neumatico_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico
+    ADD CONSTRAINT solicitud_neumatico_pkey PRIMARY KEY (numsolicitud, numcontratocliente);
 
 
 --
@@ -4277,35 +4778,19 @@ ALTER TABLE ONLY public.solicitud
 
 
 --
--- Name: solicitud_producto solicitud_producto_idproducto_a7faf533_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_ppa solicitud_ppa_numsolicitud_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT solicitud_producto_idproducto_a7faf533_uniq UNIQUE (idproducto);
-
-
---
--- Name: solicitud_producto solicitud_producto_numsolicitud_a0709dd6_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_uniq UNIQUE (numsolicitud);
+ALTER TABLE ONLY public.solicitud_ppa
+    ADD CONSTRAINT solicitud_ppa_numsolicitud_key UNIQUE (numsolicitud);
 
 
 --
--- Name: solicitud_producto solicitud_producto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_ppa solicitud_ppa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT solicitud_producto_pkey PRIMARY KEY (numsolicitud, idproducto);
-
-
---
--- Name: solicitud_proveedor solicitud_proveedor_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_proveedor
-    ADD CONSTRAINT solicitud_proveedor_pk PRIMARY KEY (numsolicitud, codmincex);
+ALTER TABLE ONLY public.solicitud_ppa
+    ADD CONSTRAINT solicitud_ppa_pkey PRIMARY KEY (numsolicitud, numcontratocliente);
 
 
 --
@@ -4658,6 +5143,13 @@ CREATE INDEX notifications_notification_unread_cce4be30 ON public.notifications_
 
 
 --
+-- Name: ppa_equipo_id_968edb4c; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ppa_equipo_id_968edb4c ON public.ppa USING btree (equipo);
+
+
+--
 -- Name: provincia_idprovincia_aa96c8e0_like; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -4669,6 +5161,41 @@ CREATE INDEX provincia_idprovincia_aa96c8e0_like ON public.provincia USING btree
 --
 
 CREATE INDEX reports_savedreport_run_by_id_0e49a3ac ON public.reports_savedreport USING btree (run_by_id);
+
+
+--
+-- Name: solicitu_bateria_numsolicitud_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX solicitu_bateria_numsolicitud_idx ON public.solicitud_bateria USING btree (numsolicitud);
+
+
+--
+-- Name: solicitud_equipo_numsolicitud_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX solicitud_equipo_numsolicitud_idx ON public.solicitud_equipo USING btree (numsolicitud);
+
+
+--
+-- Name: solicitud_equipo_proxy_idproducto_08c7c6e0; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX solicitud_equipo_proxy_idproducto_08c7c6e0 ON public.solicitud_equipo_proxy USING btree (idproducto);
+
+
+--
+-- Name: solicitud_neumatico_numsolicitud_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX solicitud_neumatico_numsolicitud_idx ON public.solicitud_neumatico USING btree (numsolicitud);
+
+
+--
+-- Name: solicitud_ppa_numsolicitud_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX solicitud_ppa_numsolicitud_idx ON public.solicitud_ppa USING btree (numsolicitud);
 
 
 --
@@ -4826,11 +5353,35 @@ ALTER TABLE ONLY public.solicitud
 
 
 --
--- Name: cliente codigoprovincia; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_equipo cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.cliente
-    ADD CONSTRAINT codigoprovincia FOREIGN KEY (codigoprovincia) REFERENCES public.provincia(codigoprovincia);
+ALTER TABLE ONLY public.solicitud_equipo
+    ADD CONSTRAINT cliente FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) NOT VALID;
+
+
+--
+-- Name: solicitud_neumatico cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico
+    ADD CONSTRAINT cliente FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) NOT VALID;
+
+
+--
+-- Name: solicitud_ppa cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_ppa
+    ADD CONSTRAINT cliente FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) NOT VALID;
+
+
+--
+-- Name: solicitud_bateria cliente; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria
+    ADD CONSTRAINT cliente FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) NOT VALID;
 
 
 --
@@ -4850,22 +5401,6 @@ ALTER TABLE ONLY public.proveedor_producto
 
 
 --
--- Name: solicitud codmincex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud
-    ADD CONSTRAINT codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex) NOT VALID;
-
-
---
--- Name: solicitud_proveedor codmincex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_proveedor
-    ADD CONSTRAINT codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex);
-
-
---
 -- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
@@ -4879,6 +5414,46 @@ ALTER TABLE ONLY public.django_admin_log
 
 ALTER TABLE ONLY public.django_admin_log
     ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: ppa equipo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ppa
+    ADD CONSTRAINT equipo FOREIGN KEY (equipo) REFERENCES public.equipo(idproducto) NOT VALID;
+
+
+--
+-- Name: solicitud_equipo especialista_comex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo
+    ADD CONSTRAINT especialista_comex FOREIGN KEY (idespecialista) REFERENCES public.especialista_comex(idespecialista) NOT VALID;
+
+
+--
+-- Name: solicitud_neumatico especialista_comex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico
+    ADD CONSTRAINT especialista_comex FOREIGN KEY (idespecialista) REFERENCES public.especialista_comex(idespecialista) NOT VALID;
+
+
+--
+-- Name: solicitud_ppa especialista_comex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_ppa
+    ADD CONSTRAINT especialista_comex FOREIGN KEY (idespecialista) REFERENCES public.especialista_comex(idespecialista) NOT VALID;
+
+
+--
+-- Name: solicitud_bateria especialista_comex; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria
+    ADD CONSTRAINT especialista_comex FOREIGN KEY (idespecialista) REFERENCES public.especialista_comex(idespecialista) NOT VALID;
 
 
 --
@@ -4922,6 +5497,38 @@ ALTER TABLE ONLY public.proveedor_producto
 
 
 --
+-- Name: solicitud_equipo_proxy idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo_proxy
+    ADD CONSTRAINT idproducto FOREIGN KEY (idproducto) REFERENCES public.equipo(idproducto) NOT VALID;
+
+
+--
+-- Name: solicitud_ppa_proxy idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_ppa_proxy
+    ADD CONSTRAINT idproducto FOREIGN KEY (idproducto) REFERENCES public.ppa(idproducto) NOT VALID;
+
+
+--
+-- Name: solicitud_bateria_proxy idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria_proxy
+    ADD CONSTRAINT idproducto FOREIGN KEY (idproducto) REFERENCES public.bateria(idproducto) NOT VALID;
+
+
+--
+-- Name: solicitud_neumatico_proxy idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_neumatico_proxy
+    ADD CONSTRAINT idproducto FOREIGN KEY (idproducto) REFERENCES public.neumatico(idproducto) NOT VALID;
+
+
+--
 -- Name: notifications_notification notifications_notifi_action_object_conten_7d2b8ee9_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
@@ -4954,27 +5561,35 @@ ALTER TABLE ONLY public.notifications_notification
 
 
 --
--- Name: solicitud_proveedor numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_ppa_proxy numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud_proveedor
-    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud(numsolicitud);
-
-
---
--- Name: oferta productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.oferta
-    ADD CONSTRAINT productos FOREIGN KEY (productos) REFERENCES public.solicitud_producto(idproducto);
+ALTER TABLE ONLY public.solicitud_ppa_proxy
+    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud_ppa(numsolicitud);
 
 
 --
--- Name: solicitud productos; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: solicitud_neumatico_proxy numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.solicitud
-    ADD CONSTRAINT productos FOREIGN KEY (productos) REFERENCES public.solicitud_producto(idproducto);
+ALTER TABLE ONLY public.solicitud_neumatico_proxy
+    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud_neumatico(numsolicitud);
+
+
+--
+-- Name: solicitud_bateria_proxy numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_bateria_proxy
+    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud_bateria(numsolicitud);
+
+
+--
+-- Name: solicitud_equipo_proxy numsolicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.solicitud_equipo_proxy
+    ADD CONSTRAINT numsolicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud_equipo(numsolicitud) NOT VALID;
 
 
 --
@@ -4994,6 +5609,14 @@ ALTER TABLE ONLY public.sucursal_cuba
 
 
 --
+-- Name: cliente provincia; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT provincia FOREIGN KEY (provincia) REFERENCES public.provincia(codigoprovincia);
+
+
+--
 -- Name: abstractnotification receiver; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -5007,22 +5630,6 @@ ALTER TABLE ONLY public.abstractnotification
 
 ALTER TABLE ONLY public.reports_savedreport
     ADD CONSTRAINT reports_savedreport_run_by_id_0e49a3ac_fk_auth_user_id FOREIGN KEY (run_by_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: solicitud_producto solicitud_producto_idproducto_a7faf533_fk_producto_idproducto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT solicitud_producto_idproducto_a7faf533_fk_producto_idproducto FOREIGN KEY (idproducto) REFERENCES public.producto(idproducto) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: solicitud_producto solicitud_producto_numsolicitud_a0709dd6_fk_solicitud; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.solicitud_producto
-    ADD CONSTRAINT solicitud_producto_numsolicitud_a0709dd6_fk_solicitud FOREIGN KEY (numsolicitud) REFERENCES public.solicitud(numsolicitud) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

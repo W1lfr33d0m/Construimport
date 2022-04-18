@@ -101,6 +101,7 @@ class Producto(models.Model):
     idproducto = models.IntegerField(primary_key=True, verbose_name = 'Código')
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
+    marca = models.CharField(max_length=30 )
     #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
     
     class Meta:
@@ -114,11 +115,7 @@ class Producto(models.Model):
         return '{}'.format(self.descripcion)
 
 class Equipo(Producto):
-    
-    marca = models.CharField(
-        max_length=30
-    )
-    
+        
     modelo = models.CharField(
         max_length=30
     )
@@ -134,11 +131,7 @@ class Equipo(Producto):
     
 class PPA(Producto):
     
-    equipo = models.ForeignKey(
-        Equipo,
-        models.CASCADE,
-        #db_column='idproducto'
-    )
+    #equipo = models.ForeignKey(Equipo, models.CASCADE, db_column='idproducto')
 
     class Meta:
         verbose_name = _('Pieza')
@@ -146,6 +139,9 @@ class PPA(Producto):
         managed = True
         db_table = 'ppa'
         
+    def __str__(self):
+        return '{}'.format(self.descripcion)
+    
 class Neumatico(Producto):
     diametro = models.FloatField(
         max_length=4
@@ -160,6 +156,9 @@ class Neumatico(Producto):
         verbose_name_plural = _('Neumáticos')
         managed = True
         db_table = 'neumatico'
+        
+    def __str__(self):
+        return '{}'.format(self.descripcion)
         
 class Bateria(Producto):
     voltaje = models.FloatField(
@@ -176,7 +175,9 @@ class Bateria(Producto):
         managed = True
         db_table = 'bateria'
         
-
+    def __str__(self):
+        return '{}'.format(self.descripcion)
+    
 class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, max_length=4),
     direccion = models.CharField(max_length=100, verbose_name='Dirección')
@@ -195,6 +196,7 @@ class Proveedor(models.Model):
     Comercializador = 'Comercializador'
     TIPO_PROVEEDOR_CHOICES = [(Productor, 'Productor'), (Comercializador, 'Comercializador')]
     name_validator = UnicodenameValidator()
+    
     codmincex = models.CharField(
                                  max_length=8,
                                  primary_key=True, 

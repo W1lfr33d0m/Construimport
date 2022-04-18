@@ -7,7 +7,7 @@ from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
-from .models import Cliente, Pais, Proveedor, Producto, Provincia, Sucursal_Cuba, Casa_Matriz
+from .models import Cliente, Pais, Proveedor, Producto, Provincia, Sucursal_Cuba, Casa_Matriz, Equipo, PPA, Neumatico, Bateria
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -102,9 +102,75 @@ class PaisAdmin(ImportExportModelAdmin):
 class ProvinciaAdmin(admin.ModelAdmin):
     list_display = ('codigoprovincia', 'nombre', 'capital')
     
-
-
-        
-
+class EquipoResource(resources.ModelResource):
     
+    class meta:
+        model = Pais
+        skip_unchanged = True
+        report_skipped = False    
+    
+@admin.register(Equipo)
+class EquipoAdmin(ImportExportModelAdmin):
+    resource_class = EquipoResource
+    list_display = ('idproducto', 'descripcion', 'modelo')
         
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        #form.base_fields['idpais'].widget.can_add_related = False
+    
+        return form
+    
+class PPAResource(resources.ModelResource):
+    
+    class meta:
+        model = Pais
+        skip_unchanged = True
+        report_skipped = False    
+    
+@admin.register(PPA)
+class PPAAdmin(ImportExportModelAdmin):
+    resource_class = PPAResource
+    list_display = ('idproducto', 'descripcion')
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        #form.base_fields['idpais'].widget.can_add_related = False
+    
+        return form
+    
+class NeumaticoResource(resources.ModelResource):
+    
+    class meta:
+        model = Pais
+        skip_unchanged = True
+        report_skipped = False    
+    
+@admin.register(Neumatico)
+class NeumaticoAdmin(ImportExportModelAdmin):
+    resource_class = NeumaticoResource
+    list_display = ('idproducto', 'descripcion', 'diametro', 'grosor')
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        #form.base_fields['idpais'].widget.can_add_related = False
+    
+        return form
+    
+class BateriaResource(resources.ModelResource):
+    
+    class meta:
+        model = Pais
+        skip_unchanged = True
+        report_skipped = False    
+    
+@admin.register(Bateria)
+class BateriaAdmin(ImportExportModelAdmin):
+    resource_class = BateriaResource
+    list_display = ('idproducto', 'descripcion', 'voltaje', 'amperaje')
+        
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        #form.base_fields['idpais'].widget.can_add_related = False
+    
+        return form
+    
