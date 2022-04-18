@@ -37,50 +37,51 @@ from django.utils.translation import ngettext
 
 
 
-class Solicitud_Equipo_ProveedorInlineAdmin(admin.StackedInline):
+class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Equipo_Proveedor
-    fk_name = 'numsolicitud'
+    #fk_name = 'numsolicitud'
     extra = 1
     fields = ('codmincex',)
+    verbose = 'Proveedor'
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_Equipo_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_Equipo_ProveedorInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         formfield.widget.can_add_related = False
         formfield.widget.can_change_related = False
         return formfield
     
-class Solicitud_PPA_ProveedorInlineAdmin(admin.StackedInline):
+class Solicitud_PPA_ProveedorInline(admin.StackedInline):
     model =  Solicitud_PPA_Proveedor
     fk_name = 'numsolicitud'
     extra = 1
     fields = ('codmincex',)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_PPA_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_PPA_ProveedorInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         formfield.widget.can_add_related = False
         formfield.widget.can_change_related = False
         return formfield
 
-class Solicitud_Neumatico_ProveedorInlineAdmin(admin.StackedInline):
+class Solicitud_Neumatico_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Neumatico_Proveedor
     fk_name = 'numsolicitud'
     extra = 1
     fields = ('codmincex',)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_Neumatico_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_Neumatico_ProveedorInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         formfield.widget.can_add_related = False
         formfield.widget.can_change_related = False
         return formfield
 
-class Solicitud_Bateria_ProveedorInlineAdmin(admin.StackedInline):
+class Solicitud_Bateria_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Bateria_Proveedor
     fk_name = 'numsolicitud'
     extra = 1
     fields = ('codmincex',)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_Bateria_ProveedorInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_Bateria_ProveedorInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         formfield.widget.can_add_related = False
         formfield.widget.can_change_related = False
         return formfield
@@ -123,7 +124,7 @@ class SolicitudResource(resources.ModelResource):
                   'idespecialista'
                   )
     
-class Solicitud_EquipoInlineAdmin(admin.StackedInline):
+class Solicitud_EquipoInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_Equipo_Proxy
     fk_name = 'numsolicitud'
@@ -134,13 +135,13 @@ class Solicitud_EquipoInlineAdmin(admin.StackedInline):
     #Autocomplete_fields = ['', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_EquipoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_EquipoInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
 
-class Solicitud_PPAInlineAdmin(admin.StackedInline):
+class Solicitud_PPAInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_PPA_Proxy
     fk_name = 'numsolicitud'
@@ -150,13 +151,13 @@ class Solicitud_PPAInlineAdmin(admin.StackedInline):
     #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_PPAInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_PPAInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto' or db_field.name == 'proveedor':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
     
-class Solicitud_NeumaticoInlineAdmin(admin.StackedInline):
+class Solicitud_NeumaticoInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_Neumatico_Proxy
     fk_name = 'numsolicitud'
@@ -166,13 +167,13 @@ class Solicitud_NeumaticoInlineAdmin(admin.StackedInline):
     #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_NeumaticoInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_NeumaticoInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto' or db_field.name == 'proveedor':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
     
-class Solicitud_BateriaInlineAdmin(admin.StackedInline):
+class Solicitud_BateriaInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_Bateria_Proxy
     fk_name = 'numsolicitud'
@@ -182,7 +183,7 @@ class Solicitud_BateriaInlineAdmin(admin.StackedInline):
     #Autocomplete_fields = ['productos', ]
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(Solicitud_BateriaInlineAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        formfield = super(Solicitud_BateriaInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto' or db_field.name == 'proveedor':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
@@ -193,7 +194,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Equipo_ProveedorInlineAdmin, Solicitud_EquipoInlineAdmin)
+    inlines = ( Solicitud_Equipo_ProveedorInline, Solicitud_EquipoInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -257,7 +258,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_PPA_ProveedorInlineAdmin, Solicitud_PPAInlineAdmin)
+    inlines = ( Solicitud_PPA_ProveedorInline, Solicitud_PPAInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -313,7 +314,7 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Neumatico_ProveedorInlineAdmin, Solicitud_NeumaticoInlineAdmin)
+    inlines = ( Solicitud_Neumatico_ProveedorInline, Solicitud_NeumaticoInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -369,7 +370,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Bateria_ProveedorInlineAdmin, Solicitud_BateriaInlineAdmin)
+    inlines = ( Solicitud_Bateria_ProveedorInline, Solicitud_BateriaInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 

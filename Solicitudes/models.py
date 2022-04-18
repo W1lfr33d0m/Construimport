@@ -58,12 +58,7 @@ def validate_cantidad(cantidad):
              )            
 
 
-def validate_fecha(fechasol):
-        if not fechasol == date.today() or not date.weekday(fechasol):
-            raise ValidationError(
-            _('%(fechasol)s la fecha debe ser del día actual'),
-            params={'fechasol': fechasol},
-             )            
+     
 
 
 class Solicitud(models.Model):
@@ -101,8 +96,8 @@ class Solicitud(models.Model):
         )
     
     fechasol = models.DateField(
-        default= date.today(), 
-        validators=[validate_fecha], 
+        #default= date.today(), 
+        #validators=[validate_fecha], 
         verbose_name = 'Fecha'
         )
     
@@ -395,9 +390,7 @@ class Solicitud_Equipo_Proveedor(models.Model):
         managed = True
         db_table = 'solicitud_equipo_poveedor'
     
-    def __str__(self):
-           return '{}'.format(self.codmincex)
-
+    
 
 class Solicitud_PPA_Proveedor(models.Model):
         
