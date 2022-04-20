@@ -57,8 +57,9 @@ class Cliente(models.Model):
 
 
 class Pais(models.Model):
+    
     codigopais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
-    nompais = models.CharField(max_length=30)
+    nompais = models.CharField(max_length=30, verbose_name='Nombre')
 
     class Meta:
         verbose_name = _('País')
@@ -67,7 +68,7 @@ class Pais(models.Model):
         db_table = 'pais'
         
     def __str__(self):
-        return '{}'.format(self.pais)
+        return '{}'.format(self.nompais)
 
 
 class Producto(models.Model):
