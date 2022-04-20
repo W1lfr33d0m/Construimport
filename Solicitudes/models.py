@@ -33,34 +33,20 @@ from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, AbstractUser
 from django.utils.timezone import now
 
-
-class SolicitudesBackupview(models.Model):
-    ids = models.BigAutoField(primary_key=True)
-
-    class Meta:
-        managed = False
-        db_table = 'Solicitudes_backupview'
-
-
 def validate_numsolicitud(numsolicitud):
         if numsolicitud <= 0:
             raise ValidationError(
             _('%(numsolicitud)s no es correcto'),
             params={'numsolicitud': numsolicitud},
         )
-
-
+            
 def validate_cantidad(cantidad):
-        if cantidad <= 0 or cantidad > 9999:
+        if cantidad <= 0:
             raise ValidationError(
-            _('%(cantidad)s debe ser un valor mayor que cero y menor de 10000'),
+            _('%(cantidad)s debe ser un valor positivo'),
             params={'cantidad': cantidad},
-             )            
-
-
-     
-
-
+        )
+            
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
@@ -142,7 +128,7 @@ class Solicitud(models.Model):
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
-        
+
 class Solicitud_Equipo(Solicitud):
     
     equipo = models.ManyToManyField(
@@ -160,7 +146,7 @@ class Solicitud_Equipo(Solicitud):
     class Meta:
         verbose_name = _('Solicitud de Equipo')
         verbose_name_plural = _('Solicitudes de Equipos')
-        managed = False
+        managed = True
         db_table = 'solicitud_equipo'
         
     def __str__(self):
@@ -188,7 +174,7 @@ class Solicitud_PPA(Solicitud):
     class Meta:
         verbose_name = _('Solicitud de Partes, Piezas y Accesorios')
         verbose_name_plural = _('Solicitudes de Partes, Piezas y Accesorios')
-        managed = False
+        managed = True
         db_table = 'solicitud_ppa'
         
     def __str__(self):
@@ -211,7 +197,7 @@ class Solicitud_Neumatico(Solicitud):
     class Meta:
         verbose_name = _('Solicitud de Neumático')
         verbose_name_plural = _('Solicitudes de Neumáticos')
-        managed = False
+        managed = True
         db_table = 'solicitud_neumatico'
     
     def __str__(self):
@@ -234,7 +220,7 @@ class Solicitud_Bateria(Solicitud):
     class Meta:
         verbose_name = _('Solicitud de Batería')
         verbose_name_plural = _('Solicitudes de Baterías')
-        managed = False
+        managed = True
         db_table = 'solicitud_bateria'
     
     def __str__(self):
@@ -462,23 +448,3 @@ class Solicitud_Bateria_Proveedor(models.Model):
     
     def __str__(self):
            return '{}'.format(self.codmincex)
-
-class Usuario(User):
-    
-    DIRECTOR_COMEX = 'DIRECTOR_COMEX'
-    DIRECTOR_DESARROLLO = 'DIRECTOR_DESARROLLO'
-    ESPECIALISTA_COMEX = 'ESPECIALISTA_COMEX'
-    ESPECIALISTA_MARKETING = 'ESPECIALISTA_MARKETING'
-    SUPERVISOR = 'SUPERVISOR'
-    CONSULTOR = 'CONSULTOR'
-
-    ROLES = [
-        (DIRECTOR_COMEX, _('Director COMEX')),
-        (DIRECTOR_DESARROLLO, _('Director Desarrollo')),
-        (ESPECIALISTA_COMEX, _('Especialista COMEX')),
-        (ESPECIALISTA_MARKETING, _('Especialista Marketing')),
-        (SUPERVISOR, _('Supervisor')),
-        (CONSULTOR, _('Consultor')),
-    ]
-    #website = models.URLField(blank=True, null=True)
-    rol = models.CharField(verbose_name=_('Rol'), max_length=250, choices=ROLES, default=CONSULTOR)

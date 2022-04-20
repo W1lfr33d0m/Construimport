@@ -25,21 +25,6 @@ from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
 from django import forms
 from django.utils.text import slugify
 
-#from Solicitudes.models import Solicitud
-
-
-
-
-
-
-class Almacen(models.Model):
-    idalmacen = models.BigIntegerField(primary_key=True)
-    tipoalmacen = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'almacen'
-        
 class  Provincia(models.Model):
     codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura')
     nombre = models.CharField(max_length=100)
@@ -64,7 +49,7 @@ class Cliente(models.Model):
     provincia = models.ForeignKey(Provincia, models.CASCADE, db_column='provincia', verbose_name='Provincia')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'cliente'
 
     def __str__(self):
@@ -72,24 +57,18 @@ class Cliente(models.Model):
 
 
 class Pais(models.Model):
-    idpais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
-    pais = models.CharField(max_length=30)
+    codigopais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
+    nompais = models.CharField(max_length=30)
 
     class Meta:
         verbose_name = _('País')
         verbose_name_plural = _('Países')
-        managed = False
+        managed = True
         db_table = 'pais'
         
     def __str__(self):
         return '{}'.format(self.pais)
 
-def validate_idproducto(idproducto):
-    if idproducto <= 0 or idproducto > 9999999999:
-         raise ValidationError(
-        _('%(idproducto)s debe ser un valor entre 20220000 o 20229999'),
-        params={'idproducto': idproducto},
-         )
 
 class Producto(models.Model):
     
@@ -208,10 +187,10 @@ class Proveedor(models.Model):
                                     validators=[name_validator], 
                                     verbose_name = 'Nombre'
                                     )
-    idpais = models.ForeignKey(
+    codigopais = models.ForeignKey(
                                Pais, 
                                models.CASCADE, 
-                               db_column='idpais', 
+                               db_column='codigopais', 
                                verbose_name = 'País'
                                )
     
@@ -228,7 +207,7 @@ class Proveedor(models.Model):
         verbose_name = _('Proveedor')
         verbose_name_plural = _('Proveedores')
         db_table = 'proveedor'
-        unique_together = (('codmincex', 'idpais'),)
+        unique_together = (('codmincex', 'codigopais'),)
         
     def __str__(self):
         
@@ -272,4 +251,3 @@ class Casa_Matriz(Datos):
         verbose_name = _('Casa Matriz')
         managed = True
         db_table = 'casa_matriz' 
-    

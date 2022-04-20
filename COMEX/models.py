@@ -1,11 +1,15 @@
+from pydoc import cli
 from signal import raise_signal
+from tabnanny import verbose
 from django.db import models
+from django.db.models import ManyToManyField, ManyToManyRel, Model
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from Nomencladores.validators import UnicodenameValidator
+#from Nomencladores.models import Cliente, Proveedor
 #from django.db.models import apps
-#Solicitud_Producto = apps.get_model('Solicitud', 'Solicitud_Producto')
-#from Solicitudes.models import Solicitud, Solicitud_Producto
+#Solicitud_Equipo = apps.get_model('Solicitud', 'Solicitud_Producto')
+#from Solicitudes.models import Solicitud, Solicitud_Bateria_Proveedor, Solicitud_Equipo_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proxy, Solicitud_Bateria_Proxy, Solicitud_Equipo_Proxy, Solicitud_PPA_Proxy
 from django.contrib.auth.models import User, Group 
 
 
@@ -16,8 +20,6 @@ from django.contrib.auth.models import User, Group
 #        params={'idespecialista': idespecialista},
 #        ) 
 
-
-         
 
 class EspecialistaCOMEX(models.Model):
     
@@ -51,11 +53,4 @@ class EspecialistaCOMEX(models.Model):
     def __str__(self):
         
         return '{}'.format(self.idespecialista)
-    
-class Oferta(models.Model):
-    
-    numoferta = models.IntegerField(
-                                      primary_key=True
-                                      )
-    
-   
+  
