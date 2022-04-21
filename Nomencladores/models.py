@@ -17,7 +17,6 @@ from django.db import models
 from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
-
 from numpy import save
 from .validators import UnicodenameValidator
 from django.utils import timezone
@@ -61,9 +60,9 @@ class Pais(models.Model):
     nompais = models.CharField(max_length=30, verbose_name='Nombre')
 
     class Meta:
+        managed = True
         verbose_name = _('País')
         verbose_name_plural = _('Países')
-        managed = True
         db_table = 'pais'
         
     def __str__(self):
@@ -74,12 +73,13 @@ class Producto(models.Model):
     
     desc_validator = UnicodenameValidator
 
-    U = 'U'
+    U = 'Unidad'
     SET = 'SET'
-    UM = [(U, 'U'), (SET, 'SET')]
+    MT = 'Metro'
+    UM = [(U, 'U'), (SET, 'SET'), ('MT', 'Metro')]
     idproducto = models.IntegerField(primary_key=True, verbose_name = 'Código')
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
-    UM = models.CharField(max_length = 5, null= False, choices = UM, default = U)
+    UM = models.CharField(max_length = 15, null= False, choices = UM, default = U)
     marca = models.CharField(max_length=30 )
     #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
     
