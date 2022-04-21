@@ -87,7 +87,6 @@ class PaisResource(resources.ModelResource):
         model = Pais
         skip_unchanged = True
         report_skipped = False
-        exclude = ('id',)
         import_id_fields = ('codigopais', 'nompais')    
     
 @admin.register(Pais)
@@ -97,8 +96,7 @@ class PaisAdmin(ImportExportModelAdmin):
     list_display = ('codigopais', 'nompais')
     skip_unchanged = True
     report_skipped = True
-    exclude = ('id',)
-    
+
         
 @admin.register(Provincia)
 class ProvinciaAdmin(admin.ModelAdmin):

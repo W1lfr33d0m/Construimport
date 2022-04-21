@@ -57,7 +57,6 @@ class Cliente(models.Model):
 
 
 class Pais(models.Model):
-    
     codigopais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
     nompais = models.CharField(max_length=30, verbose_name='Nombre')
 
