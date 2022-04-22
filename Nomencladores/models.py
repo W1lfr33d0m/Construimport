@@ -24,6 +24,19 @@ from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
 from django import forms
 from django.utils.text import slugify
 
+class Marca(models.Model):
+    codigomarca = models.IntegerField(max_length=5, primary_key=True, verbose_name='Código')
+    nommarca = models.CharField(max_length=30, verbose_name='Nombre')
+
+    class Meta:
+        managed = True
+        verbose_name = _('Marca')
+        verbose_name_plural = _('Marcas')
+        db_table = 'marca'
+        
+    def __str__(self):
+        return '{}'.format(self.nommarca)
+
 class  Provincia(models.Model):
     codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura')
     nombre = models.CharField(max_length=100)
@@ -36,7 +49,7 @@ class  Provincia(models.Model):
         db_table = 'provincia'
         
     def __str__(self):
-        return '%s' % self.nombre    
+        return '{}'.format(self.nombre)
 
 class Cliente(models.Model):
     
@@ -56,8 +69,9 @@ class Cliente(models.Model):
 
 
 class Pais(models.Model):
-    codigopais = models.CharField(primary_key=True, max_length=3, verbose_name = 'Código')
-    nompais = models.CharField(max_length=30, verbose_name='Nombre')
+    
+    codigopais = models.CharField(primary_key=True, max_length=20, verbose_name = 'Código')
+    nompais = models.CharField(max_length=100, verbose_name='Nombre')
 
     class Meta:
         managed = True
@@ -77,18 +91,14 @@ class Producto(models.Model):
     SET = 'SET'
     MT = 'Metro'
     UM = [(U, 'U'), (SET, 'SET'), ('MT', 'Metro')]
-    idproducto = models.IntegerField(primary_key=True, verbose_name = 'Código')
+    idproducto = models.CharField(max_length=30, primary_key=True, verbose_name = 'Código')
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.CharField(max_length = 15, null= False, choices = UM, default = U)
-    marca = models.CharField(max_length=30 )
+    marca = models.ForeignKey(Marca, models.CASCADE, verbose_name='Marca')
     #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
     
     class Meta:
         abstract = True
-        verbose_name = _('Producto')
-        verbose_name_plural = _('Productos')
-        managed = True
-        db_table = 'producto'
         
     def __str__(self):
         return '{}'.format(self.descripcion)
@@ -110,7 +120,7 @@ class Equipo(Producto):
     
 class PPA(Producto):
     
-    #equipo = models.ForeignKey(Equipo, models.CASCADE, db_column='idproducto')
+    equipo = models.ForeignKey(Equipo, models.CASCADE, db_column='modelo')
 
     class Meta:
         verbose_name = _('Pieza')
@@ -177,16 +187,18 @@ class Proveedor(models.Model):
     name_validator = UnicodenameValidator()
     
     codmincex = models.CharField(
-                                 max_length=8,
+                                 max_length=16,
                                  primary_key=True, 
                                  verbose_name = 'Código MINCEX', 
                                  validators=[code_validator]
                                  )
+    
     nomproveedor = models.CharField(
-                                    max_length=45, 
+                                    max_length=100, 
                                     validators=[name_validator], 
                                     verbose_name = 'Nombre'
                                     )
+    
     codigopais = models.ForeignKey(
                                Pais, 
                                models.CASCADE, 
@@ -194,7 +206,6 @@ class Proveedor(models.Model):
                                verbose_name = 'País'
                                )
     
-
     clasificacion = models.TextField(
                                        choices = TIPO_PROVEEDOR_CHOICES,
                                        default = Productor,
@@ -249,5 +260,6 @@ class Casa_Matriz(Datos):
      
     class Meta:
         verbose_name = _('Casa Matriz')
+        verbose_name_plural = _('Casa Matriz')
         managed = True
         db_table = 'casa_matriz' 

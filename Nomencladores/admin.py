@@ -4,7 +4,6 @@ from tabnanny import verbose
 from django.contrib import admin
 from django.shortcuts import render
 from sqlalchemy import ForeignKey
-#from Solicitudes.models import Solicitud
 from attr import field
 from xlrd import open_workbook_xls
 from simplejson import dump
@@ -14,7 +13,11 @@ from django.forms import forms, formset_factory
 from django.contrib.auth.models import User
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from .resources import ProveedorResource, ClienteResource, PaisResource, ProvinciaResource, EquipoResource, PPAResource, NeumaticoResource, BateriaResource
+from .resources import ProveedorResource, ClienteResource, EquipoResource, PPAResource, NeumaticoResource, BateriaResource, MarcaResource
+from django import forms
+from import_export.forms import ImportForm, ConfirmImportForm
+from .models import *
+from .forms import *
 
 # Register your models here.     
 class Sucursal_CubaInline(admin.StackedInline):
@@ -61,31 +64,44 @@ class ClienteAdmin(ImportExportModelAdmin):
         
     
 @admin.register(Pais)
-class PaisAdmin(ImportExportModelAdmin):
-    resource_class = PaisResource
+class PaisAdmin(admin.ModelAdmin):
     fields = ['codigopais', 'nompais']
     list_display = ('codigopais', 'nompais')
     skip_unchanged = True
-    report_skipped = True
-
+    report_skipped = False
+    search_fields = ('nompais',)
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(PaisAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        return formfield
         
 @admin.register(Provincia)
-class ProvinciaAdmin(ImportExportModelAdmin):
-    resources = ProvinciaResource
+class ProvinciaAdmin(admin.ModelAdmin):
     list_display = ('codigoprovincia', 'nombre', 'capital')
-    
 
 
-@admin.register(Equipo)
-class EquipoAdmin(ImportExportModelAdmin):
-    resource_class = EquipoResource
-    list_display = ('idproducto', 'descripcion', 'modelo')
+@admin.register(Marca)
+class MarcaAdmin(ImportExportModelAdmin):
+    resource_class = MarcaResource
+    list_display = ('codigomarca', 'nommarca')
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         #form.base_fields['idpais'].widget.can_add_related = False
     
         return form
+    
+
+@admin.register(Equipo)
+class EquipoAdmin(ImportExportModelAdmin):
+    resource_class = EquipoResource
+    list_display = ('idproducto', 'descripcion', 'modelo', 'marca')
+        
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(EquipoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'marca':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
     
 
 
@@ -94,11 +110,15 @@ class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
     list_display = ('idproducto', 'descripcion')
         
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        #form.base_fields['idpais'].widget.can_add_related = False
-    
-        return form
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(PPAAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'modelo': 
+           formfield.widget.can_add_related = False
+           formfield.widget.can_change_related = False
+        if db_field.name == 'marca':
+           formfield.widget.can_add_related = False
+           formfield.widget.can_change_related = False
+        return formfield
     
     
 @admin.register(Neumatico)
@@ -106,11 +126,12 @@ class NeumaticoAdmin(ImportExportModelAdmin):
     resource_class = NeumaticoResource
     list_display = ('idproducto', 'descripcion', 'diametro', 'grosor')
         
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        #form.base_fields['idpais'].widget.can_add_related = False
-    
-        return form
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(NeumaticoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'marca':
+           formfield.widget.can_add_related = False
+           formfield.widget.can_change_related = False
+        return formfield
 
 
 @admin.register(Bateria)
@@ -118,7 +139,9 @@ class BateriaAdmin(ImportExportModelAdmin):
     resource_class = BateriaResource
     list_display = ('idproducto', 'descripcion', 'voltaje', 'amperaje')
         
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        #form.base_fields['idpais'].widget.can_add_related = False
-    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(BateriaAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'marca':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+        return formfield
