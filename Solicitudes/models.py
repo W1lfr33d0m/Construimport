@@ -74,6 +74,7 @@ class Solicitud(models.Model):
         editable = False, 
         verbose_name = 'Número'
         )
+    
     numcontratocliente = models.ForeignKey(
         Cliente, 
         models.DO_NOTHING, 

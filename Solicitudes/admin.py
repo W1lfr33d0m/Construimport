@@ -4,8 +4,10 @@ from hashlib import new
 from importlib import import_module
 from msilib.schema import Verb
 from multiprocessing.sharedctypes import Value
+import re
 from tabnanny import verbose
 from tkinter import Widget
+from unicodedata import name
 from urllib import request
 from django.contrib import admin
 #from django import forms
@@ -207,25 +209,28 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     #filter_horizontal = ('productos', )    
         
     def get_fields(self, request, obj=None):
-        if request.user.role == User.ESPECIALISTA_MARKETING and obj is None:
-            return  ['estado']
-        elif request.user.role == User.DIRECTOR_COMEX and obj is None:
-            return ['idespecialista']
-        elif request.user.role == User.ESPECIALISTA_MARKETING and obj is None:
-            return ['numcontratocliente', 'fechasol', 'observaciones', 'valor_estimado', 'marca', 'modelo']
+        if request.user.groups.filter(name = 'Marketing').exists():
+            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+        if request.user.groups.filter(name = 'DirectorDesarrollo').exists():
+            return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
+    
+    def form_change(self, request, obj=None):
+        if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
+            return ['estado', 'idespecialista']
         
     def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super(Solicitud_EquipoAdmin, self).get_form(request, obj, **kwargs)
+        form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        form.base_fields['estado'].required = False
-        form.base_fields['numcontratocliente'].widget.can_add_related = False
-        form.base_fields['numcontratocliente'].widget.can_delete_related = False
-        form.base_fields['numcontratocliente'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_add_related = False
-        form.base_fields['idespecialista'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_delete_related = False  
+        if request.user.groups.filter(name = 'Marketing').exists():
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['numcontratocliente'].widget.can_change_related = False
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
+            form.base_fields['idespecialista'].widget.can_add_related = False
+            form.base_fields['idespecialista'].widget.can_change_related = False
+            form.base_fields['idespecialista'].widget.can_delete_related = False  
         
         return form
     
@@ -270,18 +275,26 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     
     #filter_horizontal = ('productos', )    
         
+    def get_fields(self, request, obj=None):
+        if request.user.username == 'marketing':
+            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+        elif request.user.username == 'dirdesarrollo':
+            return ['estado', 'idespecialista']
+        return super().get_fields(request, obj)
+        
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        form.base_fields['numcontratocliente'].widget.can_add_related = False
-        form.base_fields['numcontratocliente'].widget.can_delete_related = False
-        form.base_fields['numcontratocliente'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_add_related = False
-        form.base_fields['idespecialista'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_delete_related = False  
-        #form.base_fields['productos'].widget.can_add_related = False
-        #form.base_fields['productos'].widget.can_add_related = False
+        if request.user.username == 'marketing':
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['numcontratocliente'].widget.can_change_related = False
+        elif request.user.username == 'dirdesarrollo':
+            form.base_fields['idespecialista'].widget.can_add_related = False
+            form.base_fields['idespecialista'].widget.can_change_related = False
+            form.base_fields['idespecialista'].widget.can_delete_related = False  
+        
         return form
     
     
@@ -325,19 +338,27 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
                    )
     
     #filter_horizontal = ('productos', )    
+    
+    def get_fields(self, request, obj=None):
+        if request.user.username == 'marketing':
+            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+        elif request.user.username == 'dirdesarrollo':
+            return ['estado', 'idespecialista']
+        return super().get_fields(request, obj)
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        form.base_fields['numcontratocliente'].widget.can_add_related = False
-        form.base_fields['numcontratocliente'].widget.can_delete_related = False
-        form.base_fields['numcontratocliente'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_add_related = False
-        form.base_fields['idespecialista'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_delete_related = False  
-        #form.base_fields['productos'].widget.can_add_related = False
-        #form.base_fields['productos'].widget.can_add_related = False
+        if request.user.username == 'marketing':
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['numcontratocliente'].widget.can_change_related = False
+        elif request.user.username == 'dirdesarrollo':
+            form.base_fields['idespecialista'].widget.can_add_related = False
+            form.base_fields['idespecialista'].widget.can_change_related = False
+            form.base_fields['idespecialista'].widget.can_delete_related = False  
+        
         return form
     
     
@@ -382,18 +403,26 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     
     #filter_horizontal = ('productos', )    
         
+    def get_fields(self, request, obj=None):
+        if request.user.username == 'marketing':
+            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+        elif request.user.username == 'dirdesarrollo':
+            return ['estado', 'idespecialista']
+        return super().get_fields(request, obj)
+        
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        form.base_fields['numcontratocliente'].widget.can_add_related = False
-        form.base_fields['numcontratocliente'].widget.can_delete_related = False
-        form.base_fields['numcontratocliente'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_add_related = False
-        form.base_fields['idespecialista'].widget.can_change_related = False
-        form.base_fields['idespecialista'].widget.can_delete_related = False  
-        #form.base_fields['productos'].widget.can_add_related = False
-        #form.base_fields['productos'].widget.can_add_related = False
+        if request.user.username == 'marketing':
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['numcontratocliente'].widget.can_change_related = False
+        elif request.user.username == 'dirdesarrollo':
+            form.base_fields['idespecialista'].widget.can_add_related = False
+            form.base_fields['idespecialista'].widget.can_change_related = False
+            form.base_fields['idespecialista'].widget.can_delete_related = False  
+        
         return form
     
     

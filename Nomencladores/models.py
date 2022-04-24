@@ -25,7 +25,7 @@ from django import forms
 from django.utils.text import slugify
 
 class Marca(models.Model):
-    codigomarca = models.IntegerField(max_length=5, primary_key=True, verbose_name='Código')
+    codigomarca = models.CharField(max_length=30, primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, verbose_name='Nombre')
 
     class Meta:
@@ -95,7 +95,6 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.CharField(max_length = 15, null= False, choices = UM, default = U)
     marca = models.ForeignKey(Marca, models.CASCADE, verbose_name='Marca')
-    #solicitud = models.ManyToManyField(Solicitud, through= '', field_name = 'numsolicitud')
     
     class Meta:
         abstract = True
@@ -120,7 +119,7 @@ class Equipo(Producto):
     
 class PPA(Producto):
     
-    equipo = models.ForeignKey(Equipo, models.CASCADE, db_column='modelo')
+    equipo = models.ManyToManyField(Equipo, verbose_name='Equipos')
 
     class Meta:
         verbose_name = _('Pieza')
@@ -211,6 +210,12 @@ class Proveedor(models.Model):
                                        default = Productor,
                                        verbose_name = 'Clasificación'
                                     )
+    
+    
+    marca = models.ManyToManyField(
+                                Marca,
+                                verbose_name='Marcas'
+    )
     
     
     class Meta:

@@ -109,15 +109,24 @@ class EquipoAdmin(ImportExportModelAdmin):
 class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
     list_display = ('idproducto', 'descripcion')
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == 'marca':
+            kwargs["queryset"] = Equipo.objects.filter(owner=request.marca)
+        return super(PPAAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+        
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(PPAAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'modelo': 
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
-        if db_field.name == 'marca':
+        elif db_field.name == 'marca':
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
+        elif db_field.name == 'equipo':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
         return formfield
     
     
