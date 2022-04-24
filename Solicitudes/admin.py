@@ -211,14 +211,10 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
-        if request.user.groups.filter(name = 'DirectorDesarrollo').exists():
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
     
-    def form_change(self, request, obj=None):
-        if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
-            return ['estado', 'idespecialista']
-        
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
@@ -231,32 +227,29 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['idespecialista'].widget.can_add_related = False
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  
-        
         return form
     
-    def post_save(self, request, queryset):
+    
+    def save_model(self, request, obj=None):
+        messages.success(request, 'Solicitud añadida correctamente')
+        return super(Solicitud_Equipo, self).save(request, obj)
+    
+    def post_save(self, request, queryset, obj=None):
         s = queryset.get(estado = 'Pendiente')
-        if request.user.username == 'director_desarrollo':
+        if request.user.groups.filter(name = 'Marketing').exists():
             self.message_user(request, ngettext(
                 '%d Se añadieron nuevas solicitudes.', s,
             ) %s, messages.SUCCESS)
         
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
-    
-                
-    #jazzmin_section_order = ('solicitud', 'Productos')
-    
+        
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
     
-    def pending_alert(self, request):
-        for sol in self:
-            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
-                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
         
 @admin.register(Solicitud_PPA)
 class Solicitud_PPAAdmin(ImportExportModelAdmin):
@@ -276,27 +269,25 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     #filter_horizontal = ('productos', )    
         
     def get_fields(self, request, obj=None):
-        if request.user.username == 'marketing':
+        if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
-        elif request.user.username == 'dirdesarrollo':
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
-        
+            
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.username == 'marketing':
+        if request.user.groups.filter(name = 'Marketing').exists():
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.username == 'dirdesarrollo':
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             form.base_fields['idespecialista'].widget.can_add_related = False
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  
-        
         return form
-    
     
     def post_save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')
@@ -340,33 +331,36 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #filter_horizontal = ('productos', )    
     
     def get_fields(self, request, obj=None):
-        if request.user.username == 'marketing':
-            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
-        elif request.user.username == 'dirdesarrollo':
+        if request.user.groups.filter(name = 'Marketing').exists():
+           return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
+    
+    def form_change(self, request, obj=None):
+        if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
+            return ['estado', 'idespecialista']
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.username == 'marketing':
+        if request.user.groups.filter(name = 'Marketing').exists():
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.username == 'dirdesarrollo':
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             form.base_fields['idespecialista'].widget.can_add_related = False
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  
-        
         return form
     
     
-    def post_save(self, request, queryset):
+    def save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')
-        if request.user.username == 'director_desarrollo':
-            self.message_user(request, ngettext(
-                '%d Se añadieron nuevas solicitudes.', s,
+        if request.user.groups.filter(name = 'Marketing').exists():
+           self.message_user(request, ngettext(
+            '%d Se añadieron nuevas solicitudes.', s,
             ) %s, messages.SUCCESS)
         
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
@@ -404,27 +398,29 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #filter_horizontal = ('productos', )    
         
     def get_fields(self, request, obj=None):
-        if request.user.username == 'marketing':
+        if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
-        elif request.user.username == 'dirdesarrollo':
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
+    
+    def form_change(self, request, obj=None):
+        if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
+            return ['estado', 'idespecialista']
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['numcontratocliente', 'estado']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.username == 'marketing':
+        if request.user.groups.filter(name = 'Marketing').exists():
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.username == 'dirdesarrollo':
+        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             form.base_fields['idespecialista'].widget.can_add_related = False
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  
-        
         return form
-    
     
     def post_save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')

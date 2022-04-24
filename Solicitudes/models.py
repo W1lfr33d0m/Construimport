@@ -6,7 +6,9 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from ast import Raise
-from datetime import date, datetime
+import calendar
+from calendar import MONDAY, SATURDAY, SUNDAY
+from datetime import date, datetime, timedelta
 from math import prod
 from re import T
 from tabnanny import verbose
@@ -34,19 +36,28 @@ from django.contrib.auth.models import User, UserManager, AbstractBaseUser, Abst
 from django.utils.timezone import now
 
 def validate_numsolicitud(numsolicitud):
-        if numsolicitud <= 0:
-            raise ValidationError(
-            _('%(numsolicitud)s no es correcto'),
-            params={'numsolicitud': numsolicitud},
-        )
+    if numsolicitud <= 0:
+        raise ValidationError(
+        _('%(numsolicitud)s no es correcto'),
+        params={'numsolicitud': numsolicitud},
+       )
             
 def validate_cantidad(cantidad):
-        if cantidad <= 0:
-            raise ValidationError(
-            _('%(cantidad)s debe ser un valor positivo'),
-            params={'cantidad': cantidad},
+    if cantidad <= 0:
+        raise ValidationError(
+        _('%(cantidad)s debe ser un valor positivo'),
+        params={'cantidad': cantidad},
         )
             
+def validate_fecha(fechasol):
+    if date.today().weekday() == 5 or date.today().weekday() == 6:
+        raise ValidationError(
+        _('%(fechasol)s debe ser un día de la semana'),
+        params={'fechasol': fechasol},
+        )
+ 
+        
+
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
@@ -83,7 +94,7 @@ class Solicitud(models.Model):
         )
     
     fechasol = models.DateField(
-        #default= date.today(), 
+        default= date.today(), 
         #validators=[validate_fecha], 
         verbose_name = 'Fecha'
         )
