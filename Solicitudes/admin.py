@@ -166,7 +166,7 @@ class Solicitud_PPAInline(admin.StackedInline):
         return formfield
     
 class Solicitud_NeumaticoInline(admin.StackedInline):
-    #resource_class = Solicitud_ProductoResource
+  
     model = Solicitud_Neumatico_Proxy
     fk_name = 'numsolicitud'
     extra = 1
@@ -233,21 +233,24 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['idespecialista'].widget.can_delete_related = False  
         return form
       
-    def save_model(self, request,  obj, form, change):
-        #obj.user = request.user
-        messages.add_message(
-        request = request,
-        message = _('La solicitud fue añadida correctamente'), 
-        level = messages.SUCCESS)
-        return super().save_model(request, obj, form, change)
+    def response_add(self, request, obj, post_url_continue=None):
+        msg = "Solicitud agregada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_post_save_add(request, obj)
+    
+    def response_change(self, request, obj, post_url_continue=None):
+        msg = "Solicitud modificada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_post_save_change(request, obj)
     
     def response_post_save_add(self, request, obj=None):
-        send_mail(
-                   'Solicitud agregada',
-                    'Solicitud pendiente a aprobar',
-                    'wilferreira3@nauta.cu',
-                    ['wilfreferreira3@gmail.com'],
-                    fail_silently=False,
+        if request.user.groups.filter(name='Marketing').exists():
+           send_mail(
+                   'Nueva solicitud',
+                   'Tiene solicitudes pendientes a aprobar',
+                   'informatico@construimport.cu',
+                   ['informatico@construimport.cu'],
+                   fail_silently=False,
                 )
         return super().response_post_save_add(request, obj)
         
