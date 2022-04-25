@@ -215,7 +215,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
-        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
     
@@ -227,7 +227,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
             form.base_fields['idespecialista'].widget.can_add_related = False
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  

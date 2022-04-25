@@ -1,6 +1,8 @@
 from pydoc import cli
+import re
 from signal import raise_signal
 from tabnanny import verbose
+from unicodedata import name
 from django.db import models
 from django.db.models import ManyToManyField, ManyToManyRel, Model
 from django.utils.translation import gettext as _
@@ -20,12 +22,17 @@ from django.contrib.auth.models import User, Group
 #        params={'idespecialista': idespecialista},
 #        ) 
 
+#def filter_especialista(idespecialista):
+#   if idespecialista.user.groups.filter(name = 'Especialista_COMEX').exists():
+#       return True
 
 class EspecialistaCOMEX(models.Model):
     
     PPA = 'PZ'
-    Equipo = 'EQ'
-    CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo')]
+    Equipo = 'Equipo'
+    Bateria = 'Batería'
+    Neumatico = 'Neumático'
+    CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo'), (Bateria, 'Batería'), (Neumatico, 'Neumático') ]
     name_validator = UnicodenameValidator()
     
     
@@ -35,7 +42,7 @@ class EspecialistaCOMEX(models.Model):
                                           primary_key=True, 
                                           db_column='idespecialista', 
                                           verbose_name='Usuario',
-                                          #validators=[validate_especialista]
+                                          #validators=[filter_especialista]
                                           )
     categoria = models.CharField(
                                  max_length = 10, 
@@ -53,4 +60,5 @@ class EspecialistaCOMEX(models.Model):
     def __str__(self):
         
         return '{}'.format(self.idespecialista)
-  
+    
+    
