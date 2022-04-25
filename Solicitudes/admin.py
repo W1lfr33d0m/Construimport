@@ -205,7 +205,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'valor_estimado',
                    'edit_link'
                    )
-    
+            
     #filter_horizontal = ('productos', )    
         
     def get_fields(self, request, obj=None):
