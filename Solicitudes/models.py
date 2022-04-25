@@ -140,6 +140,7 @@ class Solicitud(models.Model):
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
+    
 
 class Solicitud_Equipo(Solicitud):
     
@@ -386,7 +387,7 @@ class Solicitud_Equipo_Proveedor(models.Model):
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
         managed = True
-        db_table = 'solicitud_equipo_poveedor'
+        db_table = 'solicitud_equipo_proveedor'
     
     
 
@@ -408,7 +409,7 @@ class Solicitud_PPA_Proveedor(models.Model):
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
         managed = True
-        db_table = 'solicitud_ppa_poveedor'
+        db_table = 'solicitud_ppa_proveedor'
     
     def __str__(self):
            return '{}'.format(self.codmincex)
@@ -432,7 +433,7 @@ class Solicitud_Neumatico_Proveedor(models.Model):
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
         managed = True
-        db_table = 'solicitud_neumatico_poveedor'
+        db_table = 'solicitud_neumatico_proveedor'
     
     def __str__(self):
            return '{}'.format(self.codmincex)
@@ -456,7 +457,7 @@ class Solicitud_Bateria_Proveedor(models.Model):
         verbose_name = 'Proveedor'
         verbose_name_plural = 'Proveedores'
         managed = True
-        db_table = 'solicitud_bateria_poveedor'
+        db_table = 'solicitud_bateria_proveedor'
     
     def __str__(self):
            return '{}'.format(self.codmincex)
