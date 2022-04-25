@@ -1,4 +1,5 @@
 from cProfile import label
+from django.core.mail import send_mail
 from email import message
 from hashlib import new
 from importlib import import_module
@@ -34,6 +35,7 @@ from notifications.signals import notify
 from django.forms import forms, formset_factory
 from django.contrib import messages
 from django.utils.translation import ngettext
+from django.utils.translation import gettext as _
 
 # Register your models here.
 
@@ -51,6 +53,10 @@ class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
         formfield.widget.can_add_related = False
         formfield.widget.can_change_related = False
         return formfield
+    
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        
     
 class Solicitud_PPA_ProveedorInline(admin.StackedInline):
     model =  Solicitud_PPA_Proveedor
@@ -135,7 +141,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['', ]
-    
+        
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_EquipoInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto':
@@ -196,7 +202,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Equipo_ProveedorInline, Solicitud_EquipoInline)
+    inlines = (  Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -206,8 +212,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
             
-    #filter_horizontal = ('productos', )    
-        
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
@@ -228,18 +232,24 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['idespecialista'].widget.can_change_related = False
             form.base_fields['idespecialista'].widget.can_delete_related = False  
         return form
+      
+    def save_model(self, request,  obj, form, change):
+        #obj.user = request.user
+        messages.add_message(
+        request = request,
+        message = _('La solicitud fue añadida correctamente'), 
+        level = messages.SUCCESS)
+        return super().save_model(request, obj, form, change)
     
-    
-    def save_model(self, request, obj=None):
-        messages.success(request, 'Solicitud añadida correctamente')
-        return super(Solicitud_Equipo, self).save(request, obj)
-    
-    def post_save(self, request, queryset, obj=None):
-        s = queryset.get(estado = 'Pendiente')
-        if request.user.groups.filter(name = 'Marketing').exists():
-            self.message_user(request, ngettext(
-                '%d Se añadieron nuevas solicitudes.', s,
-            ) %s, messages.SUCCESS)
+    def response_post_save_add(self, request, obj=None):
+        send_mail(
+                   'Solicitud agregada',
+                    'Solicitud pendiente a aprobar',
+                    'wilferreira3@nauta.cu',
+                    ['wilfreferreira3@gmail.com'],
+                    fail_silently=False,
+                )
+        return super().response_post_save_add(request, obj)
         
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
@@ -249,7 +259,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
-    
+        
         
 @admin.register(Solicitud_PPA)
 class Solicitud_PPAAdmin(ImportExportModelAdmin):
