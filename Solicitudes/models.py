@@ -31,7 +31,7 @@ from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
 from Nomencladores.models import Cliente, Pais, Proveedor, Producto, Equipo, PPA, Neumatico, Bateria 
-from COMEX.models import EspecialistaCOMEX
+#from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, AbstractUser
 from django.utils.timezone import now
 
@@ -96,7 +96,7 @@ class Solicitud(models.Model):
     fechasol = models.DateField(
         default= date.today(), 
         #validators=[validate_fecha], 
-        verbose_name = 'Fecha'
+        verbose_name = 'Fecha de la Solicitud'
         )
     
     estado = models.CharField(
@@ -117,16 +117,14 @@ class Solicitud(models.Model):
         null= False,
         verbose_name= 'Valor Estimado',
         )
-    
+        
     idespecialista = models.ForeignKey(
-        EspecialistaCOMEX, 
-        models.DO_NOTHING, 
-        db_column='idespecialista', 
-        null=True, 
-        blank=True, 
-        verbose_name='Especialista COMEX'
-        )
-    
+        'COMEX.EspecialistaCOMEX',
+        models.DO_NOTHING,
+        db_column='idespecialista',
+        verbose_name='Especialista COMEX',
+        null=True,
+    )
     
     class Meta:
         abstract = True

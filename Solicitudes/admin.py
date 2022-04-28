@@ -1,4 +1,7 @@
+from argparse import Action
 from cProfile import label
+from sre_constants import SUCCESS
+from types import new_class
 from django.core.mail import send_mail
 from email import message
 from hashlib import new
@@ -13,6 +16,7 @@ from urllib import request
 from django.contrib import admin
 #from django import forms
 from django.shortcuts import render
+from requests import post
 from attr import attributes, field
 from pydantic import Field
 from .models import Solicitud, Solicitud_Equipo_Proveedor,  Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_Bateria_Proveedor, Solicitud_Equipo, Solicitud_Equipo_Proxy, Solicitud_PPA, Solicitud_PPA_Proxy, Solicitud_Neumatico, Solicitud_Neumatico_Proxy,Solicitud_Bateria, Solicitud_Bateria_Proxy
@@ -36,6 +40,7 @@ from django.forms import forms, formset_factory
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.utils.translation import gettext as _
+from COMEX.models import Oferta_Equipo, Oferta_Equipo_Proxy
 
 # Register your models here.
 
@@ -103,11 +108,6 @@ class SolicitudResource(resources.ModelResource):
         widget= ForeignKeyWidget(Cliente, 'nomcliente')
     )
     
-    idespecialista = fields.Field(
-       column_name= 'idespecialista',
-       attribute= 'idespecialista',
-       widget= ForeignKeyWidget(EspecialistaCOMEX, 'nombre')
-    )
     
     class Meta:
         model = Solicitud
@@ -129,7 +129,6 @@ class SolicitudResource(resources.ModelResource):
                   'valor_estimado',
                   'estado', 
                   
-                  'idespecialista'
                   )
     
 class Solicitud_EquipoInline(admin.StackedInline):
@@ -197,12 +196,15 @@ class Solicitud_BateriaInline(admin.StackedInline):
             formfield.widget.can_change_related = False
         return formfield
 
+
+            
+
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = (  Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
+    inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -211,13 +213,17 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'valor_estimado',
                    'edit_link'
                    )
-            
+    
+
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            return ['estado', 'idespecialista']
+            #actions = ['designar Especialista COMEX']
+            return ['estado','idespecialista']
+            
         return super().get_fields(request, obj)
+            
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -227,15 +233,15 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            form.base_fields['idespecialista'].widget.can_add_related = False
-            form.base_fields['idespecialista'].widget.can_change_related = False
-            form.base_fields['idespecialista'].widget.can_delete_related = False  
         return form
       
     def response_add(self, request, obj, post_url_continue=None):
-        msg = "Solicitud agregada correctamente"
-        self.message_user(request, msg, level=messages.SUCCESS)
+        if SUCCESS:
+            msg = "Solicitud agregada correctamente"
+            self.message_user(request, msg, level=messages.SUCCESS)
+        else:
+            msg = "Error Agregando Solicitud"
+            self.message_user(request, msg, level=messages.SUCCESS)    
         return self.response_post_save_add(request, obj)
     
     def response_change(self, request, obj, post_url_continue=None):
@@ -285,7 +291,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            return ['estado', 'idespecialista']
+            return ['estado',]
         return super().get_fields(request, obj)
             
     def get_form(self, request, obj=None, change=False, **kwargs):
@@ -296,10 +302,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            form.base_fields['idespecialista'].widget.can_add_related = False
-            form.base_fields['idespecialista'].widget.can_change_related = False
-            form.base_fields['idespecialista'].widget.can_delete_related = False  
+        
         return form
     
     def post_save(self, request, queryset):
@@ -347,12 +350,12 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name = 'Marketing').exists():
            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            return ['estado', 'idespecialista']
+            return ['estado',]
         return super().get_fields(request, obj)
     
     def form_change(self, request, obj=None):
         if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
-            return ['estado', 'idespecialista']
+            return ['estado', ]
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -362,10 +365,6 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            form.base_fields['idespecialista'].widget.can_add_related = False
-            form.base_fields['idespecialista'].widget.can_change_related = False
-            form.base_fields['idespecialista'].widget.can_delete_related = False  
         return form
     
     
@@ -414,12 +413,12 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            return ['estado', 'idespecialista']
+            return ['estado',]
         return super().get_fields(request, obj)
     
     def form_change(self, request, obj=None):
         if request.user.groups.filter(name = 'DirectorDesarrollo').exists:
-            return ['estado', 'idespecialista']
+            return ['estado',]
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -429,10 +428,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            form.base_fields['idespecialista'].widget.can_add_related = False
-            form.base_fields['idespecialista'].widget.can_change_related = False
-            form.base_fields['idespecialista'].widget.can_delete_related = False  
+        
         return form
     
     def post_save(self, request, queryset):
