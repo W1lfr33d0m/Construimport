@@ -69,15 +69,27 @@ class EspecialistaCOMEX(models.Model):
     
 class Oferta(models.Model):
     
-    Oferta = 'Oferta'
-    Reoferta = 'Reoferta'
-    Contraoferta = 'Contraoferta'
+    Aprobada = 'Aprobada'
+    Cancelada = 'Cancelada'
+    Pendiente = 'Pendiente'
+    ESTADO_CHOICES = [
+                      (Aprobada, 'Aprobada'), 
+                      (Cancelada, 'Cancelada'), 
+                      (Pendiente, 'Pendiente')
+                      ]
     
-    TIPO_CHOICES = [
-                    (Oferta, 'Oferta'),
-                    (Reoferta, 'Reoferta'),
-                    (Contraoferta, 'Contraoferta')
-    ]
+    Treinta = '30 Días'
+    Sesenta = '60 Días'
+    
+    VALIDEZ_CHOICES = [
+                       (Treinta, '30 Días'),
+                       (Sesenta, '60 Días')
+                      ]
+    
+    numero = models.IntegerField(
+        primary_key=True,
+        verbose_name='Número'
+    )
             
     fecha = models.DateField(
         default= date.today(), 
@@ -101,14 +113,16 @@ class Oferta(models.Model):
         blank=True
     )
     
-    validez = models.DateField(
-        
+    validez = models.CharField(
+        max_length=30,
+        choices= VALIDEZ_CHOICES,
+        default=Treinta
     )
     
-    tipo = models.CharField(
+    estado = models.CharField(
         max_length=30,
-        choices=TIPO_CHOICES,
-        default='Oferta'
+        choices=ESTADO_CHOICES,
+        default='Pendiente'
     )
     
     especialista = models.ForeignKey(
@@ -132,7 +146,6 @@ class Oferta_Equipo(Oferta):
     solicitud = models.ForeignKey(
         Solicitud_Equipo,
         models.DO_NOTHING,
-        primary_key=True,
         db_column='numsolicitud',
         verbose_name='Solicitud'        
     )

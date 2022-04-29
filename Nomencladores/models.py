@@ -25,7 +25,7 @@ from django import forms
 from django.utils.text import slugify
 
 class Marca(models.Model):
-    codigomarca = models.CharField(max_length=30, primary_key=True, verbose_name='Código')
+    codigomarca = models.AutoField(max_length=4, primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, verbose_name='Nombre')
 
     class Meta:
@@ -55,10 +55,10 @@ class Cliente(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratocliente = models.IntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
+    numcontratocliente = models.BigIntegerField(max_length=8, primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
-    provincia = models.ForeignKey(Provincia, models.CASCADE, db_column='provincia', verbose_name='Provincia')
+    codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', verbose_name='Provincia')
 
     class Meta:
         managed = True

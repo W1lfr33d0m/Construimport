@@ -218,8 +218,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Bottom of the file
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '10.0.0.54'
+EMAIL_HOST = 'smtp.nauta.cu'
 EMAIL_PORT = 25
 EMAIL_USE_TLS = False
-EMAIL_HOST_USER = 'informatico@construimport.cu'
-EMAIL_HOST_PASSWORD = 'C0nstmanager*22'
+EMAIL_HOST_USER = 'wilferreira3@nauta.cu'
+EMAIL_HOST_PASSWORD = '123'

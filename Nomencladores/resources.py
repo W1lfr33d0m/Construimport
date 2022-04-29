@@ -30,7 +30,7 @@ class ClienteResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = False
         import_id_fields = ('numcontratocliente',)
-        fields = ('numcontratocliente', 'nomcliente', 'OSDE', 'provincia')
+        fields = ('numcontratocliente', 'nomcliente', 'OSDE', 'codigoprovincia')
 
 
 class MarcaResource(resources.ModelResource):

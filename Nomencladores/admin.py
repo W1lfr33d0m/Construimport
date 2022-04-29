@@ -53,11 +53,11 @@ class ProveedorAdmin(ImportExportModelAdmin):
 @admin.register(Cliente)
 class ClienteAdmin(ImportExportModelAdmin):
     resource_class = ClienteResource
-    list_display = ('numcontratocliente', 'nomcliente', 'OSDE', 'provincia')
+    list_display = ('numcontratocliente', 'nomcliente', 'OSDE', 'codigoprovincia')
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'provincia':
+        if db_field.name == 'codigoprovincia':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield

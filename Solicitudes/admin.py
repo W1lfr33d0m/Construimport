@@ -236,12 +236,8 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         return form
       
     def response_add(self, request, obj, post_url_continue=None):
-        if SUCCESS:
-            msg = "Solicitud agregada correctamente"
-            self.message_user(request, msg, level=messages.SUCCESS)
-        else:
-            msg = "Error Agregando Solicitud"
-            self.message_user(request, msg, level=messages.SUCCESS)    
+        msg = "Solicitud agregada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
         return self.response_post_save_add(request, obj)
     
     def response_change(self, request, obj, post_url_continue=None):
@@ -254,7 +250,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
            send_mail(
                    'Nueva solicitud',
                    'Tiene solicitudes pendientes a aprobar',
-                   'informatico@construimport.cu',
+                   'wilferreira3@nauta.cu',
                    ['informatico@construimport.cu'],
                    fail_silently=False,
                 )
