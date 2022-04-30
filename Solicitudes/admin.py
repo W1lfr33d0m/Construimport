@@ -213,7 +213,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'valor_estimado',
                    'edit_link'
                    )
-    
+
 
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
