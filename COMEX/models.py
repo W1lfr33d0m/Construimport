@@ -86,7 +86,7 @@ class Oferta(models.Model):
                        (Sesenta, '60 Días')
                       ]
     
-    numero = models.IntegerField(
+    numero = models.AutoField(
         primary_key=True,
         verbose_name='Número'
     )
@@ -100,8 +100,9 @@ class Oferta(models.Model):
     pais = models.ForeignKey(
         Pais,
         models.DO_NOTHING,
-        verbose_name='País de Origen de la carga',
         db_column='idpais',
+        null=True,
+        verbose_name='País de Origen de la carga',
         blank=True
     )
     
@@ -131,6 +132,12 @@ class Oferta(models.Model):
         db_column='idespecialista'
     )
     
+    valor_estimado = models.FloatField(
+        max_length= 10,
+        null= False,
+        verbose_name= 'Valor Estimado',
+    )
+    
     class Meta:
         abstract = True
         app_label = ('COMEX')
@@ -141,6 +148,7 @@ class Oferta(models.Model):
     def __str__(self):
         return '{}'.format(self.solicitud)
     
+
 class Oferta_Equipo(Oferta):
     
     solicitud = models.ForeignKey(
@@ -179,17 +187,17 @@ class Oferta_Equipo_Proxy(models.Model):
     )
     
     cantidad = models.IntegerField(
-        max_length=4,
+        max_length=8,
         
     )
     
     precio = models.FloatField(
-        max_length=4,
+        max_length=8,
         
     )
     
     importe = models.FloatField(
-        max_length=4
+        max_length=8
     )
     
     class Meta:

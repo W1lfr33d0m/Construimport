@@ -24,8 +24,12 @@ from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
 from django import forms
 from django.utils.text import slugify
 
+"""
+Clase Marca
+    
+"""
 class Marca(models.Model):
-    codigomarca = models.AutoField(max_length=4, primary_key=True, verbose_name='Código')
+    codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, verbose_name='Nombre')
 
     class Meta:
@@ -36,6 +40,11 @@ class Marca(models.Model):
         
     def __str__(self):
         return '{}'.format(self.nommarca)
+    
+"""
+Clase Provincia 
+    
+"""
 
 class  Provincia(models.Model):
     codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura')
@@ -51,6 +60,10 @@ class  Provincia(models.Model):
     def __str__(self):
         return '{}'.format(self.nombre)
 
+"""
+Clase Cliente
+    
+"""
 class Cliente(models.Model):
     
     name_validator = UnicodenameValidator()
@@ -67,6 +80,10 @@ class Cliente(models.Model):
     def __str__(self):
         return '{}'.format(self.nomcliente)
 
+"""
+Clase Pais
+    
+"""
 
 class Pais(models.Model):
     
@@ -82,7 +99,10 @@ class Pais(models.Model):
     def __str__(self):
         return '{}'.format(self.nompais)
 
-
+"""
+Clase abstracta Producto
+    
+"""
 class Producto(models.Model):
     
     desc_validator = UnicodenameValidator
@@ -102,6 +122,10 @@ class Producto(models.Model):
     def __str__(self):
         return '{}'.format(self.descripcion)
 
+"""
+Clase Equipo.
+    
+"""
 class Equipo(Producto):
         
     modelo = models.CharField(
@@ -116,7 +140,11 @@ class Equipo(Producto):
         
     def __str__(self):
         return '{}'.format(self.descripcion)
+   
+"""
+Clase Pieza
     
+"""
 class PPA(Producto):
     
     equipo = models.ManyToManyField(Equipo, verbose_name='Equipos')
@@ -129,7 +157,12 @@ class PPA(Producto):
         
     def __str__(self):
         return '{}'.format(self.descripcion)
+
+"""
+Clase Neumatico
     
+""" 
+   
 class Neumatico(Producto):
     diametro = models.FloatField(
         max_length=4
@@ -147,7 +180,12 @@ class Neumatico(Producto):
         
     def __str__(self):
         return '{}'.format(self.descripcion)
-        
+
+"""
+Clase Bateria
+    
+"""        
+
 class Bateria(Producto):
     voltaje = models.FloatField(
         max_length=4
@@ -165,7 +203,12 @@ class Bateria(Producto):
         
     def __str__(self):
         return '{}'.format(self.descripcion)
+
+"""
+Clase abstracta Datos
     
+"""    
+
 class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, max_length=4),
     direccion = models.CharField(max_length=100, verbose_name='Dirección')
@@ -176,6 +219,10 @@ class Datos(models.Model):
     class Meta:
         abstract = True
 
+"""
+Clase Proveedor
+    
+"""
 class Proveedor(models.Model):
     
     code_validator = UnicodeCodeValidator
@@ -216,8 +263,7 @@ class Proveedor(models.Model):
                                 Marca,
                                 verbose_name='Marcas'
     )
-    
-    
+     
     class Meta:
         managed = True
         verbose_name = _('Proveedor')
@@ -229,9 +275,13 @@ class Proveedor(models.Model):
         
         return '{}'.format(self.nomproveedor)
     
-class Sucursal_Cuba(Datos):
     
+"""
+Clase Sucursal en Cuba
     
+"""    
+
+class Sucursal_Cuba(Datos):    
            
     carnet_trabajo = models.CharField(
                                       verbose_name='Carnet de Trabajo',
@@ -250,9 +300,11 @@ class Sucursal_Cuba(Datos):
         managed = True
         db_table = 'sucursal_cuba'
         
+"""
+Clase Casa Matriz
     
+""" 
 class Casa_Matriz(Datos):
-    
     
     sitio_web = models.CharField(max_length=60, verbose_name='Página Web')
     

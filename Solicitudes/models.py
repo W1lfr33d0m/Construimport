@@ -30,7 +30,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
 #from taggit.managers import TaggableManager
-from Nomencladores.models import Cliente, Pais, Proveedor, Producto, Equipo, PPA, Neumatico, Bateria 
+from Nomencladores.models import *
 #from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, AbstractUser
 from django.utils.timezone import now
@@ -55,9 +55,11 @@ def validate_fecha(fechasol):
         _('%(fechasol)s debe ser un día de la semana'),
         params={'fechasol': fechasol},
         )
- 
         
-
+"""
+Clase Abstracta de Solicitudess
+    
+"""
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
@@ -78,7 +80,6 @@ class Solicitud(models.Model):
                     (Bateria, 'Batería'),
                     (Neumatico, 'Neumático'),
                     ]
-    
     
     numsolicitud = models.AutoField(
         primary_key=True, 
@@ -137,9 +138,12 @@ class Solicitud(models.Model):
         ordering = ['numsolicitud', 'fechasol']
         
     def __str__(self):
-        return '{}'.format(self.numsolicitud)
-    
+        return '{}'.format(self.numsolicitud)   
 
+"""
+Clase de Solicitud de Equipos
+    
+"""
 class Solicitud_Equipo(Solicitud):
     
     equipo = models.ManyToManyField(
@@ -162,7 +166,70 @@ class Solicitud_Equipo(Solicitud):
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
-       
+        
+"""
+Clases para representar las relaciones de muchos a muchos.
+    
+"""
+class Solicitud_Equipo_Proxy(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Equipo, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    idproducto = models.ForeignKey(
+        Equipo, 
+        models.CASCADE, 
+        db_column='idproducto',
+        )
+    
+    cantidad = models.IntegerField(
+        blank=False, 
+        null=False, 
+        validators=[validate_cantidad]
+        )
+    
+    class Meta:
+        verbose_name = 'Equipo'
+        verbose_name_plural = 'Equipos'
+        managed = True
+        db_table = 'solicitud_equipo_proxy'
+     
+    def __str__(self):
+           return '{}'.format(self.idproducto)
+
+    
+
+class Solicitud_Equipo_Proveedor(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Equipo, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        db_column='codmincex',
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_equipo_proveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
+
+"""
+Clase de Solicitud Piezas
+    
+"""              
 class Solicitud_PPA(Solicitud):
     
     ppa = models.ManyToManyField(
@@ -190,84 +257,11 @@ class Solicitud_PPA(Solicitud):
         
     def __str__(self):
         return '{}'.format(self.numsolicitud)
-    
-    
-class Solicitud_Neumatico(Solicitud):
-    
-    neumatico = models.ManyToManyField(
-        Neumatico,
-        through= 'Solicitud_Neumatico_Proxy'
-    )
-    
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_Neumatico_Proveedor',
-        verbose_name='Proveedores'
-    )
-    
-    class Meta:
-        verbose_name = _('Solicitud de Neumático')
-        verbose_name_plural = _('Solicitudes de Neumáticos')
-        managed = True
-        db_table = 'solicitud_neumatico'
-    
-    def __str__(self):
-        return '{}'.format(self.numsolicitud)
-    
-    
-class Solicitud_Bateria(Solicitud):
-    
-    bateria = models.ManyToManyField(
-        Bateria,
-        through= 'Solicitud_Bateria_Proxy'
-    )
-    
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_Bateria_Proveedor',
-        verbose_name='Proveedores'
-    )
-    
-    class Meta:
-        verbose_name = _('Solicitud de Batería')
-        verbose_name_plural = _('Solicitudes de Baterías')
-        managed = True
-        db_table = 'solicitud_bateria'
-    
-    def __str__(self):
-        return '{}'.format(self.numsolicitud)
-    
-class Solicitud_Equipo_Proxy(models.Model):
-    
-    numsolicitud = models.ForeignKey(
-        Solicitud_Equipo, 
-        models.CASCADE, 
-        db_column='numsolicitud',
-        )
-    
-    idproducto = models.ForeignKey(
-        Equipo, 
-        models.CASCADE, 
-        db_column='idproducto',
-        )
-    
-    cantidad = models.IntegerField(
-        blank=False, 
-        null=False, 
-        validators=[validate_cantidad]
-        )
-    
-    
-    class Meta:
-        verbose_name = 'Equipo'
-        verbose_name_plural = 'Equipos'
-        managed = True
-        db_table = 'solicitud_equipo_proxy'
-    
-    
-    def __str__(self):
-           return '{}'.format(self.idproducto)
 
+"""
+Clases para representar las relaciones de muchos a muchos.
+    
+"""
 
 class Solicitud_PPA_Proxy(models.Model):
     
@@ -300,8 +294,62 @@ class Solicitud_PPA_Proxy(models.Model):
     
     def __str__(self):
            return '{}'.format(self.idproducto)
+    
+
+class Solicitud_PPA_Proveedor(models.Model):
+        
+    numsolicitud = models.ForeignKey(
+        Solicitud_PPA, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_ppa_proveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
        
-       
+"""
+Clase de Solicitud de Neumaticos
+    
+"""
+class Solicitud_Neumatico(Solicitud):
+    
+    neumatico = models.ManyToManyField(
+        Neumatico,
+        through= 'Solicitud_Neumatico_Proxy'
+    )
+    
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Neumatico_Proveedor',
+        verbose_name='Proveedores'
+    )
+    
+    class Meta:
+        verbose_name = _('Solicitud de Neumático')
+        verbose_name_plural = _('Solicitudes de Neumáticos')
+        managed = True
+        db_table = 'solicitud_neumatico'
+    
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+    
+"""
+Clases para representar las relaciones de muchos a muchos.
+    
+"""
+
 class Solicitud_Neumatico_Proxy(models.Model):
     
     numsolicitud = models.ForeignKey(
@@ -333,7 +381,62 @@ class Solicitud_Neumatico_Proxy(models.Model):
     
     def __str__(self):
            return '{}'.format(self.idproducto)
-       
+
+
+class Solicitud_Neumatico_Proveedor(models.Model):
+    
+    numsolicitud = models.ForeignKey(
+        Solicitud_Neumatico, 
+        models.CASCADE, 
+        db_column='numsolicitud',
+        )
+    
+    codmincex = models.ForeignKey(
+        Proveedor,
+        models.CASCADE,
+        verbose_name = 'Proveedor',
+        )
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
+        managed = True
+        db_table = 'solicitud_neumatico_proveedor'
+    
+    def __str__(self):
+           return '{}'.format(self.codmincex)
+    
+"""
+Clase de Solicitud de Baterias
+    
+"""
+class Solicitud_Bateria(Solicitud):
+    
+    bateria = models.ManyToManyField(
+        Bateria,
+        through= 'Solicitud_Bateria_Proxy'
+    )
+    
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Bateria_Proveedor',
+        verbose_name='Proveedores'
+    )
+    
+    class Meta:
+        verbose_name = _('Solicitud de Batería')
+        verbose_name_plural = _('Solicitudes de Baterías')
+        managed = True
+        db_table = 'solicitud_bateria'
+    
+    def __str__(self):
+        return '{}'.format(self.numsolicitud)
+
+"""
+Clases para representar las relaciones de muchos a muchos.
+    
+"""           
+
 class Solicitud_Bateria_Proxy(models.Model):
     
     numsolicitud = models.ForeignKey(
@@ -365,76 +468,6 @@ class Solicitud_Bateria_Proxy(models.Model):
     
     def __str__(self):
            return '{}'.format(self.idproducto)
-    
-
-class Solicitud_Equipo_Proveedor(models.Model):
-    
-    numsolicitud = models.ForeignKey(
-        Solicitud_Equipo, 
-        models.CASCADE, 
-        db_column='numsolicitud',
-        )
-    
-    codmincex = models.ForeignKey(
-        Proveedor,
-        models.CASCADE,
-        verbose_name = 'Proveedor',
-        )
-    
-    class Meta:
-        verbose_name = 'Proveedor'
-        verbose_name_plural = 'Proveedores'
-        managed = True
-        db_table = 'solicitud_equipo_proveedor'
-    
-    
-
-class Solicitud_PPA_Proveedor(models.Model):
-        
-    numsolicitud = models.ForeignKey(
-        Solicitud_PPA, 
-        models.CASCADE, 
-        db_column='numsolicitud',
-        )
-    
-    codmincex = models.ForeignKey(
-        Proveedor,
-        models.CASCADE,
-        verbose_name = 'Proveedor',
-        )
-    
-    class Meta:
-        verbose_name = 'Proveedor'
-        verbose_name_plural = 'Proveedores'
-        managed = True
-        db_table = 'solicitud_ppa_proveedor'
-    
-    def __str__(self):
-           return '{}'.format(self.codmincex)
-       
-    
-class Solicitud_Neumatico_Proveedor(models.Model):
-    
-    numsolicitud = models.ForeignKey(
-        Solicitud_Neumatico, 
-        models.CASCADE, 
-        db_column='numsolicitud',
-        )
-    
-    codmincex = models.ForeignKey(
-        Proveedor,
-        models.CASCADE,
-        verbose_name = 'Proveedor',
-        )
-    
-    class Meta:
-        verbose_name = 'Proveedor'
-        verbose_name_plural = 'Proveedores'
-        managed = True
-        db_table = 'solicitud_neumatico_proveedor'
-    
-    def __str__(self):
-           return '{}'.format(self.codmincex)
 
 
 class Solicitud_Bateria_Proveedor(models.Model):
