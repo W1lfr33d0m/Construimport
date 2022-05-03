@@ -9,6 +9,7 @@ from colorama import Cursor
 from django.contrib import admin
 from django.shortcuts import render
 #from .models import RegistroControlSolicitud
+from django.utils.html import format_html
 from django.views.generic.base import TemplateView
 from .models import EspecialistaCOMEX
 from django.views.generic.base import TemplateView
@@ -21,6 +22,8 @@ from django.db.models import Q
 from django.db import models
 from django.db.models import Model
 from .models import *
+from django.contrib import messages
+from django.http import HttpRequest
 
 # Register your models here.
 
@@ -34,8 +37,22 @@ class EspecialistaCOMEXAdmin(admin.ModelAdmin):
             return self.fields['idespecialista']
         return super().get_fields(request, obj)
 
+
+class Oferta_EquipoInlineResource(resources.ModelResource):
+    solicitud = fields.Field(
+        column_name= 'numsolicitud',
+        attribute= 'solicitud',
+        widget= ForeignKeyWidget(Oferta_Equipo_Proxy, 'numsolicitud')
+    )
+    
+    class Meta:
+        model = Solicitud
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ('solicitud',) 
+
 class Oferta_EquipoInline(admin.TabularInline):
-    #resource_class = Solicitud_ProductoResource
+    resource_class = Oferta_EquipoInlineResource
     model = Oferta_Equipo_Proxy
     fk_name = 'solicitud'
     extra = 1
@@ -51,27 +68,51 @@ class Oferta_EquipoInline(admin.TabularInline):
             formfield.widget.can_change_related = False
         return formfield
     
+    #def get_fields(self, request: HttpRequest, obj=None):
+    #    if self.fields.solicitud:
+    #        return ['equipo', 'cantidad', 'precio', 'importe']   
+    #    return super().get_fields(request, obj)
+      
+    
 @admin.register(Oferta_Equipo)
 class Oferta_EquipoAdmin(admin.ModelAdmin):
     inlines = [Oferta_EquipoInline,]
-    list_display = ['solicitud', ]    
+    list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
+        
+    def get_fields(self, request, obj=None):
+        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+            return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
+        elif request.user.groups.filter(name = 'Director_COMEX').exists():
+            return ['estado', 'idespecialista']
+        return super().get_fields(request, obj)
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        fields = ['pais', 'proveedor', 'especialista', 'solicitud']
+        fields = ['pais',]
+        readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
         if request.user.groups.filter(name = 'Especialista_COMEX').exists():
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
-            form.base_fields['proveedor'].widget.can_add_related = False
-            form.base_fields['proveedor'].widget.can_delete_related = False
-            form.base_fields['proveedor'].widget.can_change_related = False
-            form.base_fields['especialista'].widget.can_add_related = False
-            form.base_fields['especialista'].widget.can_delete_related = False
-            form.base_fields['especialista'].widget.can_change_related = False
-            form.base_fields['solicitud'].widget.can_add_related = False
-            form.base_fields['solicitud'].widget.can_delete_related = False
-            form.base_fields['solicitud'].widget.can_change_related = False
+            form.base_fields['proveedor'].disabled = True
+            form.base_fields['especialista'].disabled = True
+            form.base_fields['solicitud'].disabled = True
+            form.base_fields['valor_estimado'].disabled = True
         return form
+    
+    def response_change(self, request, obj, post_url_continue=None):
+
+        msg = "Oferta modificada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_change(request, obj)
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.numero))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Editar"
+    
+    def get_fields(self, request: HttpRequest, obj=None):
+        return super().get_fields(request, obj)
       
