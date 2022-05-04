@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.dispatch import receiver
 #from django import forms
 from django.shortcuts import render
+from numpy import character
 from requests import post
 from attr import attributes, field
 from pydantic import Field
@@ -80,6 +81,8 @@ class SolicitudResource(resources.ModelResource):
 Clases de Equipo
     
 """
+
+
 class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Equipo_Proveedor
     #fk_name = 'numsolicitud'
@@ -136,6 +139,12 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
+    @admin.action(description='Generar archivo PDF')
+    def generatePDF(modeladmin, request, queryset):
+        url ='Solicitudes/templates/?pks=' + ','.join(str([q.pk for q in queryset]))
+       
+    actions = ['generatePDF']
+    
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
@@ -158,7 +167,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
        return obj.proveedores.all().values_list('codmincex', flat=True)
                 
     def get_equipos(self, obj):
-       return list(obj.equipo.all().values_list('idproducto', flat=True))
+       return obj.equipo.all().values_list('idproducto', flat=True)
     
     def get_cantidad(self, obj, idproducto):
         if obj.idproducto == idproducto:
@@ -179,15 +188,18 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                 oferta_equipo.proveedor_id = p
                 oferta_equipo.especialista = obj.idespecialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
-                oferta_equipo.save()
+                #oferta_equipo.save()
                 for e in self.get_equipos(obj):
-                    print(self.get_cantidad(Solicitud_Equipo_Proxy, e))
-                    print(e)
-                    oferta_equipo.equipos_set = e
-                    oferta_equipo_proxy = Oferta_Equipo_Proxy()
-                    oferta_equipo_proxy.solicitud_id = obj.numsolicitud
-                    oferta_equipo_proxy.idproducto_id = e
-                    #oferta_equipo_proxy.cantidad  = Solicitud_EquipoInline.get_cantidad(e)
+                    print(type(e))
+                    print(self.get_cantidad(obj, e))
+                    #print(self.get_cantidad(Solicitud_Equipo_Proxy, e))
+                    #print(e)
+                    #oferta_equipo.equipos_set = e
+                oferta_equipo_proxy = Oferta_Equipo_Proxy()
+                oferta_equipo_proxy.solicitud_id = obj.numsolicitud
+                    #oferta_equipo_proxy.idproducto_id = e
+                oferta_equipo_proxy.cantidad  = self.get_cantidad(obj, p)
+                #oferta_equipo_proxy.save()
                 #super(Oferta_Equipo, self).response_post_save_add(request,obj)
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
         #receiver = request.user.objects.filter(name = str(obj.idespecialista))

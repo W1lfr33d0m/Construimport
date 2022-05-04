@@ -135,7 +135,7 @@ NOTIFICATIONS_USE_JSONFIELD = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Construimport-Server', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'Construimport-Server', 'Solicitudes', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
