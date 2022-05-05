@@ -170,8 +170,8 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
        return obj.equipo.all().values_list('idproducto', flat=True)
     
     def get_cantidad(self, obj, idproducto):
-        if obj.idproducto == idproducto:
-            return obj.cantidad
+       if obj.equipos_set.filter(idproducto).exists():
+           return obj.cantidad
     
     def response_add(self, request, obj, post_url_continue=None):
         msg = "Solicitud agregada correctamente"
@@ -188,19 +188,14 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                 oferta_equipo.proveedor_id = p
                 oferta_equipo.especialista = obj.idespecialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
-                #oferta_equipo.save()
-                for e in self.get_equipos(obj):
-                    print(type(e))
-                    print(self.get_cantidad(obj, e))
-                    #print(self.get_cantidad(Solicitud_Equipo_Proxy, e))
-                    #print(e)
-                    #oferta_equipo.equipos_set = e
-                oferta_equipo_proxy = Oferta_Equipo_Proxy()
-                oferta_equipo_proxy.solicitud_id = obj.numsolicitud
-                    #oferta_equipo_proxy.idproducto_id = e
-                oferta_equipo_proxy.cantidad  = self.get_cantidad(obj, p)
-                #oferta_equipo_proxy.save()
-                #super(Oferta_Equipo, self).response_post_save_add(request,obj)
+                oferta_equipo.save()
+                for sep in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = obj.numsolicitud):
+                    print(sep.numsolicitud)
+                    oferta_equipo_proxy = Oferta_Equipo_Proxy(id = 'id', solicitud = oferta_equipo.solicitud_id, equipo = sep, cantidad =  sep.cantidad)
+                    #oferta_equipo_proxy.solicitud_id = str(sep.numsolicitud)
+                    #oferta_equipo_proxy.equipo = sep
+                    #oferta_equipo_proxy.cantidad = sep.cantidad
+                    oferta_equipo_proxy.save()                
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
         #receiver = request.user.objects.filter(name = str(obj.idespecialista))
         #self.message_user(receiver, msg1, level=messages.INFO)
@@ -302,30 +297,76 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
         
         return form
     
-    def post_save(self, request, queryset):
-        s = queryset.get(estado = 'Pendiente')
-        if request.user.username == 'director_desarrollo':
-            self.message_user(request, ngettext(
-                '%d Se añadieron nuevas solicitudes.', s,
-            ) %s, messages.SUCCESS)
+    def get_proveedores(self, obj):
+           return obj.proveedores.all().values_list('codmincex', flat=True)
+                
+    def get_piezas(self, obj):
+       return obj.equipo.all().values_list('idproducto', flat=True)
+    
+    def get_cantidad(self, obj, idproducto):
+        if obj.idproducto == idproducto:
+            return obj.cantidad
+    
+    def response_add(self, request, obj, post_url_continue=None):
+        msg = "Solicitud agregada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_post_save_add(request, obj)
+    
+    def response_change(self, request:HttpRequest, obj, post_url_continue=None):
+        print(Solicitud_EquipoInline.get_marca(self, obj))
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+            for p in self.get_proveedores(obj):
+                print(p)
+                oferta_equipo = Oferta_Equipo()
+                oferta_equipo.solicitud_id = obj.numsolicitud
+                oferta_equipo.proveedor_id = p
+                oferta_equipo.especialista = obj.idespecialista
+                oferta_equipo.valor_estimado = obj.valor_estimado
+                #oferta_equipo.save()
+                for e in self.get_equipos(obj):
+                    print(type(e))
+                    print(self.get_cantidad(obj, e))
+                    #print(self.get_cantidad(Solicitud_Equipo_Proxy, e))
+                    #print(e)
+                    #oferta_equipo.equipos_set = e
+                oferta_equipo_proxy = Oferta_Equipo_Proxy()
+                oferta_equipo_proxy.solicitud_id = obj.numsolicitud
+                    #oferta_equipo_proxy.idproducto_id = e
+                oferta_equipo_proxy.cantidad  = self.get_cantidad(obj, p)
+                #oferta_equipo_proxy.save()
+                #super(Oferta_Equipo, self).response_post_save_add(request,obj)
+        #msg1 = "Tiene nuevas solicitudes de Ofertas"
+        #receiver = request.user.objects.filter(name = str(obj.idespecialista))
+        #self.message_user(receiver, msg1, level=messages.INFO)
+        msg2 = "Solicitud modificada correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+        return self.response_post_save_change(request, obj)
+    
+    def response_post_save_add(self, request, obj=None):
+        if request.user.groups.filter(name='Marketing').exists():
+           send_mail(
+                   'Nueva solicitud',
+                   'Tiene solicitudes pendientes a aprobar',
+                   'wilferreira3@nauta.cu',
+                   ['informatico@construimport.cu'],
+                   fail_silently=False,
+                    )
+        return super().response_post_save_add(request, obj)
         
+    def save(self, request:HttpResponse, obj=None):
+        
+        return super(Solicitud_Equipo, self).save(request, obj)
+       
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
     
-                
-    #jazzmin_section_order = ('solicitud', 'Productos')
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
-    
-    def pending_alert(self, request):
-        for sol in self:
-            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
-                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
-        
+
 """
 Clases de Neumaticos
     
