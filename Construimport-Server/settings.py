@@ -76,6 +76,7 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth.user': 'fas fa-user',
         'auth.group': 'fas fa-users',
+        'COMEX.EspecialistaCOMEX': 'fas fa-address-book',
         'Nomencladores.Bateria': 'fas fa-car-battery',
         'Nomencladores.Equipo': 'fas fa-truck-pickup',
         'Nomencladores.Neumatico': 'fas fa-bullseye',
@@ -83,7 +84,6 @@ JAZZMIN_SETTINGS = {
         'Nomencladores.Marca': 'fas fa-registered',
         'Nomencladores.Proveedor': 'fas fa-id-card',
         'Nomencladores.Cliente': 'fas fa-id-badge',
-        'Nomencladores.EspecialistaCOMEX': 'fas fa-address-book',
         'Solicitudes.Solicitud': 'fas fa-book',
         'Nomencladores.Pais': 'fas fa-flag', 
         'Nomencladores.ContratoCliente': 'fas fa-file',
