@@ -149,13 +149,13 @@ class Solicitud_Equipo(Solicitud):
     equipo = models.ManyToManyField(
         Equipo,
         through='Solicitud_Equipo_Proxy',
-        verbose_name= 'Equipos'
+        related_name= 'Equipos'
     )
 
     proveedores = models.ManyToManyField(
         Proveedor,
         through='Solicitud_Equipo_Proveedor',
-        verbose_name='Proveedores'
+        related_name='Proveedores'
     )
 
     class Meta:

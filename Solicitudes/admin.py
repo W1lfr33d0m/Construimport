@@ -181,7 +181,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         print(Solicitud_EquipoInline.get_marca(self, obj))
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
-            for p in self.get_proveedores(obj):
+            for p in obj.proveedores.all().values_list('codmincex', flat=True):
                 print(p)
                 oferta_equipo = Oferta_Equipo()
                 oferta_equipo.solicitud_id = obj.numsolicitud
@@ -189,13 +189,14 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                 oferta_equipo.especialista = obj.idespecialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
                 oferta_equipo.save()
-                for sep in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = obj.numsolicitud):
-                    print(sep.numsolicitud)
-                    oferta_equipo_proxy = Oferta_Equipo_Proxy(id = 'id', solicitud = oferta_equipo.solicitud_id, equipo = sep, cantidad =  sep.cantidad)
-                    #oferta_equipo_proxy.solicitud_id = str(sep.numsolicitud)
-                    #oferta_equipo_proxy.equipo = sep
-                    #oferta_equipo_proxy.cantidad = sep.cantidad
-                    oferta_equipo_proxy.save()                
+                if oferta_equipo.save():
+                    for sep in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = obj.numsolicitud):
+                        print(sep.numsolicitud)
+                        oferta_equipo_proxy = Oferta_Equipo_Proxy()
+                        oferta_equipo_proxy.solicitud_id = str(sep.numsolicitud)
+                        oferta_equipo_proxy.equipo = sep
+                        oferta_equipo_proxy.cantidad = sep.cantidad
+                        oferta_equipo_proxy.save                
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
         #receiver = request.user.objects.filter(name = str(obj.idespecialista))
         #self.message_user(receiver, msg1, level=messages.INFO)
@@ -283,7 +284,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            return ['estado',]
+            return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
             
     def get_form(self, request, obj=None, change=False, **kwargs):
@@ -315,25 +316,21 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         print(Solicitud_EquipoInline.get_marca(self, obj))
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
-            for p in self.get_proveedores(obj):
+            for p in obj.proveedores.all().values_list('codmincex', flat=True):
                 print(p)
-                oferta_equipo = Oferta_Equipo()
-                oferta_equipo.solicitud_id = obj.numsolicitud
-                oferta_equipo.proveedor_id = p
-                oferta_equipo.especialista = obj.idespecialista
-                oferta_equipo.valor_estimado = obj.valor_estimado
+                oferta_ppa = Oferta_PPA()
+                oferta_ppa.solicitud_id = obj.numsolicitud
+                oferta_ppa.proveedor_id = p
+                oferta_ppa.especialista = obj.idespecialista
+                oferta_ppa.valor_estimado = obj.valor_estimado
                 #oferta_equipo.save()
-                for e in self.get_equipos(obj):
-                    print(type(e))
-                    print(self.get_cantidad(obj, e))
-                    #print(self.get_cantidad(Solicitud_Equipo_Proxy, e))
-                    #print(e)
-                    #oferta_equipo.equipos_set = e
-                oferta_equipo_proxy = Oferta_Equipo_Proxy()
-                oferta_equipo_proxy.solicitud_id = obj.numsolicitud
-                    #oferta_equipo_proxy.idproducto_id = e
-                oferta_equipo_proxy.cantidad  = self.get_cantidad(obj, p)
-                #oferta_equipo_proxy.save()
+                for ppa in obj.ppa.all().values_list('codmincex', flat=True):
+                   print(ppa.numsolicitud)
+                   oferta_ppa_proxy = Oferta_PPA_Proxy()
+                   oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
+                   oferta_ppa_proxy.equipo = ppa
+                   oferta_ppa_proxy.cantidad = ppa.cantidad
+                   oferta_ppa_proxy.save        
                 #super(Oferta_Equipo, self).response_post_save_add(request,obj)
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
         #receiver = request.user.objects.filter(name = str(obj.idespecialista))
