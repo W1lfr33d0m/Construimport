@@ -119,10 +119,10 @@ class Solicitud(models.Model):
         verbose_name= 'Valor Estimado',
         )
         
-    idespecialista = models.ForeignKey(
-        'COMEX.EspecialistaCOMEX',
+    especialista = models.ForeignKey(
+        User,
         models.DO_NOTHING,
-        db_column='idespecialista',
+        db_column='username',
         verbose_name='Especialista COMEX',
         null=True,
     )
@@ -214,7 +214,7 @@ class Solicitud_Equipo_Proveedor(models.Model):
         Proveedor,
         models.CASCADE,
         db_column='codmincex',
-        verbose_name = 'Proveedor',
+        verbose_name = 'Proveedor'
         )
     
     class Meta:

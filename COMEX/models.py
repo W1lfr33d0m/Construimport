@@ -32,40 +32,6 @@ from django.contrib.auth.models import User, Group
 #   if idespecialista.user.groups.filter(name = 'Especialista_COMEX').exists():
 #       return True
 
-class EspecialistaCOMEX(models.Model):
-    
-    PPA = 'PZ'
-    Equipo = 'Equipo'
-    Bateria = 'Batería'
-    Neumatico = 'Neumático'
-    CATEGORIA_CHOICES = [(PPA, 'PPA'), (Equipo, 'Equipo'), (Bateria, 'Batería'), (Neumatico, 'Neumático') ]
-    name_validator = UnicodenameValidator()
-    
-    
-    idespecialista = models.OneToOneField(
-                                          User, 
-                                          models.DO_NOTHING, 
-                                          primary_key=True, 
-                                          db_column='idespecialista', 
-                                          verbose_name='Usuario',
-                                          #validators=[filter_especialista]
-                                          )
-    categoria = models.CharField(
-                                 max_length = 10, 
-                                 null= False, 
-                                 choices = CATEGORIA_CHOICES, 
-                                 default = PPA
-                                 )
-    
-    class Meta:
-        managed = True
-        verbose_name = _('Especialista COMEX')
-        verbose_name_plural = _('Especialistas COMEX')
-        db_table = 'especialista_comex'
-        
-    def __str__(self):
-        
-        return '{}'.format(self.idespecialista)
     
 class Oferta(models.Model):
     
@@ -127,15 +93,21 @@ class Oferta(models.Model):
     )
     
     especialista = models.ForeignKey(
-        EspecialistaCOMEX,
+        User,
         models.DO_NOTHING,
-        db_column='idespecialista'
+        db_column='username'
     )
     
     valor_estimado = models.FloatField(
         max_length= 10,
         null= False,
         verbose_name= 'Valor Estimado',
+    )
+    
+    monto_total = models.FloatField(
+        max_length=10,
+        null=True,
+        verbose_name='Monto Total'
     )
     
     class Meta:
@@ -180,7 +152,8 @@ class Oferta_Equipo_Proxy(models.Model):
     solicitud = models.ForeignKey(
         Oferta_Equipo,
         models.DO_NOTHING,
-        db_column='numsolicitud'
+        db_column='numsolicitud',
+        db_constraint=False
     )
     
     equipo = models.ForeignKey(

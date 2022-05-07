@@ -24,7 +24,6 @@ from pydantic import Field
 from .models import Solicitud, Solicitud_Equipo_Proveedor,  Solicitud_PPA_Proveedor, Solicitud_Neumatico_Proveedor, Solicitud_Bateria_Proveedor, Solicitud_Equipo, Solicitud_Equipo_Proxy, Solicitud_PPA, Solicitud_PPA_Proxy, Solicitud_Neumatico, Solicitud_Neumatico_Proxy,Solicitud_Bateria, Solicitud_Bateria_Proxy
 from django.views.generic.base import TemplateView
 from Nomencladores.models import Producto, Cliente, Proveedor, Pais, Equipo, PPA, Neumatico, Bateria
-from COMEX.models import EspecialistaCOMEX
 from django.contrib.auth.models import Group, User, UserManager, GroupManager, PermissionsMixin
 from django.core.exceptions import ValidationError, PermissionDenied
 from ast import Raise
@@ -81,8 +80,6 @@ class SolicitudResource(resources.ModelResource):
 Clases de Equipo
     
 """
-
-
 class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Equipo_Proveedor
     #fk_name = 'numsolicitud'
@@ -101,8 +98,7 @@ class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
             sei = self.fields['idproducto']
             kwargs['queryset'] = Solicitud_Equipo_Proveedor.objects.filter(request)
         return super().formfield_for_manytomany(db_field, request, **kwargs)
-    
-    
+      
 class Solicitud_EquipoInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_Equipo_Proxy
@@ -123,13 +119,20 @@ class Solicitud_EquipoInline(admin.StackedInline):
     def get_marca(self, obj):
         return obj.equipo.all().values_list('marca', flat=True)
     
-
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     #readonly_fields = ('numsolicitud')
+    
+    fieldsets = (
+        (None, {
+            "fields": (('fechasol', 'numcontratocliente'), 'observaciones', 'valor_estimado'),
+        }),
+        
+     )
+    
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -150,7 +153,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
             #actions = ['designar Especialista COMEX']
-            return ['estado', 'idespecialista']
+            return ['estado', 'especialista']
         return super().get_fields(request, obj)
     
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
@@ -161,6 +164,8 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
+            form.base_fields['especialista'].widget.can_delete_related = False
         return form
     
     def get_proveedores(self, obj):
@@ -183,37 +188,36 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
                 print(p)
-                oferta_equipo = Oferta_Equipo()
-                oferta_equipo.solicitud_id = obj.numsolicitud
-                oferta_equipo.proveedor_id = p
-                oferta_equipo.especialista = obj.idespecialista
-                oferta_equipo.valor_estimado = obj.valor_estimado
-                oferta_equipo.save()
-                if oferta_equipo.save():
-                    for sep in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = obj.numsolicitud):
-                        print(sep.numsolicitud)
-                        oferta_equipo_proxy = Oferta_Equipo_Proxy()
-                        oferta_equipo_proxy.solicitud_id = str(sep.numsolicitud)
-                        oferta_equipo_proxy.equipo = sep
-                        oferta_equipo_proxy.cantidad = sep.cantidad
-                        oferta_equipo_proxy.save                
+                oferta_equipo = Oferta_Equipo.objects.create(solicitud_id = obj.numsolicitud, 
+                                                             proveedor_id = p, 
+                                                             especialista = obj.especialista, 
+                                                             valor_estimado = obj.valor_estimado
+                                                             )
+                print(obj.equipo.all())
+                #for proxy in Solicitud_Equipo_Proxy.objects.filter(numsolicitud=obj.numsolicitud):
+                #   print(proxy.cantidad)
+                #    oferta_equipo_proxy = oferta_equipo.equipos.create(proxy)
+                    #oferta_equipo_proxy.solicitud = proxy.numsolicitud
+                    #oferta_equipo_proxy.equipo = proxy.idproducto
+                    #oferta_equipo_proxy.cantidad = proxy.cantidad
+                    #oferta_equipo.equipos.add(oferta_equipo_proxy)                
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
-        #receiver = request.user.objects.filter(name = str(obj.idespecialista))
+        #receiver = request.user.objects.filter(name = str(obj.especialista))
         #self.message_user(receiver, msg1, level=messages.INFO)
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
     
-    def response_post_save_add(self, request, obj=None):
-        if request.user.groups.filter(name='Marketing').exists():
-           send_mail(
-                   'Nueva solicitud',
-                   'Tiene solicitudes pendientes a aprobar',
-                   'wilferreira3@nauta.cu',
-                   ['informatico@construimport.cu'],
-                   fail_silently=False,
-                    )
-        return super().response_post_save_add(request, obj)
+    #def response_post_save_add(self, request, obj=None):
+        #if request.user.groups.filter(name='Marketing').exists():
+           #send_mail(
+            #       'Nueva solicitud',
+            #       'Tiene solicitudes pendientes a aprobar',
+           #       'wilferreira3@nauta.cu',
+            #       ['wilfreferreira3@gmail.com'],
+            #       fail_silently=False,
+                    #)
+        #return super().response_post_save_add(request, obj)
         
     def save(self, request:HttpResponse, obj=None):
         
@@ -278,13 +282,13 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
-    #filter_horizontal = ('productos', )    
-        
+    #filter_horizontal = ('productos', )            
+    
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
-            return ['estado', 'idespecialista']
+            return ['estado', 'especialista']
         return super().get_fields(request, obj)
             
     def get_form(self, request, obj=None, change=False, **kwargs):
@@ -321,7 +325,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
                 oferta_ppa = Oferta_PPA()
                 oferta_ppa.solicitud_id = obj.numsolicitud
                 oferta_ppa.proveedor_id = p
-                oferta_ppa.especialista = obj.idespecialista
+                oferta_ppa.especialista = obj.especialista
                 oferta_ppa.valor_estimado = obj.valor_estimado
                 #oferta_equipo.save()
                 for ppa in obj.ppa.all().values_list('codmincex', flat=True):
@@ -333,7 +337,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
                    oferta_ppa_proxy.save        
                 #super(Oferta_Equipo, self).response_post_save_add(request,obj)
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
-        #receiver = request.user.objects.filter(name = str(obj.idespecialista))
+        #receiver = request.user.objects.filter(name = str(obj.especialista))
         #self.message_user(receiver, msg1, level=messages.INFO)
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)

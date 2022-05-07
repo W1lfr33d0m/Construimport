@@ -53,10 +53,14 @@ class EquipoResource(resources.ModelResource):
 
 class PPAResource(resources.ModelResource):
     
+    model = PPA
+    
     class meta:
         model = Pais
         skip_unchanged = True
-        report_skipped = False    
+        report_skipped = False
+        import_id_fields = ('idproducto')
+        fields = ('descripcion', 'UM', 'marca', 'equipo')  
         
 
 class NeumaticoResource(resources.ModelResource):

@@ -1,4 +1,5 @@
 #from os import getgroups
+from logging import warning
 from unicodedata import name
 from django.db import connection, reset_queries
 from celery import group
@@ -11,7 +12,6 @@ from django.shortcuts import render
 #from .models import RegistroControlSolicitud
 from django.utils.html import format_html
 from django.views.generic.base import TemplateView
-from .models import EspecialistaCOMEX
 from django.views.generic.base import TemplateView
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -26,17 +26,6 @@ from django.contrib import messages
 from django.http import HttpRequest
 
 # Register your models here.
-
-@admin.register(EspecialistaCOMEX)
-class EspecialistaCOMEXAdmin(admin.ModelAdmin):
-    
-    list_display = ['idespecialista', 'categoria']
-    
-    def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name='Especialista_COMEX').exists():
-            return self.fields['idespecialista']
-        return super().get_fields(request, obj)
-
 
 class Oferta_EquipoInlineResource(resources.ModelResource):
     solicitud = fields.Field(
@@ -80,7 +69,7 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
     list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
         
     def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists():
             return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
@@ -91,7 +80,7 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists():
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
@@ -102,9 +91,17 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
         return form
     
     def response_change(self, request, obj, post_url_continue=None):
+        if request.method == 'POST':
+            for i in obj.equipos.all():
+                suma += i.importe
+            obj.monto_total = suma
+            if suma > obj.valor_estimado:
+                raise warning('El monto total excede el valor estimado, debe modificar la oferta')
+            elif i.importe != (i.cantidad * i.precio):
+                raise ValidationError('El valor del importe no es correcto')
         msg = "Oferta modificada correctamente"
         self.message_user(request, msg, level=messages.SUCCESS)
-        return self.response_change(request, obj)
+        return self.response_post_save_change(request, obj)
     
     
     def edit_link(self,obj):
@@ -120,7 +117,6 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
         Oferta PPA
         
         """
-  
 class Oferta_PPAResource(resources.ModelResource):
     solicitud = fields.Field(
         column_name= 'numsolicitud',
@@ -162,7 +158,7 @@ class Oferta_PPAAdmin(admin.ModelAdmin):
     list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
         
     def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_PPA').exists():
             return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
@@ -173,7 +169,7 @@ class Oferta_PPAAdmin(admin.ModelAdmin):
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_PPA').exists():
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
@@ -243,7 +239,7 @@ class Oferta_NeumaticoAdmin(admin.ModelAdmin):
     list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
         
     def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Neumatico').exists():
             return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
@@ -254,7 +250,7 @@ class Oferta_NeumaticoAdmin(admin.ModelAdmin):
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Neumatico').exists():
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
@@ -325,7 +321,7 @@ class Oferta_BateriAdmin(admin.ModelAdmin):
     list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
         
     def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Bateria').exists():
             return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
@@ -336,7 +332,7 @@ class Oferta_BateriAdmin(admin.ModelAdmin):
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Especialista_COMEX').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Bateria').exists():
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
