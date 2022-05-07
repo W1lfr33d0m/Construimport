@@ -108,7 +108,7 @@ class EquipoAdmin(ImportExportModelAdmin):
 @admin.register(PPA)
 class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
-    list_display = ('idproducto', 'descripcion')
+    list_display = ('idproducto', 'descripcion', 'marca')
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'marca':
@@ -133,7 +133,7 @@ class PPAAdmin(ImportExportModelAdmin):
 @admin.register(Neumatico)
 class NeumaticoAdmin(ImportExportModelAdmin):
     resource_class = NeumaticoResource
-    list_display = ('idproducto', 'descripcion', 'diametro', 'grosor')
+    list_display = ('idproducto', 'descripcion', 'diametro', 'grosor', 'marca')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(NeumaticoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -146,7 +146,7 @@ class NeumaticoAdmin(ImportExportModelAdmin):
 @admin.register(Bateria)
 class BateriaAdmin(ImportExportModelAdmin):
     resource_class = BateriaResource
-    list_display = ('idproducto', 'descripcion', 'voltaje', 'amperaje')
+    list_display = ('idproducto', 'descripcion', 'voltaje', 'amperaje', 'marca')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(BateriaAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)

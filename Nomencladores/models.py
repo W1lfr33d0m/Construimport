@@ -68,7 +68,7 @@ class Cliente(models.Model):
     
     name_validator = UnicodenameValidator()
     
-    numcontratocliente = models.BigIntegerField(max_length=8, primary_key=True, verbose_name = 'Numero de Contrato' )
+    numcontratocliente = models.BigIntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
     nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
     OSDE = models.CharField(max_length=45, validators=[name_validator],)
     codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', verbose_name='Provincia')
@@ -156,13 +156,12 @@ class PPA(Producto):
         db_table = 'ppa'
         
     def __str__(self):
-        return '{}'.format(self.descripcion)
+        return '{}'.format(self.idproducto, self.descripcion)
 
 """
 Clase Neumatico
     
 """ 
-   
 class Neumatico(Producto):
     diametro = models.FloatField(
         max_length=4
@@ -185,7 +184,6 @@ class Neumatico(Producto):
 Clase Bateria
     
 """        
-
 class Bateria(Producto):
     voltaje = models.FloatField(
         max_length=4

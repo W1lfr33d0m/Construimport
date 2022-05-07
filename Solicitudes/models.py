@@ -50,7 +50,7 @@ def validate_cantidad(cantidad):
         )
             
 def validate_fecha(fechasol):
-    if date.today().weekday() == 5 or date.today().weekday() == 6:
+    if fechasol != date.today():
         raise ValidationError(
         _('%(fechasol)s debe ser un día de la semana'),
         params={'fechasol': fechasol},
@@ -97,6 +97,7 @@ class Solicitud(models.Model):
     fechasol = models.DateField(
         default= date.today(), 
         #validators=[validate_fecha], 
+        editable=False,
         verbose_name = 'Fecha de la Solicitud'
         )
     
@@ -114,7 +115,7 @@ class Solicitud(models.Model):
         )
     
     valor_estimado = models.FloatField(
-        max_length= 10,
+        #max_length= 10,
         null= False,
         verbose_name= 'Valor Estimado',
         )
@@ -237,11 +238,7 @@ class Solicitud_PPA(Solicitud):
         through= 'Solicitud_PPA_proxy'
     )
     
-    equipo = models.ForeignKey(
-        Equipo,
-        models.CASCADE,
-        db_column='idproducto'
-    )
+    
     
     proveedores = models.ManyToManyField(
         Proveedor,
@@ -269,6 +266,7 @@ class Solicitud_PPA_Proxy(models.Model):
         Solicitud_PPA, 
         models.CASCADE, 
         db_column='numsolicitud',
+        null=False,
         )
     
     idproducto = models.ForeignKey(
@@ -276,6 +274,7 @@ class Solicitud_PPA_Proxy(models.Model):
         models.CASCADE, 
         db_column='idproducto',
         verbose_name= 'Producto',
+        null=False,
         )
     
     cantidad = models.IntegerField(
@@ -363,6 +362,7 @@ class Solicitud_Neumatico_Proxy(models.Model):
         models.CASCADE, 
         db_column='idproducto',
         verbose_name= 'Neumático',
+        unique=True
         )
     
     cantidad = models.IntegerField(
@@ -395,6 +395,7 @@ class Solicitud_Neumatico_Proveedor(models.Model):
         Proveedor,
         models.CASCADE,
         verbose_name = 'Proveedor',
+        unique=True
         )
     
     class Meta:
@@ -414,13 +415,15 @@ class Solicitud_Bateria(Solicitud):
     
     bateria = models.ManyToManyField(
         Bateria,
-        through= 'Solicitud_Bateria_Proxy'
+        through= 'Solicitud_Bateria_Proxy',
+        null=False
     )
     
     proveedores = models.ManyToManyField(
         Proveedor,
         through='Solicitud_Bateria_Proveedor',
-        verbose_name='Proveedores'
+        verbose_name='Proveedores',
+        null=False
     )
     
     class Meta:
@@ -443,6 +446,7 @@ class Solicitud_Bateria_Proxy(models.Model):
         Solicitud_Bateria, 
         models.CASCADE, 
         db_column='numsolicitud',
+        null=False
         )
     
     idproducto = models.ForeignKey(
@@ -450,6 +454,8 @@ class Solicitud_Bateria_Proxy(models.Model):
         models.CASCADE, 
         db_column='idproducto',
         verbose_name= 'Batería',
+        unique=True,
+        null=False
         )
     
     cantidad = models.IntegerField(
@@ -476,12 +482,15 @@ class Solicitud_Bateria_Proveedor(models.Model):
         Solicitud_Bateria, 
         models.CASCADE, 
         db_column='numsolicitud',
+        null=False
         )
     
     codmincex = models.ForeignKey(
         Proveedor,
         models.CASCADE,
         verbose_name = 'Proveedor',
+        unique=True,
+        null=False
         )
     
     class Meta:

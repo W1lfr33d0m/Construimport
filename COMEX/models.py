@@ -99,13 +99,13 @@ class Oferta(models.Model):
     )
     
     valor_estimado = models.FloatField(
-        max_length= 10,
+        #max_length= 10,
         null= False,
         verbose_name= 'Valor Estimado',
     )
     
     monto_total = models.FloatField(
-        max_length=10,
+        #max_length=10,
         null=True,
         verbose_name='Monto Total'
     )
@@ -163,19 +163,19 @@ class Oferta_Equipo_Proxy(models.Model):
     )
     
     cantidad = models.IntegerField(
-        max_length=8,
+        #max_length=8,
         
     )
     
     precio = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank = True
     
     )
     
     importe = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank=True
     )
@@ -228,17 +228,17 @@ class Oferta_PPA_Proxy(models.Model):
     )
     
     cantidad = models.IntegerField(
-        max_length=8,
+        #max_length=8,
         
     )
     
     precio = models.FloatField(
-        max_length=8,
+        #max_length=8,
         
     )
     
     importe = models.FloatField(
-        max_length=8
+        #max_length=8
     )
     
     class Meta:
@@ -290,19 +290,19 @@ class Oferta_Neumatico_Proxy(models.Model):
     )
     
     cantidad = models.IntegerField(
-        max_length=8,
+        #max_length=8,
         
     )
     
     precio = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank = True
     
     )
     
     importe = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank=True
     )
@@ -356,19 +356,19 @@ class Oferta_Bateria_Proxy(models.Model):
     )
     
     cantidad = models.IntegerField(
-        max_length=8,
+        #max_length=8,
         
     )
     
     precio = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank = True
     
     )
     
     importe = models.FloatField(
-        max_length=8,
+        #max_length=8,
         null=True,
         blank=True
     )

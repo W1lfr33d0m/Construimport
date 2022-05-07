@@ -128,7 +128,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     
     fieldsets = (
         (None, {
-            "fields": (('fechasol', 'numcontratocliente'), 'observaciones', 'valor_estimado'),
+            "fields": (('numcontratocliente'), 'observaciones', 'valor_estimado'),
         }),
         
      )
@@ -150,7 +150,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
-            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+            return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
             #actions = ['designar Especialista COMEX']
             return ['estado', 'especialista']
@@ -228,10 +228,10 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
-    edit_link.short_description = "Editar"
+    edit_link.short_description = "Detalles"
 
 """
 Clases de Piezas
@@ -286,7 +286,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
-            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+            return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado', 'especialista']
         return super().get_fields(request, obj)
@@ -343,16 +343,16 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
     
-    def response_post_save_add(self, request, obj=None):
-        if request.user.groups.filter(name='Marketing').exists():
-           send_mail(
-                   'Nueva solicitud',
-                   'Tiene solicitudes pendientes a aprobar',
-                   'wilferreira3@nauta.cu',
-                   ['informatico@construimport.cu'],
-                   fail_silently=False,
-                    )
-        return super().response_post_save_add(request, obj)
+    #def response_post_save_add(self, request, obj=None):
+    #    if request.user.groups.filter(name='Marketing').exists():
+           #send_mail(
+            #       'Nueva solicitud',
+            #       'Tiene solicitudes pendientes a aprobar',
+            #       'wilferreira3@nauta.cu',
+              #     ['informatico@construimport.cu'],
+              #     fail_silently=False,
+              #      )
+        #return super().response_post_save_add(request, obj)
         
     def save(self, request:HttpResponse, obj=None):
         
@@ -363,10 +363,10 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
-    edit_link.short_description = "Editar"
+    edit_link.short_description = "Detalles"
 
 """
 Clases de Neumaticos
@@ -420,7 +420,7 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
-           return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+           return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado',]
         return super().get_fields(request, obj)
@@ -439,6 +439,10 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_change_related = False
         return form
     
+    def response_add(self, request, obj, post_url_continue=None):
+        msg = "Solicitud agregada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_post_save_add(request, obj)
     
     def save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')
@@ -464,14 +468,11 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
             if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
                 messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")
 
-
 """
 
 Clases de Baterias
     
 """
-
-
 class Solicitud_Bateria_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Bateria_Proveedor
     fk_name = 'numsolicitud'
@@ -521,7 +522,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
         
     def get_fields(self, request, obj=None):
         if request.user.groups.filter(name = 'Marketing').exists():
-            return ['fechasol', 'numcontratocliente', 'observaciones', 'valor_estimado']
+            return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'DirectorDesarrollo').exists():
             return ['estado',]
         return super().get_fields(request, obj)
@@ -540,6 +541,11 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_change_related = False
         return form
     
+    def response_add(self, request, obj, post_url_continue=None):
+        msg = "Solicitud agregada correctamente"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        return self.response_post_save_add(request, obj)
+    
     def post_save(self, request, queryset):
         s = queryset.get(estado = 'Pendiente')
         if request.user.username == 'director_desarrollo':
@@ -554,10 +560,10 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #jazzmin_section_order = ('solicitud', 'Productos')
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
-    edit_link.short_description = "Editar"
+    edit_link.short_description = "Detalles"
     
     def pending_alert(self, request):
         for sol in self:
