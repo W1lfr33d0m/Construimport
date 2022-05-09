@@ -1,0 +1,1 @@
+defautl_app_config = 'Dasboard.apps.DashboardConfig'

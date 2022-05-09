@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'COMEX',
     'Nomencladores',
     'Trazas',
+    'Dashboard',
     #'charts_dashboard',
     'djangobower',
     #'django_pdf',
@@ -60,6 +61,8 @@ INSTALLED_APPS = [
     'easy_pdf',
     
 ]
+
+SITE_ID = 1
 
 DJANGO_SETTINGS_MODULE = 'Construimport-Server.settings'
 

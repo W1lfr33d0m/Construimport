@@ -30,7 +30,7 @@ Clase Marca
 """
 class Marca(models.Model):
     codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
-    nommarca = models.CharField(max_length=30, verbose_name='Nombre')
+    nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
 
     class Meta:
         managed = True
