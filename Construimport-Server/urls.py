@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.urls.conf import include
 import notifications.urls
+from Dashboard.models import Dashboard
+from Dashboard import urls
 
 urlpatterns = [
     path('', include('smuggler.urls')),
+    path('', include('Dashboard.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('', admin.site.urls),
     #path('admin/', admin.site.urls),

@@ -62,8 +62,6 @@ INSTALLED_APPS = [
     
 ]
 
-SITE_ID = 1
-
 DJANGO_SETTINGS_MODULE = 'Construimport-Server.settings'
 
 NOTIFICATIONS_NOTIFICATION_MODEL = 'apps.notis.Notification'
@@ -120,8 +118,9 @@ IMPORT_EXPORT_SKIP_ADMIN_LOG = False
 
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 
-
 STATIC_ROOT = 'static'
+
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
 
