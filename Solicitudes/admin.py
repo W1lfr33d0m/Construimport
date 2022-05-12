@@ -152,7 +152,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            #actions = ['designar Especialista COMEX']
             return ['estado', 'especialista']
         return super().get_fields(request, obj)
     
@@ -164,8 +163,8 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            form.base_fields['especialista'].widget.can_delete_related = False
+       # elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
+        #    form.base_fields['especialista'].widget.can_delete_related = False
         return form
     
     def get_proveedores(self, obj):

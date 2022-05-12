@@ -23,7 +23,6 @@ from Dashboard import urls
 
 urlpatterns = [
     path('', include('smuggler.urls')),
-    path('', include('Dashboard.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('', admin.site.urls),
     #path('admin/', admin.site.urls),
@@ -31,4 +30,5 @@ urlpatterns = [
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),
+    path('', include('Dashboard.urls')),
 ]
