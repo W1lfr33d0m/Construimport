@@ -4,7 +4,7 @@ from .models import *
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 # Register your models here.
-@admin.register(Dashboard)
+
 class DashboardAdmin(admin.ModelAdmin):
     template_name = 'Dashboard/dashboard.html'
     icon_name =  'Dashboard'

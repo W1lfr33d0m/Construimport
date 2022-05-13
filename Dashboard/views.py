@@ -4,13 +4,14 @@ from re import template
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from Solicitudes.models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
 def index(request):
     return render(request, 'dashboard/index.html')
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
     
     def get_solicitudes_mensuales_equipo(self):

@@ -138,7 +138,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Construimport-Server.urls'
 
-LOGIN_REDIRECT_URL = '/Dashboard/dashboard'
+LOGIN_REDIRECT_URL = '/dashboard/'
 
 NOTIFICATIONS_USE_JSONFIELD = True
 
