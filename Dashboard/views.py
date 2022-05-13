@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from Solicitudes.models import *
 # Create your views here.
 
+
 def index(request):
     return render(request, 'dashboard/index.html')
 

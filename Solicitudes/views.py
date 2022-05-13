@@ -2,13 +2,16 @@ from multiprocessing import context
 from re import template
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from formtools.wizard.views import WizardView, SessionWizardView
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
 from .models import *
+from .forms import *
+from django.views.generic import CreateView
 #from Solicitudes.models import Solicitud
-
-
+        
+        
 def generatePDF(request, id):
     buffer = io.BytesIO()
     x = canvas.Canvas(buffer)

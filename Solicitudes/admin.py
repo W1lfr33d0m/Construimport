@@ -44,6 +44,7 @@ from django.utils.translation import gettext as _
 from COMEX.models import Oferta_Equipo, Oferta_Equipo_Proxy
 from django.http import HttpRequest, HttpResponse
 from COMEX.admin import *
+from .views import *
 # Register your models here.
 
 class SolicitudResource(resources.ModelResource):
@@ -121,10 +122,14 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
+    add_form_template =  "solicitud_equipo_form.html"
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     #readonly_fields = ('numsolicitud')
+    
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
     
     fieldsets = (
         (None, {
@@ -141,6 +146,8 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'valor_estimado',
                    'edit_link'
                    )
+    
+    
     
     @admin.action(description='Generar archivo PDF')
     def generatePDF(modeladmin, request, queryset):

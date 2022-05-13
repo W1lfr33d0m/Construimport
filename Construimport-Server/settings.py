@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'import_export',
     'easy_pdf',
+    'formtools',
     
 ]
 
@@ -144,7 +145,7 @@ NOTIFICATIONS_USE_JSONFIELD = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Construimport-Server', 'Solicitudes', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
