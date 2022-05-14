@@ -42,12 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admindocs',
     'Solicitudes',
     'COMEX',
     'Nomencladores',
     'Trazas',
+    'Reportes',
     'Dashboard',
+    'Salvas',
     #'charts_dashboard',
     'djangobower',
     #'django_pdf',
@@ -74,7 +75,7 @@ JAZZMIN_SETTINGS = {
     'site_header': 'CONSTRUIMPORT',
     'site_logo': 'img/logo.png',
     'login_box': 'img/logo.png',
-    'welcome_sign': 'Iniciar sesión',
+    'welcome_sign': 'Autenticación',
     'icons': {
         'auth.user': 'fas fa-user',
         'auth.group': 'fas fa-users',
@@ -90,6 +91,7 @@ JAZZMIN_SETTINGS = {
         'Nomencladores.Marca': 'fas fa-registered',
         'Nomencladores.Proveedor': 'fas fa-id-card',
         'Nomencladores.Cliente': 'fas fa-id-badge',
+        'Salvas.Salvas': 'fas fa-download',
         'Solicitudes.Solicitud_Equipo': 'fas fa-car',
         'Solicitudes.Solicitud_PPA': 'fas fa-toolbox',
         'Solicitudes.Solicitud_Neumatico': 'far fa-circle',
@@ -123,7 +125,7 @@ STATIC_ROOT = 'static'
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Construimport-Server', 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR)]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,7 +140,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Construimport-Server.urls'
 
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_REDIRECT_URL = '/accounts/profile/'
 
 NOTIFICATIONS_USE_JSONFIELD = True
 

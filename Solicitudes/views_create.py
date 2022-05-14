@@ -1,25 +1,21 @@
+from traceback import format_list
 from django.views.generic import CreateView
 from multiprocessing import context
 from re import template
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from Solicitudes.forms import FSolicitud_Equipo, FSolicitud_Equipo_Proxy
 from formtools.wizard.views import WizardView, SessionWizardView
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
 from .models import *
 
-class Solicitud_Equipo_FormView(CreateView):
-    model = Solicitud_Equipo
-    fields = '__all__'
+class Solicitud_Equipo_FormView(WizardView):
     template_name = "solicitud_equipo_form.html"
+    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
     
-    def get_context_data(self, request:HttpResponse, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nombre_url'] = 'solicitud_equipo_form'
-        context['nombre_formulario'] = 'Agregar una nueva solicitud de Equipo'
-        context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-        return render(request, 'solicitud_equipo_form.html', context)  
+    
     
     def form_valid(self, form):
         return super().form_valid(form)
@@ -27,4 +23,8 @@ class Solicitud_Equipo_FormView(CreateView):
     def get_form(self, form):
         form =  super().get_form(form)
         form.fields['numcontratocliente'].widget_attrs.update({'autofocus': 'autofocus'})
-        
+    
+    def done(self, form_list, **kwargs):
+        return render(self.request, 'done.html', {
+            'form_data': [form.cleaned_data for form in form_list],
+        })

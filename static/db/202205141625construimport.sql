@@ -246,6 +246,8 @@ ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permis
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq;
 ALTER TABLE ONLY public.auth_group DROP CONSTRAINT auth_group_name_key;
 ALTER TABLE ONLY public."Trazas_logentry" DROP CONSTRAINT "Trazas_logentry_pkey";
+ALTER TABLE ONLY public."Reportes_reporte_solicitud" DROP CONSTRAINT "Reportes_reporte_solicitud_pkey";
+ALTER TABLE ONLY public."Datos_salvas_restauras" DROP CONSTRAINT "Datos_salvas_restauras_pkey";
 ALTER TABLE ONLY public."Dashboard_dashboard" DROP CONSTRAINT "Dashboard_dashboard_pkey";
 ALTER TABLE public.sucursal_cuba ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.solicitud_ppa_proxy ALTER COLUMN id DROP DEFAULT;
@@ -282,6 +284,8 @@ ALTER TABLE public.auth_permission ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.auth_group_permissions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.auth_group ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Trazas_logentry" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public."Reportes_reporte_solicitud" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public."Datos_salvas_restauras" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Dashboard_dashboard" ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.sucursal_cuba_id_seq;
 DROP TABLE public.sucursal_cuba;
@@ -364,6 +368,10 @@ DROP SEQUENCE public.auth_group_id_seq;
 DROP TABLE public.auth_group;
 DROP SEQUENCE public."Trazas_logentry_id_seq";
 DROP TABLE public."Trazas_logentry";
+DROP SEQUENCE public."Reportes_reporte_solicitud_id_seq";
+DROP TABLE public."Reportes_reporte_solicitud";
+DROP SEQUENCE public."Datos_salvas_restauras_id_seq";
+DROP TABLE public."Datos_salvas_restauras";
 DROP SEQUENCE public."Dashboard_dashboard_id_seq";
 DROP TABLE public."Dashboard_dashboard";
 SET default_tablespace = '';
@@ -400,6 +408,70 @@ ALTER TABLE public."Dashboard_dashboard_id_seq" OWNER TO const;
 --
 
 ALTER SEQUENCE public."Dashboard_dashboard_id_seq" OWNED BY public."Dashboard_dashboard".id;
+
+
+--
+-- Name: Datos_salvas_restauras; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public."Datos_salvas_restauras" (
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public."Datos_salvas_restauras" OWNER TO const;
+
+--
+-- Name: Datos_salvas_restauras_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public."Datos_salvas_restauras_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Datos_salvas_restauras_id_seq" OWNER TO const;
+
+--
+-- Name: Datos_salvas_restauras_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public."Datos_salvas_restauras_id_seq" OWNED BY public."Datos_salvas_restauras".id;
+
+
+--
+-- Name: Reportes_reporte_solicitud; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public."Reportes_reporte_solicitud" (
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public."Reportes_reporte_solicitud" OWNER TO const;
+
+--
+-- Name: Reportes_reporte_solicitud_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public."Reportes_reporte_solicitud_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Reportes_reporte_solicitud_id_seq" OWNER TO const;
+
+--
+-- Name: Reportes_reporte_solicitud_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public."Reportes_reporte_solicitud_id_seq" OWNED BY public."Reportes_reporte_solicitud".id;
 
 
 --
@@ -1872,6 +1944,20 @@ ALTER TABLE ONLY public."Dashboard_dashboard" ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: Datos_salvas_restauras id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."Datos_salvas_restauras" ALTER COLUMN id SET DEFAULT nextval('public."Datos_salvas_restauras_id_seq"'::regclass);
+
+
+--
+-- Name: Reportes_reporte_solicitud id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."Reportes_reporte_solicitud" ALTER COLUMN id SET DEFAULT nextval('public."Reportes_reporte_solicitud_id_seq"'::regclass);
+
+
+--
 -- Name: Trazas_logentry id; Type: DEFAULT; Schema: public; Owner: const
 --
 
@@ -2121,6 +2207,22 @@ ALTER TABLE ONLY public.sucursal_cuba ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 COPY public."Dashboard_dashboard" (id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: Datos_salvas_restauras; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public."Datos_salvas_restauras" (id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: Reportes_reporte_solicitud; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public."Reportes_reporte_solicitud" (id) FROM stdin;
 \.
 
 
@@ -2465,6 +2567,14 @@ COPY public.auth_permission (id, name, codename, content_type_id) FROM stdin;
 162	Can change dashboard	change_dashboard	41
 163	Can delete dashboard	delete_dashboard	41
 164	Can view dashboard	view_dashboard	41
+165	Can add ('Salvas y Restauras',)	add_salvas_restauras	42
+166	Can change ('Salvas y Restauras',)	change_salvas_restauras	42
+167	Can delete ('Salvas y Restauras',)	delete_salvas_restauras	42
+168	Can view ('Salvas y Restauras',)	view_salvas_restauras	42
+169	Can add reporte_ solicitud	add_reporte_solicitud	43
+170	Can change reporte_ solicitud	change_reporte_solicitud	43
+171	Can delete reporte_ solicitud	delete_reporte_solicitud	43
+172	Can view reporte_ solicitud	view_reporte_solicitud	43
 \.
 
 
@@ -2477,11 +2587,11 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 7	pbkdf2_sha256$320000$VOWXzkjOaXtJD1PNQP0jSx$kfiQ3zg1iv1RG72BS4UDnBXyTWARj6L+S9DuJE8jg+8=	\N	f	jose.luis	José Luis	García Hernández	jose.luis@construimport.cu	t	t	2022-05-06 01:52:15.675036-04	f
 4	pbkdf2_sha256$320000$DLZ5BZ0lvVpSZJDKjish7V$0HJD2J23W2r2ZDKYy+7Xeiuc1a59LBaaHTKwEzupzQs=	2022-05-06 18:08:06.083009-04	f	director_comex	Roberto	Perez Fernandez	dircomex@construimport.cu	t	t	2022-04-28 10:38:33.023523-04	f
 8	pbkdf2_sha256$320000$idikVvFMhdaE6np39F8sa8$8pNPeEsF0EFGE6VXcyxbbW84QudiXIjN+qCNnJtIhcg=	2022-05-06 01:54:00.810238-04	f	armando.tellez	Armando	Téllez Mesa	armando.tellez@construimport.cu	t	t	2022-05-06 01:53:45.115393-04	f
-9	pbkdf2_sha256$320000$8Q1Sp8oV3V0vPA0JCGa6sW$pHt+w2XWXPicHKqd/nbWqjfNK8SQLgFlO539CwWCh80=	2022-05-10 08:37:54.12445-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04	f
 2	pbkdf2_sha256$320000$6itfcQdOsiwen7H29ns2yi$HzkZRdx2Fv1pwW+bmXkyaJ0oJl+dvItEg9AdYXxAboY=	2022-05-11 13:39:52.395704-04	f	director_desarrollo	Maria	García Marrero	didrdesarrollo@construimport.cu	t	t	2022-04-28 10:29:16.889474-04	f
 5	pbkdf2_sha256$320000$DTERCJcMatk2LUfd2rw2Ao$oznDJKIHvpZVi61mHAoCehvBxHvgU5JS8g2DtQ8xz0Y=	2022-05-11 13:42:59.112257-04	f	comex1	Maria de las Mercedes	Valdes Rodriguez	comex1@construimport.cu	t	t	2022-04-28 10:39:06.1783-04	f
-10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-05-11 13:44:16.734584-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04	f
-1	pbkdf2_sha256$320000$qQC09mdwPUwi73eDhymxw3$LWT3dHYrxOrgS/3FfamAi5IKcS9PM/s0C91Q/zVLF/U=	2022-05-12 04:43:55.582099-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04	f
+9	pbkdf2_sha256$320000$8Q1Sp8oV3V0vPA0JCGa6sW$pHt+w2XWXPicHKqd/nbWqjfNK8SQLgFlO539CwWCh80=	2022-05-12 17:45:09.79103-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04	f
+1	pbkdf2_sha256$320000$qQC09mdwPUwi73eDhymxw3$LWT3dHYrxOrgS/3FfamAi5IKcS9PM/s0C91Q/zVLF/U=	2022-05-14 11:26:56.264194-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04	f
+10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-05-13 07:01:32.348566-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04	f
 \.
 
 
@@ -2913,6 +3023,8 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 39	COMEX	oferta_neumatico_proxy
 40	COMEX	oferta_bateria
 41	Dashboard	dashboard
+42	Datos	salvas_restauras
+43	Reportes	reporte_solicitud
 \.
 
 
@@ -2994,6 +3106,12 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 71	auth	0003_user_is_admin	2022-05-09 11:26:51.983351-04
 72	COMEX	0023_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-05-11 13:17:48.76307-04
 73	Solicitudes	0018_alter_solicitud_bateria_fechasol_and_more	2022-05-11 13:17:48.854509-04
+74	COMEX	0024_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-05-12 05:15:52.804505-04
+75	Datos	0001_initial	2022-05-12 05:15:52.839549-04
+76	Solicitudes	0019_alter_solicitud_bateria_fechasol_and_more	2022-05-12 05:15:52.926917-04
+77	COMEX	0025_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-05-14 06:22:19.722829-04
+78	Reportes	0001_initial	2022-05-14 06:22:19.758419-04
+79	Solicitudes	0020_alter_solicitud_bateria_fechasol_and_more	2022-05-14 06:22:19.875435-04
 \.
 
 
@@ -3004,8 +3122,19 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 53hztnsp8g0hxy0gttc83rds7ozk0bw1	.eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nnVvO:GDYjtE8LclDc735PAgGd9AD8c4V-ifMpSybpB1blRkc	2022-05-21 17:41:30.836465-04
 fitkalcdkylqnsppfqrcz1ncpne3fw1j	.eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nnKH6:PrfnF3_cDDyyQfWxk23HvfYPPaqdlX-QfBRIya0Mnzk	2022-05-21 05:15:08.601597-04
-la15lr66frgry7z2vxbeu19f8nrxzwj6	.eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apAvdnpk5LzXBtuZpa2mZZlYXFdXpd0OgRyo74DuUW9VUy7rMqHdFH7TpsXJ6Xg_37yBDy99aYhR0BMAefO8cdZLIWUY5Y-eMiLEBe_HCxCYMXfRoAxNFy2yGHtT7Ax4gOSI:1noRoi:Wg1Pm7lvQUiMe6z9Axy-K8Qz2kuZGp17OPMBzsVYUf4	2022-05-24 07:30:28.068985-04
 v9hdrrxh630edxdvav2o2wsc6xqrwmrx	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1np8Ad:yI0-iHM67N9_vQxb4nxoxELqebKgfxRDcEWw_fxahPg	2022-05-26 04:43:55.584892-04
+8okr7g1zmhtgwin2a0linhyr7zq45cqq	e30:1npWkd:ZJcl6zIJXLlcum1syDhjJG6TUGKJS_ueGby43K_l3qI	2022-05-27 06:58:43.216808-04
+fstow60qktqo7o65susnp3np60h29faj	e30:1npWle:600Z8M5FmErmSpJPPZ9A0J1q158v0v3HHXq0LxKPR-c	2022-05-27 06:59:46.60895-04
+nghafven491k6kkry96hy35uibwk3cfz	e30:1npWtT:ago4juFK9bOPl5OZ-z19s1JCc2EaIbiB14FfPWnsQq8	2022-05-27 07:07:51.466258-04
+99nchg611zcg4v2pmvsp2obyuac0nci9	e30:1npWtn:kv6sFW1jwl_OkLFpblo9-hwmbyI09l9EAMJ12xDmI68	2022-05-27 07:08:11.058977-04
+9lmbnlqoiw58c7nv0s6d2u253utckq2x	e30:1npWub:VxwTa8b5TsB_mu69CSGY2Z3QqFUL8DeIaFzUC7XAXjY	2022-05-27 07:09:01.82301-04
+7ki5lqfd572whpr2fogj4u7tgj8d775p	e30:1npWuw:lqNQHlb9UFbcG-c6pz2bbEEKYEouLmSa1Yb-WJBea-4	2022-05-27 07:09:22.305407-04
+2x9vwghx8b2u9paxx0dkol0spfswkhjz	e30:1npWvF:DChfb43h6FEhbChk84Sm54tCaVVPjewOFrOiLqxLOgw	2022-05-27 07:09:41.252425-04
+i6h3fkynch98217zxt3xsb7pysp042n8	e30:1npWvZ:Q-x3viz1W0tMY68urVHR-BCYPSiotHsSpqk0BcUtGGU	2022-05-27 07:10:01.080951-04
+5kli24l9kaps9ls0oumgrup08ew6ywgz	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1npZRu:MmcvSFL2Vx7r3cFGm-CWSRxAcpjM5lKGFNXA9mpVQRo	2022-05-27 09:51:34.66436-04
+obud0ze9woxy93l67qojrt6to9f8n6pl	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1npho1:abzk9fhPlOZ9J8IbNEPFMudqWTE6LIXefV4dm6LYpuc	2022-05-27 18:46:57.410936-04
+hu0maevnoguinrzqr5h2oifq99u6s8dk	e30:1npsKP:ZXYbtAtIcaZj-AGaVaSDaPRx4TI55YwciDZxxElC21k	2022-05-28 06:01:05.969134-04
+gfunxgrbec23l47baxuzfxs2abk3yxe2	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1npxPk:wouZ5DZgqIZtzl7ACgzKza47tQhqQgQoNkQFuGeB5lI	2022-05-28 11:26:56.269231-04
 \.
 
 
@@ -3664,6 +3793,20 @@ SELECT pg_catalog.setval('public."Dashboard_dashboard_id_seq"', 1, false);
 
 
 --
+-- Name: Datos_salvas_restauras_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public."Datos_salvas_restauras_id_seq"', 1, false);
+
+
+--
+-- Name: Reportes_reporte_solicitud_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public."Reportes_reporte_solicitud_id_seq"', 1, false);
+
+
+--
 -- Name: Trazas_logentry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
@@ -3688,7 +3831,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 170, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 164, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 172, true);
 
 
 --
@@ -3730,14 +3873,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 863, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 41, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 43, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 73, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 79, true);
 
 
 --
@@ -3928,6 +4071,22 @@ SELECT pg_catalog.setval('public.sucursal_cuba_id_seq', 1, false);
 
 ALTER TABLE ONLY public."Dashboard_dashboard"
     ADD CONSTRAINT "Dashboard_dashboard_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Datos_salvas_restauras Datos_salvas_restauras_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."Datos_salvas_restauras"
+    ADD CONSTRAINT "Datos_salvas_restauras_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Reportes_reporte_solicitud Reportes_reporte_solicitud_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."Reportes_reporte_solicitud"
+    ADD CONSTRAINT "Reportes_reporte_solicitud_pkey" PRIMARY KEY (id);
 
 
 --

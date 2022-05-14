@@ -1,4 +1,4 @@
-{% extends 'admin/index.html' %}
+{% extends 'admin/base_site.html' %}
 {% load i18n static jazzmin %}
 {% get_jazzmin_ui_tweaks as jazzmin_ui %}
 
@@ -9,18 +9,19 @@
 {% block extrahead %}
     <script src="{% static 'highcharts/code/highcharts.js' %}"></script>
     <script src="{% static 'highcharts/code/modules/exporting.js' %}"></script>
+    <script src="{% static 'highcharts/code/modules/offline-exporting.js' %}"></script>
     <script src="{% static 'highcharts/code/modules/export-data.js' %}"></script>
     <script src="{% static 'highcharts/code/modules/accessibility.js' %}"></script>
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
 
-{% block content_title %} {% trans 'Página Principal' %} {% endblock %}
+{% block content_title %} {% trans 'Sistema Integrado para la Gestión de Importaciones' %} {% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{% url 'Dashboard:dashboard' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item">{% trans 'Página Principal' %}</li>
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Reportes' %}</li>
     </ol>
 {% endblock %}
 
