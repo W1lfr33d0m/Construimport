@@ -118,7 +118,7 @@ def db_save(request):
             save_address_dbs(address)
             list = list_address_db()
             messages.success(request, "Éxito al salvar los datos")
-            return render(request, 'salvarestaura.html', {'dblist': list,})
+            return render(request, 'salvarestaura.html', {'dblist': list})
         except:
             descripcion = 'Error al salvar la base de datos'
             messages.error(request, "Error al salvar los datos")
@@ -144,32 +144,13 @@ def db_restore(request:HttpRequest, name):
         messages.error(request, "Error al restaurar la base de datos")
         return redirect(to='/')
 
-@permission_required('auth.add_user', login_url='403')
-def download_file(request:HttpResponse, filename=''):
-    if filename != '':
-        # Define Django project base directory
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        # Define the full file path
-        filepath = '/static/db/' + filename
-        # Open the file for reading content
-        path = open(filepath, 'rb')
-        # Set the mime type
-        mime_type, _ = mimetypes.guess_type(filepath)
-        # Set the return value of the HttpResponse
-        response = HttpResponse(path, content_type=mime_type)
-        # Set the HTTP header for sending to browser
-        response['Content-Disposition'] = "attachment; filename=%s" % filename
-        # Return the response value
-        return response
-    else:
-        # Load the template
-        return render(request, 'salvarestaura.html')
+
     
 @permission_required('auth.add_user', login_url='403')
-def remove_file(request:HttpResponse, name):
-    remove_address_dbs(name)
+def download_file(request:HttpResponse, name):
+   
     #address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
     #os.remove(os.path.join(address, name))
-    return render(request, 'smuggler/salvarestaura.html')
+    return render(request, 'salvarestaura.html')
     
     

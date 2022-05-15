@@ -6,6 +6,8 @@ from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 from django.http import HttpRequest
+
+
 class LogEntryResource(resources.ModelResource):
     
     class Meta:

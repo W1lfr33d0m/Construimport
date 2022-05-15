@@ -10,6 +10,7 @@ import calendar
 from calendar import MONDAY, SATURDAY, SUNDAY
 from datetime import date, datetime, timedelta
 from math import prod
+from msilib.schema import Verb
 from re import T
 from tabnanny import verbose
 from tkinter import Widget
@@ -89,8 +90,8 @@ class Solicitud(models.Model):
     
     numcontratocliente = models.ForeignKey(
         Cliente, 
-        models.DO_NOTHING, 
-        db_column='numcontratocliente', 
+        models.DO_NOTHING,
+        db_column='numcontratocliente',
         verbose_name = 'Cliente'
         )
     

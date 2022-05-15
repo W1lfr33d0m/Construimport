@@ -74,7 +74,6 @@ JAZZMIN_SETTINGS = {
     'site_title': 'CONSTRUIMPORT',
     'site_header': 'CONSTRUIMPORT',
     'site_logo': 'img/logo.png',
-    'login_box': 'img/logo.png',
     'welcome_sign': 'Autenticación',
     'icons': {
         'auth.user': 'fas fa-user',
@@ -95,7 +94,7 @@ JAZZMIN_SETTINGS = {
         'Solicitudes.Solicitud_Equipo': 'fas fa-car',
         'Solicitudes.Solicitud_PPA': 'fas fa-toolbox',
         'Solicitudes.Solicitud_Neumatico': 'far fa-circle',
-        'Solicitudes.Solicitud_Bateria': 'fas fa-battery-empty',
+        'Solicitudes.Solicitud_Bateria': 'fas fa-charging-station',
         'Nomencladores.Pais': 'fas fa-flag', 
         'Nomencladores.ContratoCliente': 'fas fa-file',
         'Nomencladores.ContratoProveedor': 'fas fa-file',
@@ -104,6 +103,7 @@ JAZZMIN_SETTINGS = {
         'Admin.LogEntry': 'fas fa-folder',
         'Información.Salva': 'fas fa-download',
         'Información.Restauras': 'fas fa-upload',
+        'Reportes.Reporte_Solicitud': 'fas fa-chart-bar',
     },
     'changeform_format': 'horizontal_tabs',
     'related_modal_active': False,
@@ -121,11 +121,11 @@ IMPORT_EXPORT_SKIP_ADMIN_LOG = False
 
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 
-STATIC_ROOT = 'static'
+
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR)]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

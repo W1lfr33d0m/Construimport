@@ -22,7 +22,7 @@ urlpatterns = [
    
     path('db_restore/<name>', db_restore, name='restaurar'),
     
-    path('descargar/<filename>', download_file, name='descargar'),
+    path('descargar/<str:name>', download_file, name='descargar'),
     
-    path('eliminar/<str:name>', remove_file, name='eliminar')
+    #path('eliminar/<str:name>', remove_file, name='eliminar')
 ]

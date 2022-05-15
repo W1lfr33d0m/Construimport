@@ -147,7 +147,16 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
+    def get_dynamic_info(self):
+        # ...
+        pass
     
+    def add_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['osm_data'] = self.get_dynamic_info()
+        return super(Solicitud_EquipoAdmin, self).change_view(
+            request, object_id, form_url, extra_context=extra_context,
+        )
     
     @admin.action(description='Generar archivo PDF')
     def generatePDF(modeladmin, request, queryset):

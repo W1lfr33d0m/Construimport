@@ -8,13 +8,11 @@ from .models import *
 
 
 class FSolicitud_Equipo(forms.ModelForm):
-    cliente = forms.CharField(max_length=50)
-    observaciones = forms.TextInput()
-    valor_estimado = forms.FloatField()
+    
     
     class Meta:
         model =  Solicitud_Equipo
-        fields = "__all__"
+        fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
         
 class FSolicitud_Equipo_Proxy(forms.ModelForm):
     class Meta:

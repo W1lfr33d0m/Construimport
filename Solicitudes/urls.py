@@ -9,6 +9,7 @@ app_name = 'Solicitudes'
 # Lista con los patrones URL de la aplicacion...
 urlpatterns = [
     path('<int:id>/generatePDF/', views.generatePDF, name='generatePDF'),
-    path('solicitud_equipo/add/', Solicitud_Equipo_FormView.as_view(), name='add'),
+    #path('solicitud_equipo/add/', Solicitud_Equipo_FormView.as_view(), name='add'),
+    path('solicitud_equipo/add/', display, name='solicitud_equipo')
     # Reglas para las paginas de la aplicacion
 ]
