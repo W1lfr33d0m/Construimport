@@ -11,16 +11,16 @@ from .forms import *
 from django.views.generic import CreateView
 #from Solicitudes.models import Solicitud
         
-class Agregar_Solicitud_Equipo(SessionWizardView):
+class Agregar_Solicitud_Equipo(CreateView):
     model = Solicitud_Equipo
-    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
+    #form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
+    fields = '__all__'
     template_name = 'solicitud_equipo_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['nombre_url'] = 'solicitud_equipo'
         context['opts'] = Solicitud_Equipo._meta,
-        context['app_list']
         context['change'] = True,
         context['is_popup'] = False,
         context['save_as'] = False,
@@ -32,11 +32,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
         return context
 
-    def done(self, form_list, **kwargs):
-        return render(self.request, 'change_list.html', {
-        'form_data': [form.cleaned_data for form in form_list],
-        })
-    
+   
     def get(self, request, *args, **kwargs):
         try:
             return self.render(self.get_form())
@@ -50,9 +46,6 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         form = super().get_form()
         form.fields['numcontratocliente'].widget.attrs.update({'autofocus': 'autofocus'})
         return form      
-       
-def display(request):
-    return render(request, 'solicitud_equipo_form.html', {'context': Agregar_Solicitud_Equipo.get_context_data})
 
 def generatePDF(request, id):
     buffer = io.BytesIO()
