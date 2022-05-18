@@ -91,8 +91,10 @@ def remove_address_dbs(name):
     fich = open("static/db/dblist.txt")
     lines = fich.readlines() 
     fich.close() 
-    if name in lines:
-            lines.remove(name)
+    address = 'static/db/' + name
+    for line in lines:
+        if address == line:
+            lines.remove(line)
     fich = open("static/db/dblist.txt", "w")
     for line in lines:
         fich.writelines(line)
@@ -123,7 +125,7 @@ def db_save(request):
             descripcion = 'Error al salvar la base de datos'
             messages.error(request, "Error al salvar los datos")
             return render(request, 'salvarestaura.html', {'dblist': list})      
-    return render(request, 'salvarestaura.html', {'dblist': list})
+    #return render(request, 'salvarestaura.html', {'dblist': list})
 
 
 @permission_required('auth.add_user', login_url='403')
@@ -144,13 +146,17 @@ def db_restore(request:HttpRequest, name):
         messages.error(request, "Error al restaurar la base de datos")
         return redirect(to='/')
 
-
     
 @permission_required('auth.add_user', login_url='403')
 def download_file(request:HttpResponse, name):
-   
+    list = list_address_db()
     #address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
     #os.remove(os.path.join(address, name))
-    return render(request, 'salvarestaura.html')
+    return render(request, 'salvarestaura.html',  {'dblist': list})
     
     
+@permission_required('auth.add_user', login_url='403')    
+def remove_file(request:HttpResponse, name):
+    list = list_address_db()
+    remove_address_dbs(name)
+    return render(request, 'salvarestaura.html',  {'dblist': list})

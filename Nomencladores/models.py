@@ -29,8 +29,15 @@ Clase Marca
     
 """
 class Marca(models.Model):
+    EQUIPOS = 'Equipos'
+    PPAS = 'PPAS'
+    NEUMATICOS = 'Neumáticos'
+    BATERIAS = 'Baterías'
+    PRODUCTOS = [(EQUIPOS, 'Equipos'), (PPAS, 'PPAS'), (NEUMATICOS, 'Neumáticos'), (BATERIAS, 'Baterías')]
+    
     codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
+    productos = models.CharField(max_length=15, choices=PRODUCTOS, default='Equipos', verbose_name='Tipos de Productos')
 
     class Meta:
         managed = True

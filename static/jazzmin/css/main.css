@@ -625,6 +625,7 @@ a.active.selector-clearall:hover {
 
 .dashboard tbody tr:first-child td {
     border-top: none;
+    
 }
 
 .vTimeField {
@@ -710,7 +711,9 @@ body.no-sidebar .main-header {
 .login-box,
 .register-box {
     width: auto;
-    max-width: 700px;
+    justify-content: center;
+    max-width: auto;
+    padding: auto;
 }
 
 #jazzy-collapsible .collapsible-header:hover {
@@ -756,7 +759,9 @@ form ul.inline li {
 
 .content-wrapper {
     background: inherit;
+    
 }
+
 
 .main-footer {
     background-image: url("/static/jazzmin/img/trama gráfica-03.png");

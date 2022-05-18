@@ -29,8 +29,8 @@ from Solicitudes.views import *
 urlpatterns = [
     path('Salvas/', include('Salvas.urls')),
     path('Reportes/', include('Reportes.urls')),
-    path('Solicitudes/', include('Solicitudes.urls')),
     path('', admin.site.urls),
+    path('Solicitudes/', include('Solicitudes.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),

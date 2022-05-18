@@ -1,76 +1,22 @@
 {% extends "admin/change_form.html" %}
-{% load i18n admin_urls static admin_modify jazzmin %}
-{% get_jazzmin_settings request as jazzmin_settings %}
-
-{% block extrastyle %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'vendor/select2/css/select2.min.css' %}">
-{% endblock %}
-
-{% block extrahead %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
-    {{ media }}
-{% endblock %}
-
-{% block coltype %}colM{% endblock %}
-
-{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
-
-{% if not is_popup %}
-    {% block breadcrumbs %}
-        <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-tachometer-alt"></i> {% trans 'Home' %}</a></li>
-            <li class="breadcrumb-item"><a href="#"></a></li>
-            <li class="breadcrumb-item">
-                {% if has_view_permission %}
-                    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
-                {% else %}
-                    {{ opts.verbose_name_plural|capfirst }}
-                {% endif %}
-            </li>
-            <li class="breadcrumb-item active">
-                {% if add %}
-                    {% blocktrans with name=opts.verbose_name %}Add {{ name }}{% endblocktrans %}
-                {% else %}
-                    {{ original|truncatewords:"18" }}
-                {% endif %}
-            </li>
-        </ol>
-    {% endblock %}
-{% endif %}
+{% load i18n %}
 
 {% block content %}
-<p>Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}</p>
-<form action="{% url 'Solicitudes:solicitud_equipo' %}" method="post">
-  {% csrf_token %}
-  <table>
-  {{ wizard.management_form }}
-  {% if wizard.form.forms %}
-    {{ wizard.form.management_form }}
-    {{ wizard.form.non_field_errors }}
-    {{ wizard.form.errors }}
-    {% for form in wizard.form.forms %}
-      {{ form }}
-    {% endfor %}
-  {% else %}
-    {{ wizard.form }}
-  {% endif %}
-  </table>
-  {% if wizard.steps.prev %}
-  <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-  <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
-  {% endif %}
-  <input type="submit" value="{% trans "submit" %}"/>
-</form>
-{% endblock %}
-
-{% block extrajs %}
-    {{  block.super }}
-    <script type="text/javascript" src="{% static 'vendor/select2/js/select2.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'jazzmin/js/change_form.js' %}"></script>
-    {% if jazzmin_settings.related_modal_active %}
-    <script type="text/javascript" src="{% static 'jazzmin/plugins/bootstrap-show-modal/bootstrap-show-modal.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'jazzmin/js/related-modal.js' %}"></script>
-    {% endif %}
+<table>
+    <tr>
+        <td width="5%"></td>
+        <td width="90%">
+            <form action="{% url 'Solicitudes:solicitud_equipo' %}" method="post" class="uniForm">
+                {% csrf_token %}
+                <br>
+                <p class="grande"> {{ nombre_formulario }} </p>
+                <br>
+                {{ form.as_p }}
+                <br>
+                <p><input type="submit" value="Guardar"> <input type="reset" value="Limpiar"></p>
+            </form>
+        </td>
+        <td width="5%"></td>
+    </tr>
+</table>
 {% endblock %}

@@ -3,6 +3,7 @@ from pyexpat import model
 from tabnanny import verbose
 from django.contrib import admin
 from django.shortcuts import render
+from numpy import delete
 from sqlalchemy import ForeignKey
 from attr import field
 from xlrd import open_workbook_xls
@@ -16,6 +17,7 @@ from import_export import resources
 from .resources import ProveedorResource, ClienteResource, EquipoResource, PPAResource, NeumaticoResource, BateriaResource, MarcaResource
 from django import forms
 from import_export.forms import ImportForm, ConfirmImportForm
+from django.http import HttpRequest, HttpResponse
 from .models import *
 from .forms import *
 
@@ -82,13 +84,20 @@ class ProvinciaAdmin(admin.ModelAdmin):
 @admin.register(Marca)
 class MarcaAdmin(ImportExportModelAdmin):
     resource_class = MarcaResource
-    list_display = ('codigomarca', 'nommarca')
+    list_display = ('codigomarca', 'nommarca', 'productos')
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         #form.base_fields['idpais'].widget.can_add_related = False
     
         return form
+    
+    def delete(self, request:HttpRequest, obj):
+        marca = self.get_object(request, 'codigomarca')
+        if Equipo.objects.filter(marca = marca).exists() or PPA.objects.filter(marca = marca).exists() or Neumatico.objects.filter(marca = marca).exists() or Bateria.objects.filter(marca = marca).exists():
+            raise PermissionError()
+        else:
+            pass
     
 
 @admin.register(Equipo)
