@@ -122,7 +122,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
-    add_form_template =  "solicitud_equipo_form.html"
+    add_form_template = 'solicitud_equipo_form.html'
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
@@ -151,8 +151,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         # ...
         pass
     
-    
-    
     @admin.action(description='Generar archivo PDF')
     def generatePDF(modeladmin, request, queryset):
         url ='Solicitudes/templates/?pks=' + ','.join(str([q.pk for q in queryset]))
@@ -166,82 +164,38 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
             return ['estado', 'especialista']
         return super().get_fields(request, obj)
     
-    def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        fields = ('numsolicitud', 'numcontratocliente', 'estado')
-        #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Marketing').exists():
-            form.base_fields['numcontratocliente'].widget.can_add_related = False
-            form.base_fields['numcontratocliente'].widget.can_delete_related = False
-            form.base_fields['numcontratocliente'].widget.can_change_related = False
-       # elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-        #    form.base_fields['especialista'].widget.can_delete_related = False
-        return form
-    
-    def get_proveedores(self, obj):
-       return obj.proveedores.all().values_list('codmincex', flat=True)
-                
-    def get_equipos(self, obj):
-       return obj.equipo.all().values_list('idproducto', flat=True)
-    
-    def get_cantidad(self, obj, idproducto):
-       if obj.equipos_set.filter(idproducto).exists():
-           return obj.cantidad
-    
-    def response_add(self, request, obj, post_url_continue=None):
-        msg = "Solicitud agregada correctamente"
-        self.message_user(request, msg, level=messages.SUCCESS)
-        return self.response_post_save_add(request, obj)
-    
-    def response_change(self, request:HttpRequest, obj, post_url_continue=None):
-        print(Solicitud_EquipoInline.get_marca(self, obj))
-        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
-            for p in obj.proveedores.all().values_list('codmincex', flat=True):
-                print(p)
-                oferta_equipo = Oferta_Equipo.objects.create(solicitud_id = obj.numsolicitud, 
-                                                             proveedor_id = p, 
-                                                             especialista = obj.especialista, 
-                                                             valor_estimado = obj.valor_estimado
-                                                             )
-                print(obj.equipo.all())
-                #for proxy in Solicitud_Equipo_Proxy.objects.filter(numsolicitud=obj.numsolicitud):
-                #   print(proxy.cantidad)
-                #    oferta_equipo_proxy = oferta_equipo.equipos.create(proxy)
-                    #oferta_equipo_proxy.solicitud = proxy.numsolicitud
-                    #oferta_equipo_proxy.equipo = proxy.idproducto
-                    #oferta_equipo_proxy.cantidad = proxy.cantidad
-                    #oferta_equipo.equipos.add(oferta_equipo_proxy)                
-        #msg1 = "Tiene nuevas solicitudes de Ofertas"
-        #receiver = request.user.objects.filter(name = str(obj.especialista))
-        #self.message_user(receiver, msg1, level=messages.INFO)
-        msg2 = "Solicitud modificada correctamente"
-        self.message_user(request, msg2, level=messages.SUCCESS)
-        return self.response_post_save_change(request, obj)
-    
-    #def response_post_save_add(self, request, obj=None):
-        #if request.user.groups.filter(name='Marketing').exists():
-           #send_mail(
-            #       'Nueva solicitud',
-            #       'Tiene solicitudes pendientes a aprobar',
-           #       'wilferreira3@nauta.cu',
-            #       ['wilfreferreira3@gmail.com'],
-            #       fail_silently=False,
-                    #)
-        #return super().response_post_save_add(request, obj)
-        
-    def save(self, request:HttpResponse, obj=None):
-        
-        return super(Solicitud_Equipo, self).save(request, obj)
-       
-    def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
-        return super().get_inline_formsets(request, formsets, inline_instances, obj)
-    
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nombre_url'] = 'solicitud_equipo'
+        context['opts'] = Solicitud_Equipo._meta,
+        context['change'] = True,
+        context['is_popup'] = False,
+        context['save_as'] = False,
+        context['has_delete_permission'] = False,
+        context['has_add_permission'] = True,
+        context['has_change_permission'] = False
+        context['changeform_template'] = 'solicitud_equipo_form.html'
+        context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
+        context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+        return context
+   
+    def get(self, request, *args, **kwargs):
+        try:
+            return self.render(self.get_form())
+        except KeyError:
+             return super().get(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+         
 
 """
 Clases de Piezas
