@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django_crontab',
     'jazzmin',
+    'grappelli',
     #'admin_interface',
     #'colorfield',
     #'admin_tools_stats',
@@ -124,6 +125,8 @@ IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 
 
 STATIC_URL = "/static/"
+
+STATIC_ROOT = "/Users/wilfr/Django/.const/static_root/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 

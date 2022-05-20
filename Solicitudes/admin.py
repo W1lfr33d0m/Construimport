@@ -1,6 +1,7 @@
 from argparse import Action
 from cProfile import label
 from sre_constants import SUCCESS
+from tkinter.messagebox import NO
 from types import new_class
 from django.core.mail import send_mail
 from email import message
@@ -45,6 +46,7 @@ from COMEX.models import Oferta_Equipo, Oferta_Equipo_Proxy
 from django.http import HttpRequest, HttpResponse
 from COMEX.admin import *
 from .views import *
+from .forms import *
 # Register your models here.
 
 class SolicitudResource(resources.ModelResource):
@@ -128,8 +130,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     #readonly_fields = ('numsolicitud')
     
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
     
     fieldsets = (
         (None, {
@@ -147,23 +147,32 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
-    def get_dynamic_info(self):
-        # ...
-        pass
-    
-    @admin.action(description='Generar archivo PDF')
-    def generatePDF(modeladmin, request, queryset):
-        url ='Solicitudes/templates/?pks=' + ','.join(str([q.pk for q in queryset]))
+
+    def done(self, form_list, **kwargs):
+        return render(self.request, 'done.html', {
+            'form_data': [form.cleaned_data for form in form_list],
+        })
        
-    actions = ['generatePDF']
+    def get(self, request, *args, **kwargs):
+        try:
+            return self.render(self.get_form())
+        except KeyError:
+            return super().get(request, *args, **kwargs)
     
-    def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Marketing').exists():
-            return ['numcontratocliente', 'observaciones', 'valor_estimado']
-        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            return ['estado', 'especialista']
-        return super().get_fields(request, obj)
-    
+    def add_view(self, request: HttpRequest, form_url='solicitud_equipo', extra_context = None):
+        extra_context = extra_context or {}
+        extra_context['nombre_url'] = 'solicitud_equipo'
+        extra_context['opts'] = Solicitud_Equipo._meta,
+        extra_context['change'] = True,
+        extra_context['is_popup'] = False,
+        extra_context['save_as'] = False,
+        extra_context['has_delete_permission'] = False,
+        extra_context['has_add_permission'] = True,
+        extra_context['has_change_permission'] = False
+        extra_context['changeform_template'] = 'solicitud_equipo_form.html'
+        extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
+        extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+        return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
@@ -171,20 +180,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nombre_url'] = 'solicitud_equipo'
-        context['opts'] = Solicitud_Equipo._meta,
-        context['change'] = True,
-        context['is_popup'] = False,
-        context['save_as'] = False,
-        context['has_delete_permission'] = False,
-        context['has_add_permission'] = True,
-        context['has_change_permission'] = False
-        context['changeform_template'] = 'solicitud_equipo_form.html'
-        context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
-        context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-        return context
    
     def get(self, request, *args, **kwargs):
         try:
@@ -194,8 +189,6 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     
     def form_valid(self, form):
         return super().form_valid(form)
-
-         
 
 """
 Clases de Piezas

@@ -10,6 +10,6 @@ app_name = 'Solicitudes'
 urlpatterns = [
     path('<int:id>/generatePDF/', views.generatePDF, name='generatePDF'),
     #path('solicitud_equipo/add/', Solicitud_Equipo_FormView.as_view(), name='add'),
-    path('solicitud_equipo/add/', Agregar_Solicitud_Equipo.as_view(), name='solicitud_equipo')
+    path('solicitud_equipo/add/', Agregar_Solicitud_Equipo.as_view([FSolicitud_Equipo, FSolicitud_Equipo_Proxy]), name='solicitud_equipo')
     # Reglas para las paginas de la aplicacion
 ]

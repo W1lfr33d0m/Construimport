@@ -11,10 +11,10 @@ from .forms import *
 from django.views.generic import CreateView
 #from Solicitudes.models import Solicitud
         
-class Agregar_Solicitud_Equipo(CreateView):
+class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
-    #form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
-    fields = '__all__'
+    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
+    fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'solicitud_equipo_form.html'
 
     def get_context_data(self, **kwargs):
@@ -32,13 +32,11 @@ class Agregar_Solicitud_Equipo(CreateView):
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
         return context
 
-   
-    def get(self, request, *args, **kwargs):
-        try:
-            return self.render(self.get_form())
-        except KeyError:
-             return super().get(request, *args, **kwargs)
-    
+    def done(self, form_list, **kwargs):
+        return render(self.request, 'done.html', {
+            'form_data': [form.cleaned_data for form in form_list],
+        })
+       
     def form_valid(self, form):
         return super().form_valid(form)
 

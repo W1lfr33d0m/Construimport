@@ -27,10 +27,11 @@ from Solicitudes.views_create import *
 from Solicitudes.views import *
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('Salvas/', include('Salvas.urls')),
     path('Reportes/', include('Reportes.urls')),
-    path('', admin.site.urls),
     path('Solicitudes/', include('Solicitudes.urls')),
+    path('', admin.site.urls),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),
