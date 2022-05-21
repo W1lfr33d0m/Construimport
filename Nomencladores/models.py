@@ -24,29 +24,26 @@ from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
 from django import forms
 from django.utils.text import slugify
 
+
 """
-Clase Marca
+Clase País
     
 """
-class Marca(models.Model):
-    EQUIPOS = 'Equipos'
-    PPAS = 'PPAS'
-    NEUMATICOS = 'Neumáticos'
-    BATERIAS = 'Baterías'
-    PRODUCTOS = [(EQUIPOS, 'Equipos'), (PPAS, 'PPAS'), (NEUMATICOS, 'Neumáticos'), (BATERIAS, 'Baterías')]
+
+class Pais(models.Model):
     
-    codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
-    nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
-    productos = models.CharField(max_length=15, choices=PRODUCTOS, default='Equipos', verbose_name='Tipos de Productos')
+    codigopais = models.CharField(primary_key=True, max_length=20, verbose_name = 'Código')
+    nompais = models.CharField(max_length=100, verbose_name='Nombre')
 
     class Meta:
         managed = True
-        verbose_name = _('Marca')
-        verbose_name_plural = _('Marcas')
-        db_table = 'marca'
+        verbose_name = _('País')
+        verbose_name_plural = _('Países')
+        db_table = 'pais'
         
     def __str__(self):
-        return '{}'.format(self.nommarca)
+        return '{}'.format(self.nompais)
+
     
 """
 Clase Provincia 
@@ -86,25 +83,6 @@ class Cliente(models.Model):
 
     def __str__(self):
         return '{}'.format(self.nomcliente)
-
-"""
-Clase Pais
-    
-"""
-
-class Pais(models.Model):
-    
-    codigopais = models.CharField(primary_key=True, max_length=20, verbose_name = 'Código')
-    nompais = models.CharField(max_length=100, verbose_name='Nombre')
-
-    class Meta:
-        managed = True
-        verbose_name = _('País')
-        verbose_name_plural = _('Países')
-        db_table = 'pais'
-        
-    def __str__(self):
-        return '{}'.format(self.nompais)
 
 """
 Clase abstracta Producto
@@ -210,6 +188,29 @@ class Bateria(Producto):
         return '{}'.format(self.descripcion)
 
 """
+Clase Marca
+    
+"""
+class Marca(models.Model):
+   
+    codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
+    nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
+    pais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='codigopais', verbose_name='País')
+    equipos = models.ManyToManyField(Equipo, blank=True)
+    ppa = models.ManyToManyField(PPA, blank=True)
+    neumaticos = models.ManyToManyField(Neumatico, blank=True)
+    baterias = models.ManyToManyField(BaseException, blank=True)
+    
+    class Meta:
+        managed = True
+        verbose_name = _('Marca')
+        verbose_name_plural = _('Marcas')
+        db_table = 'marca'
+        
+    def __str__(self):
+        return '{}'.format(self.nommarca)
+
+"""
 Clase abstracta Datos
     
 """    
@@ -268,7 +269,9 @@ class Proveedor(models.Model):
                                 Marca,
                                 verbose_name='Marcas'
     )
+    
      
+    
     class Meta:
         managed = True
         verbose_name = _('Proveedor')
@@ -325,3 +328,5 @@ class Casa_Matriz(Datos):
         verbose_name_plural = _('Casa Matriz')
         managed = True
         db_table = 'casa_matriz' 
+        
+        
