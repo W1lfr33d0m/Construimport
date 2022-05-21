@@ -72,8 +72,8 @@ NOTIFICATIONS_NOTIFICATION_MODEL = 'apps.notis.Notification'
 LOCALE_PATHS =[os.path.join(BASE_DIR, 'locale')]
 
 JAZZMIN_SETTINGS = {
-    'site_title': 'CONSTRUIMPORT',
-    'site_header': 'CONSTRUIMPORT',
+    'site_title': 'SIGIMPORT',
+    'site_header': 'SIGIMPORT',
     'site_logo': 'img/logo.png',
     'welcome_sign': 'Autenticación',
     'icons': {
@@ -108,10 +108,10 @@ JAZZMIN_SETTINGS = {
     },
     'changeform_format': 'horizontal_tabs',
     'related_modal_active': False,
-    #'topmenu_links': [
-    #    {'name': 'Backup', 'url':'/dump/',},
-    #    {'name': 'Restaura', 'url':'/load/',},
-    #]    
+    "usermenu_links": [
+        {"model": "auth.user"}
+    ],
+    
 }
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
