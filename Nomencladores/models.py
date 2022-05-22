@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from email.policy import default
 import os
-from pyexpat import model
+#from pyexpat import model
 from random import choices
 from sqlite3 import Date
 from django.db import models
@@ -20,7 +20,7 @@ from django.core.exceptions import ValidationError
 from numpy import save
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator
+from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, UnicodeREEUPValidator
 from django import forms
 from django.utils.text import slugify
 
@@ -29,11 +29,21 @@ from django.utils.text import slugify
 Clase País
     
 """
+def codigopais_validator(codigopais):
+    for i in codigopais:
+        if not i.isalpha() or i.islower():
+            raise ValidationError(_('%(codigopais)s no puede contener números, ni caracteres especiales y debe ser mayúsculas'), params={'codigopais': codigopais},)
+
+def nombre_validator(nompais):
+    for i in nompais:
+        if not i.isalpha()  :
+            raise ValidationError(_('%(nompais)s no puede contener números ni caracteres especiales y debe comenzar en mayúsculas'), params={'nompais': nompais},)
+
 
 class Pais(models.Model):
     
-    codigopais = models.CharField(primary_key=True, max_length=20, verbose_name = 'Código')
-    nompais = models.CharField(max_length=100, verbose_name='Nombre')
+    codigopais = models.CharField(primary_key=True, max_length=20, validators=[codigopais_validator], verbose_name = 'Código')
+    nompais = models.CharField(max_length=100, validators=[nombre_validator], verbose_name='Nombre')
 
     class Meta:
         managed = True
@@ -49,11 +59,15 @@ class Pais(models.Model):
 Clase Provincia 
     
 """
-
+def nombre_validator(nombre):
+    for i in nombre:
+        if not i.isalpha():
+            raise ValidationError(_('%(nombre)s no puede contener números ni caracteres especiales'), params={'nombre': nombre},)
+        
 class  Provincia(models.Model):
-    codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura')
-    nombre = models.CharField(max_length=100)
-    capital =  models.CharField(max_length=100, blank=True, null=True)
+    codigoprovincia = models.CharField(max_length=3, primary_key=True, verbose_name='Abreviatura', validators=[nombre_validator])
+    nombre = models.CharField(max_length=100, validators=[nombre_validator])
+    capital =  models.CharField(max_length=100, validators=[nombre_validator])
 
     class Meta:
         managed = True
@@ -68,38 +82,128 @@ class  Provincia(models.Model):
 Clase Cliente
     
 """
-class Cliente(models.Model):
+def reeup_validator(reeup):
+    for i in reeup:
+        if not i.isnumeric():
+            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+        
+def nombre_validator(nombre):
+    for i in nombre:
+        if not i[0].isalpha():
+            raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
+       
+        
+class Empresa(models.Model):
+    reeup = models.CharField(max_length=11, primary_key=True, validators=[UnicodeREEUPValidator, reeup_validator], verbose_name='Código REEUP')
+    nombre = models.CharField(max_length=100, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Nombre')
+    siglas = models.CharField(max_length=15, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Siglas')
+    direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
+    correo = models.EmailField(verbose_name='Correo electrónico', unique=True)
+    telefono = models.IntegerField(max_length=8, unique=True, verbose_name='Teléfono')
+    
+    class Meta:
+        abstract = True
+    
+class Ministerio(Empresa):
+    
+    class Meta:
+        managed = True
+        db_table = 'ministerio'
+        verbose_name = ('Ministerio')
+        verbose_name_plural = ('Ministerios')
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
+
+class OSDE(Empresa):
+    ministerio = models.ForeignKey(Ministerio, models.DO_NOTHING, null=False, verbose_name='Ministerio')
+    
+    class Meta:
+        managed = True
+        db_table = 'OSDE'
+        verbose_name = ('OSDE')
+        verbose_name_plural = ('OSDE')
+
+    def __str__(self):
+        return '{}'.format(self.siglas)
+        
+def validate_representante(representante):
+    for i in representante:
+        if not i.isalpha():
+            raise ValidationError(_('%(representante)s solo puede contener letras'), params={'representante': representante},)
+
+class Cliente(Empresa):
     
     name_validator = UnicodenameValidator()
     
-    numcontratocliente = models.BigIntegerField(primary_key=True, verbose_name = 'Numero de Contrato' )
-    nomcliente = models.CharField(max_length=100, validators=[name_validator], verbose_name = 'Nombre')
-    OSDE = models.CharField(max_length=45, validators=[name_validator],)
-    codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', verbose_name='Provincia')
-
+    OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
+    codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
+    representante = models.CharField(max_length=40, null=False, validators=[validate_representante], verbose_name='Representante')
+    
     class Meta:
         managed = True
         db_table = 'cliente'
 
     def __str__(self):
-        return '{}'.format(self.nomcliente)
+        return '{}'.format(self.nombre)
+
+"""
+Clase Marca
+    
+"""
+class Marca(models.Model):
+   
+    codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
+    nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
+    pais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='codigopais', verbose_name='País')
+
+    class Meta:
+        managed = True
+        verbose_name = _('Marca')
+        verbose_name_plural = _('Marcas')
+        db_table = 'marca'
+        
+    def __str__(self):
+        return '{}'.format(self.nommarca)
 
 """
 Clase abstracta Producto
     
 """
+def codigo_validator(codigoum):
+    for i in codigoum:
+        if not i.isalpha():
+            raise ValidationError(_('%(codigoum)s solo puede contener letras'), params={'codigoum': codigoum},)
+        
+def descripcion_validator(descripcionum):
+    for i in descripcionum:
+        if not i.isalpha():
+            raise ValidationError(_('%(descripcionum)s solo puede contener letras'), params={'descripcionum': descripcionum},)
+        
+class UM(models.Model):
+    codigoum = models.CharField(max_length=5, primary_key=True, validators=[codigo_validator], verbose_name='Código')
+    descripcionum = models.CharField(max_length=10, unique=True, validators=[descripcion_validator], verbose_name='Descripción')
+    
+    class Meta:
+        verbose_name = _('Unidad de Medida')
+        verbose_name_plural = _('Unidades de Medida')
+        managed = True
+        db_table = 'um'
+        
+    def __str__(self):
+        return '{}'.format(self.descripcionum)
+
+
 class Producto(models.Model):
     
     desc_validator = UnicodenameValidator
 
-    U = 'Unidad'
-    SET = 'SET'
-    MT = 'Metro'
-    UM = [(U, 'U'), (SET, 'SET'), ('MT', 'Metro')]
+   
     idproducto = models.CharField(max_length=30, primary_key=True, verbose_name = 'Código')
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
-    UM = models.CharField(max_length = 15, null= False, choices = UM, default = U)
-    marca = models.ForeignKey(Marca, models.CASCADE, verbose_name='Marca')
+    UM = models.ForeignKey(UM, models.DO_NOTHING, db_column='codigoum', null= False)
+    marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='codigomarca', verbose_name='Marca')
+    
     
     class Meta:
         abstract = True
@@ -187,28 +291,6 @@ class Bateria(Producto):
     def __str__(self):
         return '{}'.format(self.descripcion)
 
-"""
-Clase Marca
-    
-"""
-class Marca(models.Model):
-   
-    codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
-    nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
-    pais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='codigopais', verbose_name='País')
-    equipos = models.ManyToManyField(Equipo, blank=True)
-    ppa = models.ManyToManyField(PPA, blank=True)
-    neumaticos = models.ManyToManyField(Neumatico, blank=True)
-    baterias = models.ManyToManyField(BaseException, blank=True)
-    
-    class Meta:
-        managed = True
-        verbose_name = _('Marca')
-        verbose_name_plural = _('Marcas')
-        db_table = 'marca'
-        
-    def __str__(self):
-        return '{}'.format(self.nommarca)
 
 """
 Clase abstracta Datos

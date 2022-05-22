@@ -18,6 +18,7 @@ from .resources import ProveedorResource, ClienteResource, EquipoResource, PPARe
 from django import forms
 from import_export.forms import ImportForm, ConfirmImportForm
 from django.http import HttpRequest, HttpResponse
+from django.utils.html import format_html
 from .models import *
 from .forms import *
 
@@ -51,26 +52,55 @@ class ProveedorAdmin(ImportExportModelAdmin):
     
         return form
     
+
+@admin.register(Ministerio)
+class MinisterioAdmin(admin.ModelAdmin):
+    list_display = ('reeup', 'nombre', 'siglas', 'correo', 'telefono', 'edit_link')
     
-@admin.register(Cliente)
-class ClienteAdmin(ImportExportModelAdmin):
-    resource_class = ClienteResource
-    list_display = ('numcontratocliente', 'nomcliente', 'OSDE', 'codigoprovincia')
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.reeup))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
+    
+
+@admin.register(OSDE)
+class OSDEAdmin(admin.ModelAdmin):
+    list_display = ('reeup', 'nombre', 'siglas', 'ministerio', 'correo', 'telefono', 'edit_link')
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'codigoprovincia':
+        formfield = super(OSDEAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'ministerio':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.reeup))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
+
+@admin.register(Cliente)
+class ClienteAdmin(admin.ModelAdmin):
+    resource_class = ClienteResource
+    list_display = ('reeup', 'nombre', 'OSDE', 'codigoprovincia', 'representante', 'edit_link')
+    
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+        return formfield
         
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.reeup))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
     
 @admin.register(Pais)
 class PaisAdmin(admin.ModelAdmin):
     fields = ['codigopais', 'nompais']
     list_display = ('codigopais', 'nompais')
-    skip_unchanged = True
-    report_skipped = False
+    
     search_fields = ('nompais',)
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(PaisAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -84,7 +114,7 @@ class ProvinciaAdmin(admin.ModelAdmin):
 @admin.register(Marca)
 class MarcaAdmin(ImportExportModelAdmin):
     resource_class = MarcaResource
-    list_display = ('codigomarca', 'nommarca', 'productos')
+    list_display = ('codigomarca', 'nommarca', 'pais', 'edit_link')
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -99,6 +129,15 @@ class MarcaAdmin(ImportExportModelAdmin):
         else:
             pass
     
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.codigomarca))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
+
+@admin.register(UM)
+class UMAdmin(admin.ModelAdmin):
+    list_display = ('codigoum', 'descripcionum')
 
 @admin.register(Equipo)
 class EquipoAdmin(ImportExportModelAdmin):

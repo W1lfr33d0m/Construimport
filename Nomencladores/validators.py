@@ -48,3 +48,11 @@ class UnicodeCodeValidator(validators.RegexValidator):
         'Escriba correctamente el codigo '
     )
     flags = 0
+    
+@deconstructible
+class UnicodeREEUPValidator(validators.RegexValidator):
+    regex =  r'^[0-9]+\Z' '.' r'^[0-9]+\Z'
+    message = _(
+        'Escriba correctamente el codigo '
+    )
+    flags = 0

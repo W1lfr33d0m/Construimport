@@ -5,13 +5,54 @@
 {% block head %}
 
 {% endblock %}
-
 {% block extrahead %}
-    <script src="{% static 'highcharts/code/highcharts.js' %}"></script>
-    <script src="{% static 'highcharts/code/modules/exporting.js' %}"></script>
-    <script src="{% static 'highcharts/code/modules/offline-exporting.js' %}"></script>
-    <script src="{% static 'highcharts/code/modules/export-data.js' %}"></script>
-    <script src="{% static 'highcharts/code/modules/accessibility.js' %}"></script>
+    <link type="text/css" href="{% static 'jazzmin/vendor/notyf/notyf.min.css' %}" rel="stylesheet">
+   
+    <!-- Core -->
+    <script src="{% static 'jazzmin/vendor/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'jazzmin/vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+    <!-- Vendor JS -->
+    <script src="{% static 'jazzmin/vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+
+    <!-- Slider -->
+
+    <link type="text/css" href="{% static 'jazzmin/vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+    <script src="{% static 'jazzmin/vendor/nouislider/distribute/nouislider.min.js' %}"></script>
+
+    <!-- Smooth scroll -->
+    <script src="{% static 'jazzmin/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+
+    <!-- Charts -->
+    <script src="{% static 'jazzmin/vendor/chartist/dist/chartist.min.js' %}"></script>
+    <script src="{% static 'jazzmin/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+
+    <!-- Datepicker -->
+    <script src="{% static 'jazzmin/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+    <!-- Sweet Alerts 2 -->
+    <script src="{% static 'jazzmin/vendor/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+
+    <!-- Moment JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+    <!-- Vanilla JS Datepicker -->
+    <script src="{% static 'jazzmin/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+    <!-- Notyf -->
+    <script src="{% static 'jazzmin/vendor/notyf/notyf.min.js' %}"></script>
+
+    <!-- Simplebar -->
+    <script src="{% static 'jazzmin/vendor/simplebar/dist/simplebar.min.js' %}"></script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <!-- Volt JS -->
+    <script src="{% static 'jazzmin/js/volt/volt.js' %}"></script>
+    <script src="{% static 'jazzmin/js/volt/scripts.js' %}"></script>
+    <script src="https://kit.fontawesome.com/4fd3baa9fc.js" crossorigin="anonymous"></script>
+
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
@@ -31,116 +72,6 @@
     {% widthratio dashboard_list|length 2 1 as middle %}
     {% endif %}
 
-    <div class="container-fluid">
-       <div class="row">
-            <div class="col-lg-12">
-                <div id="container"></div>
-            </div>
-       </div>
-    </div>
-
-    <script type="application/javascript">
-        Highcharts.setOptions({
-            lang: {
-                months: [
-                    'Enero', 'Febrero', 'Marzo', 'Abril',
-                    'Mayo', 'Junio', 'Julio', 'Agosto',
-                    'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-                ],
-                shortMonths: [
-                    'Ene', 'Feb', 'Mar', 'Abr', 
-                    'May', 'Jun', 'Ago',
-                    'Sep', 'Oct', 'Nov', 'Dic'
-                ],
-                weekdays: [
-                    'Domingo', 'Lunes', 'Martes', 'Miércoles',
-                    'Jueves', 'Viernes', 'Sábado'
-                ]
-            }
-        });
-
-        Highcharts.chart('container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Número de Solicitudes Mensuales'
-            },
-            subtitle: {
-                text: ''
-            },
-            xAxis: {
-                categories: [
-                    'Ene',
-                    'Feb',
-                    'Mar',
-                    'Abr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Ago',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dic'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Solicitudes'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: 'Equipos',
-                data: {{get_solicitudes_mensuales_equipo|safe}} 
-        
-            }, {
-                name: 'PPA',
-                data: {{get_solicitudes_mensuales_ppa|safe}}
-        
-            }, {
-                name: 'Neumáticos',
-                data: {{get_solicitudes_mensuales_neumatico|safe}}
-        
-            }, {
-                name: 'Baterías',
-                data: {{get_solicitudes_mensuales_bateria|safe}}
-        
-            }]
-        });
-
-    </script>
-
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-             <img src="..." class="rounded me-2" alt="...">
-            <strong class="me-auto">Bootstrap</strong>
-            <small>11 mins ago</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" 
-                  aria-label="Close"> 
-         </button>
-       </div>
-       <div class="toast-body">
-            Hello, world! This is a toast message.
-       </div>
-     </div>
-   </div>
+ 
 
 {% endblock %}

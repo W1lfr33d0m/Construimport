@@ -5,8 +5,9 @@ from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 # Register your models here.
 
+@admin.register(Dashboard)
 class DashboardAdmin(admin.ModelAdmin):
-    template_name = 'Dashboard/dashboard.html'
+    template_name = 'dashboard.html'
     icon_name =  'Dashboard'
     
     def get_urls(self):
