@@ -15,9 +15,8 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
     form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
-    template_name = 'solicitud_equipo_form.html'
+    template_name = 'solicitud_form.html'
 
-   
     def done(self, form_list, **kwargs):
         return render(self.request, 'done.html', {
             'form_data': [form.cleaned_data for form in form_list],
@@ -26,10 +25,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-    def get_form(self):
-        form = super().get_form()
-        form.fields['numcontratocliente'].widget.attrs.update({'autofocus': 'autofocus'})
-        return form      
+      
 
 def generatePDF(request, id):
     buffer = io.BytesIO()
