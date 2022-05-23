@@ -14,24 +14,10 @@ from django.views.generic import CreateView
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
     form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
-    fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
+    #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'solicitud_equipo_form.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['nombre_url'] = 'solicitud_equipo'
-        context['opts'] = Solicitud_Equipo._meta,
-        context['change'] = True,
-        context['is_popup'] = False,
-        context['save_as'] = False,
-        context['has_delete_permission'] = False,
-        context['has_add_permission'] = True,
-        context['has_change_permission'] = False
-        context['changeform_template'] = 'solicitud_equipo_form.html'
-        context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
-        context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-        return context
-
+   
     def done(self, form_list, **kwargs):
         return render(self.request, 'done.html', {
             'form_data': [form.cleaned_data for form in form_list],

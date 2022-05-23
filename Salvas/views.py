@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+#from curses.ascii import NULL
 from django.shortcuts import redirect, render
 
 # Create your views here.
@@ -91,13 +93,13 @@ def remove_address_dbs(name):
     fich = open("static/db/dblist.txt")
     lines = fich.readlines() 
     fich.close() 
-    address = 'static/db/' + name
+    address = 'static/db/' + name + '\n'
     for line in lines:
         if address == line:
             lines.remove(line)
     fich = open("static/db/dblist.txt", "w")
-    for line in lines:
-        fich.writelines(line)
+    for nline in lines:
+        fich.writelines(nline)
     fich.close()    
 
 
@@ -111,20 +113,18 @@ def db_save(request):
     list = list_address_db()
     fecha_hora = str(datetime.today().strftime("%Y%m%d%H%M"))
     address = "static/db/" + fecha_hora + "construimport.sql" 
-    if request.POST:
-        PASSWORD = '3693'                ##CONTRASEÑA DE LA BD##
-        os.putenv('PGPASSWORD', PASSWORD)
-        address = "static/db/" + fecha_hora + "construimport.sql"   ##RUTA DONDE SE GUARDA EL ARCHIVO DE LA BD##
-        try:
-            subprocess.Popen("pg_dump -c -h localhost -p 5433 -U postgres -d construimport > " + address, shell=True)
-            save_address_dbs(address)
-            list = list_address_db()
-            messages.success(request, "Éxito al salvar los datos")
-            return render(request, 'salvarestaura.html', {'dblist': list})
-        except:
-            descripcion = 'Error al salvar la base de datos'
-            messages.error(request, "Error al salvar los datos")
-            return render(request, 'salvarestaura.html', {'dblist': list})      
+    PASSWORD = '3693'                ##CONTRASEÑA DE LA BD##
+    os.putenv('PGPASSWORD', PASSWORD)
+    address = "static/db/" + fecha_hora + "construimport.sql"   ##RUTA DONDE SE GUARDA EL ARCHIVO DE LA BD##
+    try:
+        subprocess.Popen("pg_dump -c -h localhost -p 5433 -U postgres -d construimport > " + address, shell=True)
+        save_address_dbs(address)
+        list = list_address_db()
+        messages.success(request, "Datos salvados")
+        return HttpResponseRedirect(request.meta['HTTP_REFERER'])
+    except:
+        
+        return render(request, 'salvarestaura.html', {'dblist': list})      
     #return render(request, 'salvarestaura.html', {'dblist': list})
 
 
@@ -140,15 +140,15 @@ def db_restore(request:HttpRequest, name):
     }
     try:
         subprocess.Popen("psql -h localhost -p 5433 -U postgres -d construimport <" + address, shell=True)
-        messages.success(request, "Éxito restaurando la base de datos")
-        return redirect(to='/')
+        messages.success(request, "Datos restaurados correctamente")
+        return render(request, 'salvarestaura.html', {'dblist': list})
     except:
         messages.error(request, "Error al restaurar la base de datos")
-        return redirect(to='/')
+        return render(request, 'salvarestaura.html', {'dblist': list}) 
 
     
 @permission_required('auth.add_user', login_url='403')
-def download_file(request:HttpResponse, name):
+def download_file(request:HttpRequest, name):
     list = list_address_db()
     #address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
     #os.remove(os.path.join(address, name))

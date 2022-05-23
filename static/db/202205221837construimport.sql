@@ -22,9 +22,9 @@ ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT solicitud_ppa_proxy_
 ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT solicitud_ppa_proxy_idproducto_efc8a761_fk_ppa_idproducto;
 ALTER TABLE ONLY public.solicitud_ppa_proveedor DROP CONSTRAINT solicitud_ppa_provee_numsolicitud_61e29922_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_ppa_proveedor DROP CONSTRAINT solicitud_ppa_provee_codmincex_id_4cab253e_fk_proveedor;
-ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT solicitud_ppa_numcontratocliente_cd73b766_fk;
+ALTER TABLE ONLY public.solicitud_ppa DROP CONSTRAINT solicitud_ppa_numcontratocliente_cd73b766_fk_cliente_reeup;
 ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT solicitud_neumatico_username_ce90dce5_fk_auth_user_id;
-ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT solicitud_neumatico_numcontratocliente_e9e0724c_fk;
+ALTER TABLE ONLY public.solicitud_neumatico DROP CONSTRAINT solicitud_neumatico_numcontratocliente_e9e0724c_fk_cliente_r;
 ALTER TABLE ONLY public.solicitud_neumatico_proxy DROP CONSTRAINT solicitud_neumatico__numsolicitud_3ebfa720_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_neumatico_proveedor DROP CONSTRAINT solicitud_neumatico__numsolicitud_23890b23_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_neumatico_proxy DROP CONSTRAINT solicitud_neumatico__idproducto_264bd634_fk_neumatico;
@@ -34,13 +34,13 @@ ALTER TABLE ONLY public.solicitud_equipo_proxy DROP CONSTRAINT solicitud_equipo_
 ALTER TABLE ONLY public.solicitud_equipo_proxy DROP CONSTRAINT solicitud_equipo_pro_numsolicitud_812d2e09_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_equipo_proveedor DROP CONSTRAINT solicitud_equipo_pro_numsolicitud_00805827_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_equipo_proveedor DROP CONSTRAINT solicitud_equipo_pro_codmincex_187ce024_fk_proveedor;
-ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT solicitud_equipo_numcontratocliente_08e73429_fk;
+ALTER TABLE ONLY public.solicitud_equipo DROP CONSTRAINT solicitud_equipo_numcontratocliente_08e73429_fk_cliente_reeup;
 ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT solicitud_bateria_username_bf683e7b_fk_auth_user_id;
 ALTER TABLE ONLY public.solicitud_bateria_proxy DROP CONSTRAINT solicitud_bateria_pr_numsolicitud_94914016_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_bateria_proveedor DROP CONSTRAINT solicitud_bateria_pr_numsolicitud_6535162f_fk_solicitud;
 ALTER TABLE ONLY public.solicitud_bateria_proxy DROP CONSTRAINT solicitud_bateria_pr_idproducto_d16d2d8c_fk_bateria_i;
 ALTER TABLE ONLY public.solicitud_bateria_proveedor DROP CONSTRAINT solicitud_bateria_pr_codmincex_id_c9dc75e4_fk_proveedor;
-ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT solicitud_bateria_numcontratocliente_726f79a5_fk;
+ALTER TABLE ONLY public.solicitud_bateria DROP CONSTRAINT solicitud_bateria_numcontratocliente_726f79a5_fk_cliente_reeup;
 ALTER TABLE ONLY public.reports_savedreport DROP CONSTRAINT reports_savedreport_run_by_id_0e49a3ac_fk_auth_user_id;
 ALTER TABLE ONLY public.proveedor_ppa DROP CONSTRAINT proveedor_ppa_proveedor_id_c93b5138_fk_proveedor_codmincex;
 ALTER TABLE ONLY public.proveedor_ppa DROP CONSTRAINT proveedor_ppa_ppa_id_7a94b08a_fk_ppa_idproducto;
@@ -53,9 +53,10 @@ ALTER TABLE ONLY public.proveedor_equipos DROP CONSTRAINT proveedor_equipos_equi
 ALTER TABLE ONLY public.proveedor DROP CONSTRAINT proveedor_codigopais_ba6f5c0d_fk_pais_codigopais;
 ALTER TABLE ONLY public.proveedor_baterias DROP CONSTRAINT proveedor_baterias_proveedor_id_9adc346c_fk_proveedor_codmincex;
 ALTER TABLE ONLY public.proveedor_baterias DROP CONSTRAINT proveedor_baterias_bateria_id_bda82610_fk_bateria_idproducto;
-ALTER TABLE ONLY public.ppa DROP CONSTRAINT ppa_marca_id_ce5f7e04_fk_marca_codigomarca;
 ALTER TABLE ONLY public.ppa_equipo DROP CONSTRAINT ppa_equipo_ppa_id_323cec64_fk_ppa_idproducto;
 ALTER TABLE ONLY public.ppa_equipo DROP CONSTRAINT ppa_equipo_equipo_id_c9d1cddb_fk_equipo_idproducto;
+ALTER TABLE ONLY public.ppa DROP CONSTRAINT ppa_codigoum_7b48f85c_fk_um_codigoum;
+ALTER TABLE ONLY public.ppa DROP CONSTRAINT ppa_codigomarca_fde9bf8b_fk_marca_codigomarca;
 ALTER TABLE ONLY public.oferta_ppa DROP CONSTRAINT oferta_ppa_username_beaea642_fk_auth_user_id;
 ALTER TABLE ONLY public.oferta_ppa_proxy DROP CONSTRAINT oferta_ppa_proxy_numsolicitud_2bc9954c_fk_oferta_ppa_numero;
 ALTER TABLE ONLY public.oferta_ppa_proxy DROP CONSTRAINT oferta_ppa_proxy_idproducto_b1cd6301_fk_solicitud_ppa_proxy_id;
@@ -79,14 +80,18 @@ ALTER TABLE ONLY public.oferta_baterias DROP CONSTRAINT oferta_baterias_idpais_e
 ALTER TABLE ONLY public.oferta_baterias DROP CONSTRAINT oferta_baterias_codmincex_9f1a49d3_fk_proveedor_codmincex;
 ALTER TABLE ONLY public.oferta_bateria_proxy DROP CONSTRAINT oferta_bateria_proxy_numsolicitud_52a169f8_fk_oferta_ba;
 ALTER TABLE ONLY public.oferta_bateria_proxy DROP CONSTRAINT oferta_bateria_proxy_idproducto_b69ad312_fk_solicitud;
-ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_marca_id_e2843a2d_fk_marca_codigomarca;
+ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_codigoum_40edba2b_fk_um_codigoum;
+ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_codigomarca_2da28965_fk_marca_codigomarca;
 ALTER TABLE ONLY public.marca DROP CONSTRAINT marca_codigopais_a5f8ede9_fk_pais_codigopais;
-ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_marca_id_aef47c38_fk_marca_codigomarca;
+ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_codigoum_0cef5e26_fk_um_codigoum;
+ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_codigomarca_33aa6296_fk_marca_codigomarca;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co;
 ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_codigoprovincia_2ef760d6_fk_provincia_codigoprovincia;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT "cliente_OSDE_id_e62a283b_fk";
 ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex;
-ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_marca_id_bff70813_fk_marca_codigomarca;
+ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_codigoum_3eef7d96_fk_um_codigoum;
+ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_codigomarca_277a3733_fk_marca_codigomarca;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id;
 ALTER TABLE ONLY public.auth_user_user_permissions DROP CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm;
 ALTER TABLE ONLY public.auth_user_groups DROP CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id;
@@ -94,7 +99,9 @@ ALTER TABLE ONLY public.auth_user_groups DROP CONSTRAINT auth_user_groups_group_
 ALTER TABLE ONLY public.auth_permission DROP CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm;
-ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk_ministerio_id";
+ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk";
+DROP INDEX public.um_descripcionum_4582a47e_like;
+DROP INDEX public.um_codigoum_8b14f118_like;
 DROP INDEX public.sucursal_cuba_codmincex_aa0b5234_like;
 DROP INDEX public.sucursal_cuba_codmincex_aa0b5234;
 DROP INDEX public.solicitud_ppa_username_bda45af5;
@@ -155,6 +162,8 @@ DROP INDEX public.ppa_equipo_ppa_id_323cec64_like;
 DROP INDEX public.ppa_equipo_ppa_id_323cec64;
 DROP INDEX public.ppa_equipo_equipo_id_c9d1cddb_like;
 DROP INDEX public.ppa_equipo_equipo_id_c9d1cddb;
+DROP INDEX public.ppa_codigoum_7b48f85c_like;
+DROP INDEX public.ppa_codigoum_7b48f85c;
 DROP INDEX public.pais_codigopais_f394d5a9_like;
 DROP INDEX public.oferta_ppa_proxy_numsolicitud_2bc9954c;
 DROP INDEX public.oferta_ppa_proxy_idproducto_b1cd6301;
@@ -190,21 +199,37 @@ DROP INDEX public.oferta_bateria_proxy_numsolicitud_52a169f8;
 DROP INDEX public.oferta_bateria_proxy_idproducto_b69ad312;
 DROP INDEX public.neumatico_marca_id_e2843a2d;
 DROP INDEX public.neumatico_idproducto_9eec9617_like;
+DROP INDEX public.neumatico_codigoum_40edba2b_like;
+DROP INDEX public.neumatico_codigoum_40edba2b;
+DROP INDEX public.ministerio_siglas_885a106d_like;
+DROP INDEX public.ministerio_reeup_ab665d77_like;
+DROP INDEX public.ministerio_nombre_21bb2048_like;
+DROP INDEX public.ministerio_correo_2ae9841a_like;
 DROP INDEX public.marca_nommarca_2d378c86_like;
 DROP INDEX public.marca_codigopais_a5f8ede9_like;
 DROP INDEX public.marca_codigopais_a5f8ede9;
 DROP INDEX public.equipo_marca_id_aef47c38;
 DROP INDEX public.equipo_idproducto_712e52c4_like;
+DROP INDEX public.equipo_codigoum_0cef5e26_like;
+DROP INDEX public.equipo_codigoum_0cef5e26;
 DROP INDEX public.django_session_session_key_c0390e0f_like;
 DROP INDEX public.django_session_expire_date_a5c62663;
 DROP INDEX public.django_admin_log_user_id_c564eba6;
 DROP INDEX public.django_admin_log_content_type_id_c4bce8eb;
+DROP INDEX public.cliente_siglas_4bfff53e_like;
+DROP INDEX public.cliente_reeup_30874119_like;
 DROP INDEX public.cliente_provincia_478bfc63_like;
 DROP INDEX public.cliente_provincia_478bfc63;
+DROP INDEX public.cliente_nombre_8fc2f80f_like;
+DROP INDEX public.cliente_correo_4271a189_like;
+DROP INDEX public."cliente_OSDE_id_e62a283b_like";
+DROP INDEX public."cliente_OSDE_id_e62a283b";
 DROP INDEX public.casa_matriz_codmincex_bd5fc4f6_like;
 DROP INDEX public.casa_matriz_codmincex_bd5fc4f6;
 DROP INDEX public.bateria_marca_id_bff70813;
 DROP INDEX public.bateria_idproducto_5736f2bb_like;
+DROP INDEX public.bateria_codigoum_3eef7d96_like;
+DROP INDEX public.bateria_codigoum_3eef7d96;
 DROP INDEX public.auth_user_username_6821ab7c_like;
 DROP INDEX public.auth_user_user_permissions_user_id_a95ead1b;
 DROP INDEX public.auth_user_user_permissions_permission_id_1fbb5f2c;
@@ -214,7 +239,14 @@ DROP INDEX public.auth_permission_content_type_id_2f476e4b;
 DROP INDEX public.auth_group_permissions_permission_id_84c5c92e;
 DROP INDEX public.auth_group_permissions_group_id_b120cbf9;
 DROP INDEX public.auth_group_name_a6ea08ec_like;
+DROP INDEX public."OSDE_siglas_bd5d3498_like";
+DROP INDEX public."OSDE_reeup_77593f2d_like";
+DROP INDEX public."OSDE_nombre_4efd2961_like";
+DROP INDEX public."OSDE_ministerio_id_dd8f8290_like";
 DROP INDEX public."OSDE_ministerio_id_dd8f8290";
+DROP INDEX public."OSDE_correo_e0bd4ae5_like";
+ALTER TABLE ONLY public.um DROP CONSTRAINT um_pkey;
+ALTER TABLE ONLY public.um DROP CONSTRAINT um_descripcionum_key;
 ALTER TABLE ONLY public.sucursal_cuba DROP CONSTRAINT sucursal_cuba_pkey;
 ALTER TABLE ONLY public.solicitud_ppa_proxy DROP CONSTRAINT solicitud_ppa_proxy_pkey;
 ALTER TABLE ONLY public.solicitud_ppa_proveedor DROP CONSTRAINT solicitud_ppa_proveedor_pkey;
@@ -259,7 +291,11 @@ ALTER TABLE ONLY public.oferta_equipo DROP CONSTRAINT oferta_equipo_pkey;
 ALTER TABLE ONLY public.oferta_baterias DROP CONSTRAINT oferta_baterias_pkey;
 ALTER TABLE ONLY public.oferta_bateria_proxy DROP CONSTRAINT oferta_bateria_proxy_pkey;
 ALTER TABLE ONLY public.neumatico DROP CONSTRAINT neumatico_pkey;
+ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_telefono_key;
+ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_siglas_key;
 ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_pkey;
+ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_nombre_key;
+ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_correo_key;
 ALTER TABLE ONLY public.marca DROP CONSTRAINT marca_pkey;
 ALTER TABLE ONLY public.marca DROP CONSTRAINT marca_nommarca_2d378c86_uniq;
 ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_pkey;
@@ -268,7 +304,11 @@ ALTER TABLE ONLY public.django_migrations DROP CONSTRAINT django_migrations_pkey
 ALTER TABLE ONLY public.django_content_type DROP CONSTRAINT django_content_type_pkey;
 ALTER TABLE ONLY public.django_content_type DROP CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq;
 ALTER TABLE ONLY public.django_admin_log DROP CONSTRAINT django_admin_log_pkey;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_telefono_key;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_siglas_key;
 ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_pkey;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_nombre_key;
+ALTER TABLE ONLY public.cliente DROP CONSTRAINT cliente_correo_key;
 ALTER TABLE ONLY public.casa_matriz DROP CONSTRAINT casa_matriz_pkey;
 ALTER TABLE ONLY public.bateria DROP CONSTRAINT bateria_pkey;
 ALTER TABLE ONLY public.auth_user DROP CONSTRAINT auth_user_username_key;
@@ -286,7 +326,11 @@ ALTER TABLE ONLY public.auth_group DROP CONSTRAINT auth_group_name_key;
 ALTER TABLE ONLY public."Trazas_logentry" DROP CONSTRAINT "Trazas_logentry_pkey";
 ALTER TABLE ONLY public."Salvas_salvas" DROP CONSTRAINT "Salvas_salvas_pkey";
 ALTER TABLE ONLY public."Reportes_reporte_solicitud" DROP CONSTRAINT "Reportes_reporte_solicitud_pkey";
+ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_telefono_key";
+ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_siglas_key";
 ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_pkey";
+ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_nombre_key";
+ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_correo_key";
 ALTER TABLE ONLY public."Datos_salvas_restauras" DROP CONSTRAINT "Datos_salvas_restauras_pkey";
 ALTER TABLE ONLY public."Dashboard_dashboard" DROP CONSTRAINT "Dashboard_dashboard_pkey";
 ALTER TABLE public.sucursal_cuba ALTER COLUMN id DROP DEFAULT;
@@ -317,7 +361,6 @@ ALTER TABLE public.oferta_equipo_proxy ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.oferta_equipo ALTER COLUMN numero DROP DEFAULT;
 ALTER TABLE public.oferta_baterias ALTER COLUMN numero DROP DEFAULT;
 ALTER TABLE public.oferta_bateria_proxy ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.ministerio ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_migrations ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_content_type ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_admin_log ALTER COLUMN id DROP DEFAULT;
@@ -331,9 +374,9 @@ ALTER TABLE public.auth_group ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Trazas_logentry" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Salvas_salvas" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Reportes_reporte_solicitud" ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public."OSDE" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Datos_salvas_restauras" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Dashboard_dashboard" ALTER COLUMN id DROP DEFAULT;
+DROP TABLE public.um;
 DROP SEQUENCE public.sucursal_cuba_id_seq;
 DROP TABLE public.sucursal_cuba;
 DROP SEQUENCE public.solicitud_ppa_proxy_id_seq;
@@ -395,7 +438,6 @@ DROP TABLE public.oferta_baterias;
 DROP SEQUENCE public.oferta_bateria_proxy_id_seq;
 DROP TABLE public.oferta_bateria_proxy;
 DROP TABLE public.neumatico;
-DROP SEQUENCE public.ministerio_id_seq;
 DROP TABLE public.ministerio;
 DROP SEQUENCE public.marca_codigomarca_seq;
 DROP TABLE public.marca;
@@ -429,7 +471,6 @@ DROP SEQUENCE public."Salvas_salvas_id_seq";
 DROP TABLE public."Salvas_salvas";
 DROP SEQUENCE public."Reportes_reporte_solicitud_id_seq";
 DROP TABLE public."Reportes_reporte_solicitud";
-DROP SEQUENCE public."OSDE_id_seq";
 DROP TABLE public."OSDE";
 DROP SEQUENCE public."Datos_salvas_restauras_id_seq";
 DROP TABLE public."Datos_salvas_restauras";
@@ -508,37 +549,17 @@ ALTER SEQUENCE public."Datos_salvas_restauras_id_seq" OWNED BY public."Datos_sal
 --
 
 CREATE TABLE public."OSDE" (
-    id bigint NOT NULL,
-    codigo character varying(20) NOT NULL,
-    nombre character varying(80) NOT NULL,
-    abreviatura character varying(10) NOT NULL,
+    reeup character varying(11) NOT NULL,
+    nombre character varying(100) NOT NULL,
+    siglas character varying(15) NOT NULL,
     direccion character varying(100) NOT NULL,
-    ministerio_id bigint NOT NULL
+    correo character varying(254) NOT NULL,
+    telefono integer NOT NULL,
+    ministerio_id character varying(11) NOT NULL
 );
 
 
 ALTER TABLE public."OSDE" OWNER TO const;
-
---
--- Name: OSDE_id_seq; Type: SEQUENCE; Schema: public; Owner: const
---
-
-CREATE SEQUENCE public."OSDE_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."OSDE_id_seq" OWNER TO const;
-
---
--- Name: OSDE_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
---
-
-ALTER SEQUENCE public."OSDE_id_seq" OWNED BY public."OSDE".id;
-
 
 --
 -- Name: Reportes_reporte_solicitud; Type: TABLE; Schema: public; Owner: const
@@ -859,10 +880,10 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 CREATE TABLE public.bateria (
     idproducto character varying(30) NOT NULL,
     descripcion character varying(50) NOT NULL,
-    "UM" character varying(15) NOT NULL,
+    codigoum character varying(5) NOT NULL,
     voltaje double precision NOT NULL,
     amperaje double precision NOT NULL,
-    marca_id integer NOT NULL
+    codigomarca integer NOT NULL
 );
 
 
@@ -911,10 +932,15 @@ ALTER SEQUENCE public.casa_matriz_id_seq OWNED BY public.casa_matriz.id;
 --
 
 CREATE TABLE public.cliente (
-    numcontratocliente bigint NOT NULL,
-    nomcliente character varying(100) NOT NULL,
-    "OSDE" character varying(45) NOT NULL,
-    codigoprovincia character varying(3) NOT NULL
+    codigoprovincia character varying(3) NOT NULL,
+    correo character varying(254) NOT NULL,
+    direccion character varying(100) NOT NULL,
+    nombre character varying(100) NOT NULL,
+    reeup character varying(11) NOT NULL,
+    siglas character varying(15) NOT NULL,
+    telefono integer NOT NULL,
+    representante character varying(40) NOT NULL,
+    "OSDE_id" character varying(11) NOT NULL
 );
 
 
@@ -1051,9 +1077,9 @@ ALTER TABLE public.django_session OWNER TO const;
 CREATE TABLE public.equipo (
     idproducto character varying(30) NOT NULL,
     descripcion character varying(50) NOT NULL,
-    "UM" character varying(15) NOT NULL,
+    codigoum character varying(5) NOT NULL,
     modelo character varying(30) NOT NULL,
-    marca_id integer NOT NULL
+    codigomarca integer NOT NULL
 );
 
 
@@ -1113,36 +1139,16 @@ ALTER TABLE public.marca ALTER COLUMN codigomarca ADD GENERATED ALWAYS AS IDENTI
 --
 
 CREATE TABLE public.ministerio (
-    id bigint NOT NULL,
-    codigo character varying(20) NOT NULL,
-    nombre character varying(80) NOT NULL,
-    abreviatura character varying(10) NOT NULL,
-    direccion character varying(100) NOT NULL
+    reeup character varying(11) NOT NULL,
+    nombre character varying(100) NOT NULL,
+    siglas character varying(15) NOT NULL,
+    direccion character varying(100) NOT NULL,
+    correo character varying(254) NOT NULL,
+    telefono integer NOT NULL
 );
 
 
 ALTER TABLE public.ministerio OWNER TO const;
-
---
--- Name: ministerio_id_seq; Type: SEQUENCE; Schema: public; Owner: const
---
-
-CREATE SEQUENCE public.ministerio_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ministerio_id_seq OWNER TO const;
-
---
--- Name: ministerio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
---
-
-ALTER SEQUENCE public.ministerio_id_seq OWNED BY public.ministerio.id;
-
 
 --
 -- Name: neumatico; Type: TABLE; Schema: public; Owner: const
@@ -1151,10 +1157,10 @@ ALTER SEQUENCE public.ministerio_id_seq OWNED BY public.ministerio.id;
 CREATE TABLE public.neumatico (
     idproducto character varying(30) NOT NULL,
     descripcion character varying(50) NOT NULL,
-    "UM" character varying(15) NOT NULL,
+    codigoum character varying(5) NOT NULL,
     diametro double precision NOT NULL,
     grosor double precision NOT NULL,
-    marca_id integer NOT NULL
+    codigomarca integer NOT NULL
 );
 
 
@@ -1494,8 +1500,8 @@ ALTER TABLE public.pais OWNER TO const;
 CREATE TABLE public.ppa (
     idproducto character varying(30) NOT NULL,
     descripcion character varying(50) NOT NULL,
-    "UM" character varying(15) NOT NULL,
-    marca_id integer NOT NULL
+    codigoum character varying(5) NOT NULL,
+    codigomarca integer NOT NULL
 );
 
 
@@ -1726,7 +1732,7 @@ ALTER SEQUENCE public.proveedor_ppa_id_seq OWNED BY public.proveedor_ppa.id;
 CREATE TABLE public.provincia (
     codigoprovincia character varying(3) NOT NULL,
     nombre character varying(100) NOT NULL,
-    capital character varying(100)
+    capital character varying(100) NOT NULL
 );
 
 
@@ -1777,9 +1783,9 @@ CREATE TABLE public.solicitud_bateria (
     numsolicitud integer NOT NULL,
     fechasol date NOT NULL,
     estado character varying(10) NOT NULL,
-    observaciones text,
+    observaciones character varying(50),
     valor_estimado double precision NOT NULL,
-    numcontratocliente bigint NOT NULL,
+    numcontratocliente character varying(11) NOT NULL,
     username integer
 );
 
@@ -1885,9 +1891,9 @@ CREATE TABLE public.solicitud_equipo (
     numsolicitud integer NOT NULL,
     fechasol date NOT NULL,
     estado character varying(10) NOT NULL,
-    observaciones text,
+    observaciones character varying(50),
     valor_estimado double precision NOT NULL,
-    numcontratocliente bigint NOT NULL,
+    numcontratocliente character varying(11) NOT NULL,
     username integer
 );
 
@@ -1993,9 +1999,9 @@ CREATE TABLE public.solicitud_neumatico (
     numsolicitud integer NOT NULL,
     fechasol date NOT NULL,
     estado character varying(10) NOT NULL,
-    observaciones text,
+    observaciones character varying(50),
     valor_estimado double precision NOT NULL,
-    numcontratocliente bigint NOT NULL,
+    numcontratocliente character varying(11) NOT NULL,
     username integer
 );
 
@@ -2101,9 +2107,9 @@ CREATE TABLE public.solicitud_ppa (
     numsolicitud integer NOT NULL,
     fechasol date NOT NULL,
     estado character varying(10) NOT NULL,
-    observaciones text,
+    observaciones character varying(50),
     valor_estimado double precision NOT NULL,
-    numcontratocliente bigint NOT NULL,
+    numcontratocliente character varying(11) NOT NULL,
     username integer
 );
 
@@ -2240,6 +2246,18 @@ ALTER SEQUENCE public.sucursal_cuba_id_seq OWNED BY public.sucursal_cuba.id;
 
 
 --
+-- Name: um; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.um (
+    codigoum character varying(5) NOT NULL,
+    descripcionum character varying(10) NOT NULL
+);
+
+
+ALTER TABLE public.um OWNER TO const;
+
+--
 -- Name: Dashboard_dashboard id; Type: DEFAULT; Schema: public; Owner: const
 --
 
@@ -2251,13 +2269,6 @@ ALTER TABLE ONLY public."Dashboard_dashboard" ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public."Datos_salvas_restauras" ALTER COLUMN id SET DEFAULT nextval('public."Datos_salvas_restauras_id_seq"'::regclass);
-
-
---
--- Name: OSDE id; Type: DEFAULT; Schema: public; Owner: const
---
-
-ALTER TABLE ONLY public."OSDE" ALTER COLUMN id SET DEFAULT nextval('public."OSDE_id_seq"'::regclass);
 
 
 --
@@ -2349,13 +2360,6 @@ ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
-
-
---
--- Name: ministerio id; Type: DEFAULT; Schema: public; Owner: const
---
-
-ALTER TABLE ONLY public.ministerio ALTER COLUMN id SET DEFAULT nextval('public.ministerio_id_seq'::regclass);
 
 
 --
@@ -2574,7 +2578,8 @@ COPY public."Datos_salvas_restauras" (id) FROM stdin;
 -- Data for Name: OSDE; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public."OSDE" (id, codigo, nombre, abreviatura, direccion, ministerio_id) FROM stdin;
+COPY public."OSDE" (reeup, nombre, siglas, direccion, correo, telefono, ministerio_id) FROM stdin;
+272.0.05568	Grupo Empresarial de Diseño e Ingeniería	GEDIC	Calle Factor #5 e/ Ayestarán y Masó.  Cerro, La Habana, Cuba.	direccion@gedic.cu	78799610	271.0.05996
 \.
 
 
@@ -2613,8 +2618,8 @@ COPY public.auth_group (id, name) FROM stdin;
 5	Especialista_COMEX_PPA
 6	Especialista_COMEX_Neumatico
 8	Administrador
-4	Marketing
 1	Director_COMEX
+4	Marketing
 \.
 
 
@@ -2764,6 +2769,14 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 170	8	16
 172	8	176
 173	4	172
+174	4	177
+175	4	178
+176	4	179
+177	4	180
+178	4	181
+179	4	182
+180	4	183
+181	4	184
 \.
 
 
@@ -2956,6 +2969,10 @@ COPY public.auth_permission (id, name, codename, content_type_id) FROM stdin;
 182	Can change OSDE	change_osde	46
 183	Can delete OSDE	delete_osde	46
 184	Can view OSDE	view_osde	46
+185	Can add Unidad de Medida	add_um	47
+186	Can change Unidad de Medida	change_um	47
+187	Can delete Unidad de Medida	delete_um	47
+188	Can view Unidad de Medida	view_um	47
 \.
 
 
@@ -2967,12 +2984,12 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 6	pbkdf2_sha256$320000$7owazJS4lRudbFD2heZddm$/KpS4rqGTwsqf4yt2KNllXKtvo0MKnsGrMKS7orodtE=	2022-05-06 01:45:48.715036-04	f	regina.ms	Regina	Martínez Suárez	regina@construimport.cu	t	t	2022-05-06 01:45:05.062039-04	f
 7	pbkdf2_sha256$320000$VOWXzkjOaXtJD1PNQP0jSx$kfiQ3zg1iv1RG72BS4UDnBXyTWARj6L+S9DuJE8jg+8=	\N	f	jose.luis	José Luis	García Hernández	jose.luis@construimport.cu	t	t	2022-05-06 01:52:15.675036-04	f
 8	pbkdf2_sha256$320000$idikVvFMhdaE6np39F8sa8$8pNPeEsF0EFGE6VXcyxbbW84QudiXIjN+qCNnJtIhcg=	2022-05-06 01:54:00.810238-04	f	armando.tellez	Armando	Téllez Mesa	armando.tellez@construimport.cu	t	t	2022-05-06 01:53:45.115393-04	f
-2	pbkdf2_sha256$320000$6itfcQdOsiwen7H29ns2yi$HzkZRdx2Fv1pwW+bmXkyaJ0oJl+dvItEg9AdYXxAboY=	2022-05-11 13:39:52.395704-04	f	director_desarrollo	Maria	García Marrero	didrdesarrollo@construimport.cu	t	t	2022-04-28 10:29:16.889474-04	f
 5	pbkdf2_sha256$320000$DTERCJcMatk2LUfd2rw2Ao$oznDJKIHvpZVi61mHAoCehvBxHvgU5JS8g2DtQ8xz0Y=	2022-05-19 17:44:41.874835-04	f	comex1	Maria de las Mercedes	Valdes Rodriguez	comex1@construimport.cu	t	t	2022-04-28 10:39:06.1783-04	f
 4	pbkdf2_sha256$320000$DLZ5BZ0lvVpSZJDKjish7V$0HJD2J23W2r2ZDKYy+7Xeiuc1a59LBaaHTKwEzupzQs=	2022-05-19 17:44:54.569465-04	f	director_comex	Roberto	Perez Fernandez	dircomex@construimport.cu	t	t	2022-04-28 10:38:33.023523-04	f
-10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-05-21 06:18:20.381054-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04	f
-9	pbkdf2_sha256$320000$8Q1Sp8oV3V0vPA0JCGa6sW$pHt+w2XWXPicHKqd/nbWqjfNK8SQLgFlO539CwWCh80=	2022-05-21 06:22:50.160484-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04	f
-1	pbkdf2_sha256$320000$qQC09mdwPUwi73eDhymxw3$LWT3dHYrxOrgS/3FfamAi5IKcS9PM/s0C91Q/zVLF/U=	2022-05-21 06:58:21.390468-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04	f
+9	pbkdf2_sha256$320000$8Q1Sp8oV3V0vPA0JCGa6sW$pHt+w2XWXPicHKqd/nbWqjfNK8SQLgFlO539CwWCh80=	2022-05-21 12:38:54.576453-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04	f
+2	pbkdf2_sha256$320000$6itfcQdOsiwen7H29ns2yi$HzkZRdx2Fv1pwW+bmXkyaJ0oJl+dvItEg9AdYXxAboY=	2022-05-21 12:39:36.334589-04	f	director_desarrollo	Maria	García Marrero	didrdesarrollo@construimport.cu	t	t	2022-04-28 10:29:16.889474-04	f
+10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-05-21 12:39:45.263081-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04	f
+1	pbkdf2_sha256$320000$qQC09mdwPUwi73eDhymxw3$LWT3dHYrxOrgS/3FfamAi5IKcS9PM/s0C91Q/zVLF/U=	2022-05-21 13:21:42.111499-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04	f
 \.
 
 
@@ -3004,19 +3021,7 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 -- Data for Name: bateria; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.bateria (idproducto, descripcion, "UM", voltaje, amperaje, marca_id) FROM stdin;
-﻿34552005	Bateria humeda 12 V Ah-4	U	12	4	15
-34552006	Bateria humeda 12 V Ah 5	U	12	5	15
-34552007	Bateria humeda 12 V-9 Ah	U	12	9	15
-34552008	Bateria humeda 12 V -12Ah	U	12	12	15
-34552009	Bateria humeda 12 V Ah-14	U	12	14	15
-34552010	Bateria humeda 12 V Ah-60	U	12	60	15
-34552011	Bateria humeda 12 V Ah-75	U	12	75	15
-34552012	Bateria humeda 12 V Ah-95	U	12	95	15
-34552013	Bateria humeda 12 V Ah-110	U	12	110	15
-34552014	Bateria humeda 12 V Ah-155	U	12	155	15
-34552015	Bateria humeda 12 V Ah-200	U	12	200	15
-34552016	Bateria humeda12 V X 185 	U	12	185	15
+COPY public.bateria (idproducto, descripcion, codigoum, voltaje, amperaje, codigomarca) FROM stdin;
 \.
 
 
@@ -3032,7 +3037,8 @@ COPY public.casa_matriz (id, direccion, email, telefono, contacto, sitio_web, co
 -- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.cliente (numcontratocliente, nomcliente, "OSDE", codigoprovincia) FROM stdin;
+COPY public.cliente (codigoprovincia, correo, direccion, nombre, reeup, siglas, telefono, representante, "OSDE_id") FROM stdin;
+HB	dinvaisa@dinvai.cu	Calle 18, Playa,  La Habana	DINVAI Construcciones S.A,	126.0.04878	DINVAI	72041716	Roberto Lopez Hernandez	272.0.05568
 \.
 
 
@@ -3377,6 +3383,18 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 887	2022-05-21 06:22:13.728268-04	4	CATERPILLAR	2	[{"changed": {"fields": ["Pa\\u00eds"]}}]	23	10
 888	2022-05-21 06:22:22.237368-04	3	SANY	2	[{"changed": {"fields": ["Pa\\u00eds"]}}]	23	10
 889	2022-05-21 06:22:34.9206-04	2	DOOSAN	2	[{"changed": {"fields": ["Pa\\u00eds"]}}]	23	10
+890	2022-05-21 07:48:07.090266-04	271.0.05996	Ministerio de la Construcción	1	[{"added": {}}]	45	1
+891	2022-05-21 07:51:57.711873-04	272.0.05568	Grupo Empresarial de Diseño e Ingeniería	1	[{"added": {}}]	46	1
+892	2022-05-21 12:38:25.767416-04	4	Marketing	2	[{"changed": {"fields": ["Permissions"]}}]	3	1
+895	2022-05-22 04:02:56.347569-04	126.0.04878	DINVAI Construcciones S.A,	1	[{"added": {}}]	30	1
+896	2022-05-22 04:03:02.452447-04	126.0.04878	DINVAI Construcciones S.A,	3		30	1
+897	2022-05-22 04:04:23.35244-04	126.0.04878	DINVAI Construcciones S.A,	1	[{"added": {}}]	30	1
+898	2022-05-22 05:03:02.895703-04	12	12	1	[{"added": {}}]	26	1
+899	2022-05-22 05:03:11.260597-04	12	12	3		26	1
+900	2022-05-22 07:17:51.094338-04	U	Unidad	1	[{"added": {}}]	47	1
+901	2022-05-22 07:19:31.701189-04	MT	Metro	1	[{"added": {}}]	47	1
+902	2022-05-22 07:19:39.523332-04	SET	Set	1	[{"added": {}}]	47	1
+903	2022-05-22 07:19:53.143355-04	IN	Pulgadas	1	[{"added": {}}]	47	1
 \.
 
 
@@ -3431,6 +3449,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 44	Salvas	salvas
 45	Nomencladores	ministerio
 46	Nomencladores	osde
+47	Nomencladores	um
 \.
 
 
@@ -3531,6 +3550,25 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 90	COMEX	0028_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-05-21 06:17:40.873984-04
 91	Nomencladores	0011_remove_marca_productos_marca_pais	2022-05-21 06:17:40.928948-04
 92	Solicitudes	0023_alter_solicitud_bateria_fechasol_and_more	2022-05-21 06:17:41.045909-04
+93	Nomencladores	0012_ministerio_remove_cliente_nomcliente_and_more	2022-05-21 07:00:35.101855-04
+94	Nomencladores	0013_alter_ministerio_options_alter_osde_options_and_more	2022-05-21 07:47:04.082612-04
+95	Nomencladores	0014_alter_cliente_osde_alter_cliente_codigoprovincia	2022-05-21 11:35:56.800349-04
+96	Nomencladores	0015_alter_cliente_osde	2022-05-21 11:40:31.747354-04
+97	Nomencladores	0016_cliente_representante_alter_cliente_osde	2022-05-21 11:44:53.104439-04
+98	COMEX	0029_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-05-22 03:58:08.108478-04
+99	Nomencladores	0017_alter_cliente_osde	2022-05-22 03:58:08.172845-04
+100	Solicitudes	0024_alter_solicitud_bateria_fechasol_and_more	2022-05-22 03:58:08.300747-04
+101	Nomencladores	0018_alter_cliente_osde	2022-05-22 03:58:36.571419-04
+102	Nomencladores	0019_alter_cliente_osde	2022-05-22 04:00:16.098623-04
+103	Nomencladores	0020_alter_cliente_osde	2022-05-22 04:00:16.131627-04
+104	Nomencladores	0021_remove_cliente_osde	2022-05-22 04:01:01.760104-04
+105	Nomencladores	0022_cliente_osde	2022-05-22 04:03:48.022436-04
+106	Nomencladores	0023_alter_cliente_reeup_alter_ministerio_reeup_and_more	2022-05-22 04:06:14.427001-04
+107	Nomencladores	0024_um_alter_cliente_nombre_alter_cliente_reeup_and_more	2022-05-22 07:08:05.729283-04
+108	Nomencladores	0025_alter_bateria_um_alter_equipo_um_alter_neumatico_um_and_more	2022-05-22 07:12:12.67671-04
+109	Nomencladores	0026_alter_pais_nompais_alter_provincia_capital_and_more	2022-05-22 13:48:32.064004-04
+110	Nomencladores	0027_alter_pais_nompais_alter_provincia_capital_and_more	2022-05-22 13:51:28.495937-04
+111	Solicitudes	0025_alter_solicitud_bateria_numcontratocliente_and_more	2022-05-22 13:51:28.859585-04
 \.
 
 
@@ -3560,7 +3598,7 @@ avf3qro6wshlq0xs3p9skgk7r7kj4thu	.eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDri
 1ukkrrghuh6moglyum1anvvijvei9aj5	.eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns3S6:iQPGfMzXXntkW2mw1I3BmHbMS0iOLLYTAhcPtxvh8fU	2022-06-03 06:18:02.77943-04
 zofrqtpf8o4gdoz6zvdv4ziac1yfsy4o	.eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apAvdnpk5LzXBtuZpa2mZZlYXFdXpd0OgRyo74DuUW9VUy7rMqHdFH7TpsXJ6Xg_37yBDy99aYhR0BMAefO8cdZLIWUY5Y-eMiLEBe_HCxCYMXfRoAxNFy2yGHtT7Ax4gOSI:1ns4EF:5kWw4gN03f0yVmVopE5jGQm7ay5Um4L9K4rH112py7Q	2022-06-03 07:07:47.407682-04
 bv4jtklk31xz0pb70o96e8bvvp7ed67l	.eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns2CE:Xmm0sqyzH2lbBmoKdNeaKhqQ58NWPJuef1CeNbY3bRo	2022-06-03 04:57:34.135862-04
-szrfw261dfk105z9yhfkb9u0gj5t9rzh	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1nsQYf:D39m4eiw4THVWUtgpVddVi_4TudHsaPSiJPdbWN2Yhw	2022-06-04 06:58:21.392468-04
+iw58n198jjjrev5aw57xpdtuopq6djqg	.eJxVjc1uwyAQhN-Fc2UBBvxz7D3PsFrD2ia1TAJYrRL53YNVq2puOzPfzjwZ4JZn2BJF8I71TLCP_96A9ovWI3BXXKdQ2bDm6IfqQKozTdUlOFo-T_atYMY0l-_OGpJOSy4sNrLWqKUyNCgumnYUvCM7alRWG2cagaPElhTWba2QGyWFLaXf_oHRAU6RJowAKSze-rw5ALpv_hZY_2Qp063M8cIfJzjMWPz9lKNfKP1q-skR__J9fwEzi1o5:1nstV4:gw1uAXyH0XhZlmx5pR03cljFfvL5JXZ-afzF6dREzZg	2022-06-05 13:52:34.719674-04
 \.
 
 
@@ -3568,11 +3606,7 @@ szrfw261dfk105z9yhfkb9u0gj5t9rzh	.eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQr
 -- Data for Name: equipo; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.equipo (idproducto, descripcion, "UM", modelo, marca_id) FROM stdin;
-59428400360	Camión KAMAZ 53212	Unidad	KM-53212	1
-647386-00-563	BULLDOZER KOMATSU D-155-A-1	Unidad	D-155-A-1	10
-647386-00-570	Grúa KAMAZ KM-1632	Unidad	KM-1632	1
-59428400325	Camión KAMAZ 5511	Unidad	KM-5511	1
+COPY public.equipo (idproducto, descripcion, codigoum, modelo, codigomarca) FROM stdin;
 \.
 
 
@@ -3605,7 +3639,8 @@ COPY public.marca (codigomarca, nommarca, codigopais) FROM stdin;
 -- Data for Name: ministerio; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.ministerio (id, codigo, nombre, abreviatura, direccion) FROM stdin;
+COPY public.ministerio (reeup, nombre, siglas, direccion, correo, telefono) FROM stdin;
+271.0.05996	Ministerio de la Construcción	MICONS	Avenida Carlos Manuel de Céspedes y esq.35. Plaza de la Revolución. La Habana. Cuba.	direccion@micons.cu	78555308
 \.
 
 
@@ -3613,25 +3648,7 @@ COPY public.ministerio (id, codigo, nombre, abreviatura, direccion) FROM stdin;
 -- Data for Name: neumatico; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.neumatico (idproducto, descripcion, "UM", diametro, grosor, marca_id) FROM stdin;
-﻿594284001	8.25R20 14PR F/C	U	20	8.25	17
-594284002	10.00R20 16PR All pos.	U	20	10	17
-594284003	11.00R20 18PR	U	20	11	17
-594284004	12.00R20 18PR	U	20	12	16
-594284005	295/70 R 22,5 cuerdas de acero	U	70	22.5	16
-594284006	11R22.5 16PR All Pos. cuerdas de acero	U	22.5	16	16
-594284007	12R22.5 16PR All pos. cuerdas de acero	U	22.5	16	16
-594284008	275/70/22,5 cuerdas de acero	U	70	22.5	16
-594284009	12-16.5 12PR 10PR	U	16	12	16
-594284010	14.00-25 (385/95 R25)	U	95	25	16
-594284011	18.00-25 32PR E-3 TL	U	32	25	17
-594284012	29.5/25 32PR 	U	25	20	17
-594284013	20.5-25 20PR	U	25	28	17
-594284014	26.5-25 28PR	U	25	10	17
-594284015	6.00-9  12PR	U	12	5	17
-594284016	6.00-9 súper elástico	U	9	3	16
-594284017	7.00-12 	U	12	7	16
-594284018	7.00-12 súper elástico	U	12	7	16
+COPY public.neumatico (idproducto, descripcion, codigoum, diametro, grosor, codigomarca) FROM stdin;
 \.
 
 
@@ -3907,91 +3924,7 @@ ZWE	Zimbabwe
 -- Data for Name: ppa; Type: TABLE DATA; Schema: public; Owner: const
 --
 
-COPY public.ppa (idproducto, descripcion, "UM", marca_id) FROM stdin;
-154 63 42841	CAMISA	Unidad	10
-154 63 42603	CILINDRO HCO RIPPER	Unidad	10
-07020 00900	COPILLA DE ENGRASE	Unidad	10
-﻿600-821-5170	Alternador 24V	Unidad	10
-07145-02146\n	ANILLO GOMA\n	U	10
-07155-01535\n	ANILLO\n	U	10
-01643-31645\n	ARANDELA\n	U	10
-01010-31640\n	ARANDELA\n	U	10
-01602-02060\n	ARANDELA\n	U	10
-01602-01236\n	ARANDELA\n	U	10
-01643-31232\n	ARANDELA\n	U	10
-01602-01648\n	ARANDELA\n	U	10
-154-15-22811\n	ARO SELLO T\n	U	10
-154-13-42710\n	ARO SELLO TEFLON\n	U	10
-154-15-22821\n	ARO SELLO\n	U	10
-155-15--12811\n	ARO SELLO\n	U	10
-154-15-22831	ARO SELLO\n	U	10
-154 33 11131\n	BANDAS\n	U	10
-07432-71203	Bomba caja velocidad completa	U	10
-07436-72202\n	Bomba de Marcha	U	10
-07444-66200	Bomba organos de trabajo completa	U	10
-07444-66102\n	Bomba Principal	U	10
-154 33 21320\n	BUJES\n	U	10
-154 33 21330\n	BUJES\n	U	10
-154-63-42320\n	BUJES\n	U	10
-07177-07015\n	BUJES\n	U	10
-07177-07030\n	BUJES\n	U	10
-154-63-12340\n	BUJES\n	U	10
-07177-07105\n	BUJES\n	U	10
-154-32-03004	Cadenas completas	jgo	10
-154-20-01000	Cardàn completo	U	10
-154 63 19400\n	C. HCO DE LA CUCHILLA\n	U	10
-154 63 19300\n	C.HCO DE LA CUCHILLA\n	U	10
-154-32-03004\n	CADENA CON TEJAS\n	U	10
-154 63 12540\n	CAMISA DE LA CUCHILLA\n	U	10
-154 20 01000\n	CARDAN COMPLETO\n	U	10
-175-78-31230\n	CASQUILLO RUSTER\n	U	10
-08086-01000	Chucho de arranque	U	10
-150-06-12120\n	CHUCHO DE LUZ\n	U	10
-155-43-15240	CABLE DE EMERGENCIA	Unidad	10
-08661-00000\n	CHUCHO PRECALENTAMIENTO\n	U	10
-154 63 42503\n	CILINDRO HCO RIPPER\n	U	10
-154 63 42603\n	CILINDRO HCO RIPPER\n	U	10
-150 30 11141\n	CILINDRO\n	U	10
-154 40 00020\n	CONTROL DE LOS MANDOS\n	U	10
-07020 00000\n	COPILLA DE ENGRASE\n	U	10
-07020 00675\n	COPILLA DE ENGRASE\n	U	10
-07020 00900\n	COPILLA DE ENGRASE\n	U	10
-154 13 41660\n	COPLING\n	U	10
-154 21 12121\n	CORONA\n	U	10
-154.13.41652	EJE DEJ CONVERTIDOR\n	U	10
-154 15 32510\n	EJES\n	U	10
-154 15 32530\n	EJES\n	U	10
-175-49-11231\n	FILTRO	U	10
-175-49-11580\n	FILTRO	U	10
-150-30-13441\n	FILTRO	U	10
-154-21-22211\n	FILTRO	U	10
-154 63 42741	CAMISA	Unidad	10
-154-06-36770\n	FAROLES\n	U	10
-150-70-21346	Gavilán derecho	U	10
-150-70-21356	Gavilán izquierdo	U	10
-155-15-05020\n	JGO REP. CAJA VELOCIDAD\n	U	10
-154-13-05010\n	KIT REP. CONVERTIDOR\n	U	10
-08128 32400\n	LAMPARA TRASERA\n	U	10
-154 06 36780\n	LAMPARA\n	U	10
-O7114-OO609	Filtro aceite convertidor	Unidad	10
-154 20 00020	CRUCETA	Unidad	10
-707-42-15012(155-63-	FILTRO	Unidad	10
-706301100	FILTRO	Unidad	10
-6711-81-9510	Junta del turbo	Unidad	10
-01602-02060	ARANDELA	Unidad	10
-6710-11-1811	Junta tapa block	Unidad	10
-24Y-81-00001	Gavilanes izquierdo	Unidad	10
-24I-81-00002	Gavilanes derecho	Unidad	10
-19M.15.12721	DISCO	Unidad	10
-195-13.3420	Filtro aceite convertidor	Unidad	10
-175.4911.580	Filtro aceite convertidor	Unidad	10
-175.49.11222	FILTRO	Unidad	10
-175-49-11580	FILTRO	Unidad	10
-175-49-11231	FILTRO	Unidad	10
-175-30-00425	Diagonales	Unidad	10
-175-13-21720	ARO SELO HIERRO	Unidad	10
-175-22-21190	ARO SELLO	Unidad	10
-155-15-12820	ARO SELLO	Unidad	10
+COPY public.ppa (idproducto, descripcion, codigoum, codigomarca) FROM stdin;
 \.
 
 
@@ -4000,31 +3933,6 @@ O7114-OO609	Filtro aceite convertidor	Unidad	10
 --
 
 COPY public.ppa_equipo (id, ppa_id, equipo_id) FROM stdin;
-1	O7114-OO609	647386-00-563
-4	707-42-15012(155-63-	647386-00-563
-5	706301100	647386-00-563
-6	6711-81-9510	647386-00-563
-7	6710-11-1811	647386-00-563
-8	﻿600-821-5170	647386-00-563
-9	24Y-81-00001	647386-00-563
-10	24I-81-00002	647386-00-563
-11	19M.15.12721	647386-00-563
-12	195-13.3420	647386-00-563
-13	175.4911.580	647386-00-563
-14	175.49.11222	647386-00-563
-15	175-49-11580	647386-00-563
-16	175-49-11231	647386-00-563
-17	175-30-00425	647386-00-563
-19	175-13-21720	647386-00-563
-20	175-22-21190	647386-00-563
-21	155-43-15240	647386-00-563
-22	155-15-12820	647386-00-563
-23	154 63 42841	647386-00-563
-24	154 63 42741	647386-00-563
-25	154 63 42603	647386-00-563
-26	154 20 00020	647386-00-563
-27	07020 00900	647386-00-563
-28	01602-02060	647386-00-563
 \.
 
 
@@ -4221,6 +4129,18 @@ COPY public.sucursal_cuba (id, direccion, email, telefono, contacto, carnet_trab
 
 
 --
+-- Data for Name: um; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.um (codigoum, descripcionum) FROM stdin;
+U	Unidad
+MT	Metro
+SET	Set
+IN	Pulgadas
+\.
+
+
+--
 -- Name: Dashboard_dashboard_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
@@ -4232,13 +4152,6 @@ SELECT pg_catalog.setval('public."Dashboard_dashboard_id_seq"', 1, false);
 --
 
 SELECT pg_catalog.setval('public."Datos_salvas_restauras_id_seq"', 1, false);
-
-
---
--- Name: OSDE_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
---
-
-SELECT pg_catalog.setval('public."OSDE_id_seq"', 1, false);
 
 
 --
@@ -4273,14 +4186,14 @@ SELECT pg_catalog.setval('public.auth_group_id_seq', 8, true);
 -- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 173, true);
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 181, true);
 
 
 --
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 184, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 188, true);
 
 
 --
@@ -4315,21 +4228,21 @@ SELECT pg_catalog.setval('public.casa_matriz_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 889, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 903, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 46, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 47, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 92, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 111, true);
 
 
 --
@@ -4344,13 +4257,6 @@ SELECT pg_catalog.setval('public.marca_codigomarca_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.marca_codigomarca_seq1', 18, true);
-
-
---
--- Name: ministerio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
---
-
-SELECT pg_catalog.setval('public.ministerio_id_seq', 1, false);
 
 
 --
@@ -4566,11 +4472,43 @@ ALTER TABLE ONLY public."Datos_salvas_restauras"
 
 
 --
+-- Name: OSDE OSDE_correo_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."OSDE"
+    ADD CONSTRAINT "OSDE_correo_key" UNIQUE (correo);
+
+
+--
+-- Name: OSDE OSDE_nombre_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."OSDE"
+    ADD CONSTRAINT "OSDE_nombre_key" UNIQUE (nombre);
+
+
+--
 -- Name: OSDE OSDE_pkey; Type: CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public."OSDE"
-    ADD CONSTRAINT "OSDE_pkey" PRIMARY KEY (id);
+    ADD CONSTRAINT "OSDE_pkey" PRIMARY KEY (reeup);
+
+
+--
+-- Name: OSDE OSDE_siglas_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."OSDE"
+    ADD CONSTRAINT "OSDE_siglas_key" UNIQUE (siglas);
+
+
+--
+-- Name: OSDE OSDE_telefono_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public."OSDE"
+    ADD CONSTRAINT "OSDE_telefono_key" UNIQUE (telefono);
 
 
 --
@@ -4710,11 +4648,43 @@ ALTER TABLE ONLY public.casa_matriz
 
 
 --
+-- Name: cliente cliente_correo_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_correo_key UNIQUE (correo);
+
+
+--
+-- Name: cliente cliente_nombre_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_nombre_key UNIQUE (nombre);
+
+
+--
 -- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.cliente
-    ADD CONSTRAINT cliente_pkey PRIMARY KEY (numcontratocliente);
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (reeup);
+
+
+--
+-- Name: cliente cliente_siglas_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_siglas_key UNIQUE (siglas);
+
+
+--
+-- Name: cliente cliente_telefono_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_telefono_key UNIQUE (telefono);
 
 
 --
@@ -4782,11 +4752,43 @@ ALTER TABLE ONLY public.marca
 
 
 --
+-- Name: ministerio ministerio_correo_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ministerio
+    ADD CONSTRAINT ministerio_correo_key UNIQUE (correo);
+
+
+--
+-- Name: ministerio ministerio_nombre_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ministerio
+    ADD CONSTRAINT ministerio_nombre_key UNIQUE (nombre);
+
+
+--
 -- Name: ministerio ministerio_pkey; Type: CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.ministerio
-    ADD CONSTRAINT ministerio_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT ministerio_pkey PRIMARY KEY (reeup);
+
+
+--
+-- Name: ministerio ministerio_siglas_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ministerio
+    ADD CONSTRAINT ministerio_siglas_key UNIQUE (siglas);
+
+
+--
+-- Name: ministerio ministerio_telefono_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ministerio
+    ADD CONSTRAINT ministerio_telefono_key UNIQUE (telefono);
 
 
 --
@@ -5142,10 +5144,61 @@ ALTER TABLE ONLY public.sucursal_cuba
 
 
 --
+-- Name: um um_descripcionum_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.um
+    ADD CONSTRAINT um_descripcionum_key UNIQUE (descripcionum);
+
+
+--
+-- Name: um um_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.um
+    ADD CONSTRAINT um_pkey PRIMARY KEY (codigoum);
+
+
+--
+-- Name: OSDE_correo_e0bd4ae5_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "OSDE_correo_e0bd4ae5_like" ON public."OSDE" USING btree (correo varchar_pattern_ops);
+
+
+--
 -- Name: OSDE_ministerio_id_dd8f8290; Type: INDEX; Schema: public; Owner: const
 --
 
 CREATE INDEX "OSDE_ministerio_id_dd8f8290" ON public."OSDE" USING btree (ministerio_id);
+
+
+--
+-- Name: OSDE_ministerio_id_dd8f8290_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "OSDE_ministerio_id_dd8f8290_like" ON public."OSDE" USING btree (ministerio_id varchar_pattern_ops);
+
+
+--
+-- Name: OSDE_nombre_4efd2961_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "OSDE_nombre_4efd2961_like" ON public."OSDE" USING btree (nombre varchar_pattern_ops);
+
+
+--
+-- Name: OSDE_reeup_77593f2d_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "OSDE_reeup_77593f2d_like" ON public."OSDE" USING btree (reeup varchar_pattern_ops);
+
+
+--
+-- Name: OSDE_siglas_bd5d3498_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "OSDE_siglas_bd5d3498_like" ON public."OSDE" USING btree (siglas varchar_pattern_ops);
 
 
 --
@@ -5212,6 +5265,20 @@ CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (u
 
 
 --
+-- Name: bateria_codigoum_3eef7d96; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX bateria_codigoum_3eef7d96 ON public.bateria USING btree (codigoum);
+
+
+--
+-- Name: bateria_codigoum_3eef7d96_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX bateria_codigoum_3eef7d96_like ON public.bateria USING btree (codigoum varchar_pattern_ops);
+
+
+--
 -- Name: bateria_idproducto_5736f2bb_like; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5222,7 +5289,7 @@ CREATE INDEX bateria_idproducto_5736f2bb_like ON public.bateria USING btree (idp
 -- Name: bateria_marca_id_bff70813; Type: INDEX; Schema: public; Owner: const
 --
 
-CREATE INDEX bateria_marca_id_bff70813 ON public.bateria USING btree (marca_id);
+CREATE INDEX bateria_marca_id_bff70813 ON public.bateria USING btree (codigomarca);
 
 
 --
@@ -5240,6 +5307,34 @@ CREATE INDEX casa_matriz_codmincex_bd5fc4f6_like ON public.casa_matriz USING btr
 
 
 --
+-- Name: cliente_OSDE_id_e62a283b; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "cliente_OSDE_id_e62a283b" ON public.cliente USING btree ("OSDE_id");
+
+
+--
+-- Name: cliente_OSDE_id_e62a283b_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX "cliente_OSDE_id_e62a283b_like" ON public.cliente USING btree ("OSDE_id" varchar_pattern_ops);
+
+
+--
+-- Name: cliente_correo_4271a189_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX cliente_correo_4271a189_like ON public.cliente USING btree (correo varchar_pattern_ops);
+
+
+--
+-- Name: cliente_nombre_8fc2f80f_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX cliente_nombre_8fc2f80f_like ON public.cliente USING btree (nombre varchar_pattern_ops);
+
+
+--
 -- Name: cliente_provincia_478bfc63; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5251,6 +5346,20 @@ CREATE INDEX cliente_provincia_478bfc63 ON public.cliente USING btree (codigopro
 --
 
 CREATE INDEX cliente_provincia_478bfc63_like ON public.cliente USING btree (codigoprovincia varchar_pattern_ops);
+
+
+--
+-- Name: cliente_reeup_30874119_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX cliente_reeup_30874119_like ON public.cliente USING btree (reeup varchar_pattern_ops);
+
+
+--
+-- Name: cliente_siglas_4bfff53e_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX cliente_siglas_4bfff53e_like ON public.cliente USING btree (siglas varchar_pattern_ops);
 
 
 --
@@ -5282,6 +5391,20 @@ CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session U
 
 
 --
+-- Name: equipo_codigoum_0cef5e26; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX equipo_codigoum_0cef5e26 ON public.equipo USING btree (codigoum);
+
+
+--
+-- Name: equipo_codigoum_0cef5e26_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX equipo_codigoum_0cef5e26_like ON public.equipo USING btree (codigoum varchar_pattern_ops);
+
+
+--
 -- Name: equipo_idproducto_712e52c4_like; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5292,7 +5415,7 @@ CREATE INDEX equipo_idproducto_712e52c4_like ON public.equipo USING btree (idpro
 -- Name: equipo_marca_id_aef47c38; Type: INDEX; Schema: public; Owner: const
 --
 
-CREATE INDEX equipo_marca_id_aef47c38 ON public.equipo USING btree (marca_id);
+CREATE INDEX equipo_marca_id_aef47c38 ON public.equipo USING btree (codigomarca);
 
 
 --
@@ -5317,6 +5440,48 @@ CREATE INDEX marca_nommarca_2d378c86_like ON public.marca USING btree (nommarca 
 
 
 --
+-- Name: ministerio_correo_2ae9841a_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ministerio_correo_2ae9841a_like ON public.ministerio USING btree (correo varchar_pattern_ops);
+
+
+--
+-- Name: ministerio_nombre_21bb2048_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ministerio_nombre_21bb2048_like ON public.ministerio USING btree (nombre varchar_pattern_ops);
+
+
+--
+-- Name: ministerio_reeup_ab665d77_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ministerio_reeup_ab665d77_like ON public.ministerio USING btree (reeup varchar_pattern_ops);
+
+
+--
+-- Name: ministerio_siglas_885a106d_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ministerio_siglas_885a106d_like ON public.ministerio USING btree (siglas varchar_pattern_ops);
+
+
+--
+-- Name: neumatico_codigoum_40edba2b; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX neumatico_codigoum_40edba2b ON public.neumatico USING btree (codigoum);
+
+
+--
+-- Name: neumatico_codigoum_40edba2b_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX neumatico_codigoum_40edba2b_like ON public.neumatico USING btree (codigoum varchar_pattern_ops);
+
+
+--
 -- Name: neumatico_idproducto_9eec9617_like; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5327,7 +5492,7 @@ CREATE INDEX neumatico_idproducto_9eec9617_like ON public.neumatico USING btree 
 -- Name: neumatico_marca_id_e2843a2d; Type: INDEX; Schema: public; Owner: const
 --
 
-CREATE INDEX neumatico_marca_id_e2843a2d ON public.neumatico USING btree (marca_id);
+CREATE INDEX neumatico_marca_id_e2843a2d ON public.neumatico USING btree (codigomarca);
 
 
 --
@@ -5562,6 +5727,20 @@ CREATE INDEX pais_codigopais_f394d5a9_like ON public.pais USING btree (codigopai
 
 
 --
+-- Name: ppa_codigoum_7b48f85c; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ppa_codigoum_7b48f85c ON public.ppa USING btree (codigoum);
+
+
+--
+-- Name: ppa_codigoum_7b48f85c_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX ppa_codigoum_7b48f85c_like ON public.ppa USING btree (codigoum varchar_pattern_ops);
+
+
+--
 -- Name: ppa_equipo_equipo_id_c9d1cddb; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5600,7 +5779,7 @@ CREATE INDEX ppa_idproducto_ae8ec065_like ON public.ppa USING btree (idproducto 
 -- Name: ppa_marca_id_ce5f7e04; Type: INDEX; Schema: public; Owner: const
 --
 
-CREATE INDEX ppa_marca_id_ce5f7e04 ON public.ppa USING btree (marca_id);
+CREATE INDEX ppa_marca_id_ce5f7e04 ON public.ppa USING btree (codigomarca);
 
 
 --
@@ -5982,11 +6161,25 @@ CREATE INDEX sucursal_cuba_codmincex_aa0b5234_like ON public.sucursal_cuba USING
 
 
 --
--- Name: OSDE OSDE_ministerio_id_dd8f8290_fk_ministerio_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: um_codigoum_8b14f118_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX um_codigoum_8b14f118_like ON public.um USING btree (codigoum varchar_pattern_ops);
+
+
+--
+-- Name: um_descripcionum_4582a47e_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX um_descripcionum_4582a47e_like ON public.um USING btree (descripcionum varchar_pattern_ops);
+
+
+--
+-- Name: OSDE OSDE_ministerio_id_dd8f8290_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public."OSDE"
-    ADD CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk_ministerio_id" FOREIGN KEY (ministerio_id) REFERENCES public.ministerio(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk" FOREIGN KEY (ministerio_id) REFERENCES public.ministerio(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6046,11 +6239,19 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: bateria bateria_marca_id_bff70813_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: bateria bateria_codigomarca_277a3733_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.bateria
-    ADD CONSTRAINT bateria_marca_id_bff70813_fk_marca_codigomarca FOREIGN KEY (marca_id) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT bateria_codigomarca_277a3733_fk_marca_codigomarca FOREIGN KEY (codigomarca) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: bateria bateria_codigoum_3eef7d96_fk_um_codigoum; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.bateria
+    ADD CONSTRAINT bateria_codigoum_3eef7d96_fk_um_codigoum FOREIGN KEY (codigoum) REFERENCES public.um(codigoum) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6059,6 +6260,14 @@ ALTER TABLE ONLY public.bateria
 
 ALTER TABLE ONLY public.casa_matriz
     ADD CONSTRAINT casa_matriz_codmincex_bd5fc4f6_fk_proveedor_codmincex FOREIGN KEY (codmincex) REFERENCES public.proveedor(codmincex) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: cliente cliente_OSDE_id_e62a283b_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT "cliente_OSDE_id_e62a283b_fk" FOREIGN KEY ("OSDE_id") REFERENCES public."OSDE"(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6086,11 +6295,19 @@ ALTER TABLE ONLY public.django_admin_log
 
 
 --
--- Name: equipo equipo_marca_id_aef47c38_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: equipo equipo_codigomarca_33aa6296_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.equipo
-    ADD CONSTRAINT equipo_marca_id_aef47c38_fk_marca_codigomarca FOREIGN KEY (marca_id) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT equipo_codigomarca_33aa6296_fk_marca_codigomarca FOREIGN KEY (codigomarca) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: equipo equipo_codigoum_0cef5e26_fk_um_codigoum; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.equipo
+    ADD CONSTRAINT equipo_codigoum_0cef5e26_fk_um_codigoum FOREIGN KEY (codigoum) REFERENCES public.um(codigoum) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6102,11 +6319,19 @@ ALTER TABLE ONLY public.marca
 
 
 --
--- Name: neumatico neumatico_marca_id_e2843a2d_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: neumatico neumatico_codigomarca_2da28965_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.neumatico
-    ADD CONSTRAINT neumatico_marca_id_e2843a2d_fk_marca_codigomarca FOREIGN KEY (marca_id) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT neumatico_codigomarca_2da28965_fk_marca_codigomarca FOREIGN KEY (codigomarca) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: neumatico neumatico_codigoum_40edba2b_fk_um_codigoum; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.neumatico
+    ADD CONSTRAINT neumatico_codigoum_40edba2b_fk_um_codigoum FOREIGN KEY (codigoum) REFERENCES public.um(codigoum) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6294,6 +6519,22 @@ ALTER TABLE ONLY public.oferta_ppa
 
 
 --
+-- Name: ppa ppa_codigomarca_fde9bf8b_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ppa
+    ADD CONSTRAINT ppa_codigomarca_fde9bf8b_fk_marca_codigomarca FOREIGN KEY (codigomarca) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: ppa ppa_codigoum_7b48f85c_fk_um_codigoum; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.ppa
+    ADD CONSTRAINT ppa_codigoum_7b48f85c_fk_um_codigoum FOREIGN KEY (codigoum) REFERENCES public.um(codigoum) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: ppa_equipo ppa_equipo_equipo_id_c9d1cddb_fk_equipo_idproducto; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
@@ -6307,14 +6548,6 @@ ALTER TABLE ONLY public.ppa_equipo
 
 ALTER TABLE ONLY public.ppa_equipo
     ADD CONSTRAINT ppa_equipo_ppa_id_323cec64_fk_ppa_idproducto FOREIGN KEY (ppa_id) REFERENCES public.ppa(idproducto) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: ppa ppa_marca_id_ce5f7e04_fk_marca_codigomarca; Type: FK CONSTRAINT; Schema: public; Owner: const
---
-
-ALTER TABLE ONLY public.ppa
-    ADD CONSTRAINT ppa_marca_id_ce5f7e04_fk_marca_codigomarca FOREIGN KEY (marca_id) REFERENCES public.marca(codigomarca) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6414,11 +6647,11 @@ ALTER TABLE ONLY public.reports_savedreport
 
 
 --
--- Name: solicitud_bateria solicitud_bateria_numcontratocliente_726f79a5_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: solicitud_bateria solicitud_bateria_numcontratocliente_726f79a5_fk_cliente_reeup; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.solicitud_bateria
-    ADD CONSTRAINT solicitud_bateria_numcontratocliente_726f79a5_fk FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT solicitud_bateria_numcontratocliente_726f79a5_fk_cliente_reeup FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6462,11 +6695,11 @@ ALTER TABLE ONLY public.solicitud_bateria
 
 
 --
--- Name: solicitud_equipo solicitud_equipo_numcontratocliente_08e73429_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: solicitud_equipo solicitud_equipo_numcontratocliente_08e73429_fk_cliente_reeup; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.solicitud_equipo
-    ADD CONSTRAINT solicitud_equipo_numcontratocliente_08e73429_fk FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT solicitud_equipo_numcontratocliente_08e73429_fk_cliente_reeup FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6542,11 +6775,11 @@ ALTER TABLE ONLY public.solicitud_neumatico_proxy
 
 
 --
--- Name: solicitud_neumatico solicitud_neumatico_numcontratocliente_e9e0724c_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: solicitud_neumatico solicitud_neumatico_numcontratocliente_e9e0724c_fk_cliente_r; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.solicitud_neumatico
-    ADD CONSTRAINT solicitud_neumatico_numcontratocliente_e9e0724c_fk FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT solicitud_neumatico_numcontratocliente_e9e0724c_fk_cliente_r FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -6558,11 +6791,11 @@ ALTER TABLE ONLY public.solicitud_neumatico
 
 
 --
--- Name: solicitud_ppa solicitud_ppa_numcontratocliente_cd73b766_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+-- Name: solicitud_ppa solicitud_ppa_numcontratocliente_cd73b766_fk_cliente_reeup; Type: FK CONSTRAINT; Schema: public; Owner: const
 --
 
 ALTER TABLE ONLY public.solicitud_ppa
-    ADD CONSTRAINT solicitud_ppa_numcontratocliente_cd73b766_fk FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(numcontratocliente) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT solicitud_ppa_numcontratocliente_cd73b766_fk_cliente_reeup FOREIGN KEY (numcontratocliente) REFERENCES public.cliente(reeup) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

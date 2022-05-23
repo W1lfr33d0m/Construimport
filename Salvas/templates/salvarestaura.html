@@ -54,12 +54,12 @@
 
 {% block bodyclass %}{{ block.super }} dashboard{% endblock %}
 
-{% block content_title %} {% trans 'Sistema Integrado para la Gestión de Importaciones' %} {% endblock %}
+{% block content_title %} {% trans 'Listado de Salvas y Restauras' %} {% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item">{% trans 'Reportes' %}</li>
+        <li class="breadcrumb-item">{% trans 'Salvas y Restauras' %}</li>
     </ol>
 {% endblock %}
 
@@ -76,16 +76,17 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-				<form class="form-horizontal" method="post" id="form" action="{% url 'salvar' %}">
+				<form class="form-horizontal" method="post" id="form" action="{% url 'Salvas' %}">
 
 						{% csrf_token %}
 					<div class="card-header-primary">
-						<h3 class="card-title">Listado de salvas de la base de datos</h3>
 
 						 	<div class="col-md-12 text-right">
 							 	<button id="submit" type="submit" class="btn btn-success">
+									<a href="{% url 'salvar'%}">
 								 	<span class="fa fa-save" style="color: #0e0f11;"> Salvar</span>
-							 	</button>
+								 	</a>
+								</button>
 						 	</div>
 
 					</div>

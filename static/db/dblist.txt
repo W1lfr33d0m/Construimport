@@ -1,2 +1,1 @@
-static/db/202205211638construimport.sql
-static/db/202205211058construimport.sql
+static/db/202205221858construimport.sql

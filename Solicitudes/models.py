@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from ast import Raise
+from cProfile import label
 import calendar
 from calendar import MONDAY, SATURDAY, SUNDAY
 from datetime import date, datetime, timedelta
@@ -92,6 +93,7 @@ class Solicitud(models.Model):
         Cliente, 
         models.DO_NOTHING,
         db_column='numcontratocliente',
+        default='Seleccione',
         verbose_name = 'Cliente'
         )
     
@@ -108,8 +110,8 @@ class Solicitud(models.Model):
         default='Pendiente'
         )
     
-    observaciones = models.TextField(
-        max_length=150, 
+    observaciones = models.CharField(
+        max_length= 50, 
         null=True, 
         blank=True, 
         verbose_name='Observaciones'

@@ -20,7 +20,7 @@ html {
 
 body {
     font-family: montserrat, arial, verdana;
-    background-image: url("/static/jazzmin/img/FONDOS DE ESCRITORIO-02.jpg");
+    background-color: lightgray;
 }
 
 /*form styles*/
@@ -137,10 +137,10 @@ body {
 
 #progressbar li {
     list-style-type: none;
-    color: white;
+    color: black;
     text-transform: uppercase;
     font-size: 9px;
-    width: 33.33%;
+    width: 32%;
     float: left;
     position: relative;
     letter-spacing: 1px;
@@ -181,7 +181,7 @@ body {
 /*The number of the step and the connector before it = green*/
 #progressbar li.active:before, #progressbar li.active:after {
     background: darkgoldenrod;
-    color: white;
+    color: black;
 }
 
 
@@ -206,6 +206,13 @@ body {
     text-decoration: none;
 }
 </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Reportes' %}</li>
+    </ol>
 {% endblock %}
 
 {% block content %}
