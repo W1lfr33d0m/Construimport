@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'import_export',
     'easy_pdf',
     'formtools',
+    'crispy-forms',
     
 ]
 
@@ -127,13 +128,13 @@ IMPORT_EXPORT_SKIP_ADMIN_LOG = False
 
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 
-
-
 STATIC_URL = "/static/"
 
 STATIC_ROOT = "/Users/wilfr/Django/.const/static_root/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+CRISPY_TEMPLATE_PACK = 'bootrstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

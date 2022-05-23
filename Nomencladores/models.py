@@ -20,7 +20,7 @@ from django.core.exceptions import ValidationError
 from numpy import save
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, UnicodeREEUPValidator
+from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, UnicodeREEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator
 from django import forms
 from django.utils.text import slugify
 
@@ -84,12 +84,12 @@ Clase Cliente
 """
 def reeup_validator(reeup):
     for i in reeup:
-        if not i.isnumeric():
+        if i.isalpha():
             raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
         
 def nombre_validator(nombre):
     for i in nombre:
-        if not i[0].isalpha():
+        if i.isnumeric():
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
        
         
@@ -129,16 +129,16 @@ class OSDE(Empresa):
         
 def validate_representante(representante):
     for i in representante:
-        if not i.isalpha():
+        if i.isnumeric():
             raise ValidationError(_('%(representante)s solo puede contener letras'), params={'representante': representante},)
 
 class Cliente(Empresa):
     
-    name_validator = UnicodenameValidator()
+    person_name_validator = UnicodePersonNameValidator()
     
     OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
     codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
-    representante = models.CharField(max_length=40, null=False, validators=[validate_representante], verbose_name='Representante')
+    representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
     
     class Meta:
         managed = True
@@ -200,7 +200,7 @@ class Producto(models.Model):
 
    
     idproducto = models.CharField(max_length=30, primary_key=True, verbose_name = 'Código')
-    descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
+    descripcion = models.CharField(max_length=50, unique=True, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.ForeignKey(UM, models.DO_NOTHING, db_column='codigoum', null= False)
     marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='codigomarca', verbose_name='Marca')
     
@@ -318,10 +318,10 @@ class Proveedor(models.Model):
     Productor = 'Productor'
     Comercializador = 'Comercializador'
     TIPO_PROVEEDOR_CHOICES = [(Productor, 'Productor'), (Comercializador, 'Comercializador')]
-    name_validator = UnicodenameValidator()
+    name_validator = UnicodProveedorValidator()
     
     codmincex = models.CharField(
-                                 max_length=16,
+                                 max_length=7,
                                  primary_key=True, 
                                  verbose_name = 'Código MINCEX', 
                                  validators=[code_validator]
@@ -329,6 +329,7 @@ class Proveedor(models.Model):
     
     nomproveedor = models.CharField(
                                     max_length=100, 
+                                    unique=True,
                                     validators=[name_validator], 
                                     verbose_name = 'Nombre'
                                     )

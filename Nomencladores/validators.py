@@ -42,6 +42,22 @@ class UnicodenameValidator(validators.RegexValidator):
     flags = 0
     
 @deconstructible
+class UnicodePersonNameValidator(validators.RegexValidator):
+    regex = r'^[A-Z a-z áéóíñ]+\Z'
+    message = _(
+        'Escriba correctamente el nombre '
+    )
+    flags = 0
+    
+@deconstructible
+class UnicodProveedorValidator(validators.RegexValidator):
+    regex = r'^[A-Z a-z áéóíñ 1-9 . & ()]+\Z'
+    message = _(
+        'Escriba correctamente el nombre '
+    )
+    flags = 0
+    
+@deconstructible
 class UnicodeCodeValidator(validators.RegexValidator):
     regex = r'^[A-Z]+\Z' '-' r'^[0-9]+\Z'
     message = _(
@@ -51,7 +67,7 @@ class UnicodeCodeValidator(validators.RegexValidator):
     
 @deconstructible
 class UnicodeREEUPValidator(validators.RegexValidator):
-    regex =  r'^[0-9]+\Z' '.' r'^[0-9]+\Z'
+    regex =  r'^[0-9 .]+\Z'
     message = _(
         'Escriba correctamente el codigo '
     )

@@ -121,7 +121,7 @@ def db_save(request):
         save_address_dbs(address)
         list = list_address_db()
         messages.success(request, "Datos salvados")
-        return HttpResponseRedirect(request.meta['HTTP_REFERER'])
+        return render(request, 'salvarestaura.html', {'dblist': list})
     except:
         
         return render(request, 'salvarestaura.html', {'dblist': list})      

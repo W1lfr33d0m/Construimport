@@ -83,12 +83,15 @@ class OSDEAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    resource_class = ClienteResource
     list_display = ('reeup', 'nombre', 'OSDE', 'codigoprovincia', 'representante', 'edit_link')
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        return formfield
+       formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
+       if db_field.name == 'OSDE':
+           formfield.widget.can_add_related = False
+           formfield.widget.can_change_related = False
+           formfield.widget.can_delete_related = False
+       return formfield
         
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
@@ -114,7 +117,7 @@ class ProvinciaAdmin(admin.ModelAdmin):
 @admin.register(Marca)
 class MarcaAdmin(ImportExportModelAdmin):
     resource_class = MarcaResource
-    list_display = ('codigomarca', 'nommarca', 'pais', 'edit_link')
+    list_display = ('nommarca', 'pais', 'edit_link')
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -142,21 +145,26 @@ class UMAdmin(admin.ModelAdmin):
 @admin.register(Equipo)
 class EquipoAdmin(ImportExportModelAdmin):
     resource_class = EquipoResource
-    list_display = ('idproducto', 'descripcion', 'modelo', 'marca')
+    list_display = ('idproducto', 'descripcion', 'modelo', 'marca', 'edit_link')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(EquipoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'marca':
+        if db_field.name == 'marca' or db_field.name == 'OSDE':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
         return formfield
     
-
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        obj._meta.app_label, obj._meta.model_name, obj.idproducto))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
 
 @admin.register(PPA)
 class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
-    list_display = ('idproducto', 'descripcion', 'marca')
+    list_display = ('idproducto', 'descripcion', 'marca', 'edit_link')
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'marca':
@@ -177,11 +185,16 @@ class PPAAdmin(ImportExportModelAdmin):
             formfield.widget.can_change_related = False
         return formfield
     
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        obj._meta.app_label, obj._meta.model_name, obj.idproducto))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
     
 @admin.register(Neumatico)
 class NeumaticoAdmin(ImportExportModelAdmin):
     resource_class = NeumaticoResource
-    list_display = ('idproducto', 'descripcion', 'diametro', 'grosor', 'marca')
+    list_display = ('idproducto', 'descripcion', 'UM', 'diametro', 'grosor', 'marca', 'edit_link')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(NeumaticoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -190,11 +203,17 @@ class NeumaticoAdmin(ImportExportModelAdmin):
            formfield.widget.can_change_related = False
         return formfield
 
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        obj._meta.app_label, obj._meta.model_name, obj.idproducto))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
+    
 
 @admin.register(Bateria)
 class BateriaAdmin(ImportExportModelAdmin):
     resource_class = BateriaResource
-    list_display = ('idproducto', 'descripcion', 'voltaje', 'amperaje', 'marca')
+    list_display = ('idproducto', 'descripcion', 'UM', 'voltaje', 'amperaje', 'marca', 'edit_link')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(BateriaAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -202,3 +221,9 @@ class BateriaAdmin(ImportExportModelAdmin):
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
         return formfield
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        obj._meta.app_label, obj._meta.model_name, obj.idproducto))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"

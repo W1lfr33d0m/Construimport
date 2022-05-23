@@ -124,7 +124,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
-    add_form_template = 'solicitud_equipo_form.html'
+    add_form_template = 'solicitud_form.html'
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
@@ -169,7 +169,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         extra_context['has_delete_permission'] = False,
         extra_context['has_add_permission'] = True,
         extra_context['has_change_permission'] = False
-        extra_context['changeform_template'] = 'solicitud_equipo_form.html'
+        extra_context['changeform_template'] = 'solicitud_form.html'
         extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
         extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
         return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
@@ -363,7 +363,7 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Neumatico_ProveedorInline, Solicitud_NeumaticoInline)
+    inlines = (  Solicitud_NeumaticoInline, Solicitud_Neumatico_ProveedorInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -465,7 +465,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_Bateria_ProveedorInline, Solicitud_BateriaInline)
+    inlines = ( Solicitud_BateriaInline, Solicitud_Bateria_ProveedorInline)
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 

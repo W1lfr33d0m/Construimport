@@ -8,11 +8,6 @@ from .models import *
 
 
 class FSolicitud_Equipo(forms.ModelForm):
-    
-    numcontratocliente = Solicitud_Equipo.numcontratocliente
-    observaciones = Solicitud_Equipo.observaciones
-    valor_estimado = Solicitud_Equipo.valor_estimado
-    
     class Meta:
         model =  Solicitud_Equipo
         fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
@@ -20,7 +15,7 @@ class FSolicitud_Equipo(forms.ModelForm):
 class FSolicitud_Equipo_Proxy(forms.ModelForm):
     class Meta:
         model = Solicitud_Equipo_Proxy
-        fields = "__all__"
+        fields = ['idproducto', 'cantidad']
         
 class FSolicitud_PPA(forms.ModelForm):
     class Meta:
