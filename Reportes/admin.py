@@ -27,6 +27,26 @@ class Reporte_SolicitudAdmin(admin.ModelAdmin):
                 }
         return TemplateResponse(request, self.template_name, context)
     
+@admin.register(Reporte_Proveedor)
+class Reporte_ProveedorAdmin(admin.ModelAdmin):
+    template_name = 'reporte_proveedores.html'
+    icon_name =  'Reportes'
+    
+    def get_urls(self):
+        from django.urls import path
+        info = self.model._meta.app_label, self.model._meta.model_name
+
+        return [
+            path('', self.reporte_proveedoresview, name='%s_%s_changelist' % info),
+        ]
+    
+    def reporte_proveedoresview(self, request):
+        context = {
+            **self.admin_site.each_context(request),
+            'title': 'Reportes de Proveedores',
+                }
+        return TemplateResponse(request, self.template_name, context)
+    
 #@admin.register(SolicitudPdf)
 #class SolicitudPdfAdmin(admin.ModelAdmin):
     

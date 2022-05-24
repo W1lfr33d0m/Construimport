@@ -110,6 +110,7 @@ JAZZMIN_SETTINGS = {
         'Información.Salva': 'fas fa-download',
         'Información.Restauras': 'fas fa-upload',
         'Reportes.Reporte_Solicitud': 'fas fa-chart-bar',
+        'Reportes.Reporte_Proveedor': 'fas fa-chart-bar',
     },
     'changeform_format': 'horizontal_tabs',
     'related_modal_active': False,

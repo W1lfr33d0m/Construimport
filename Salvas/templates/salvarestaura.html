@@ -76,14 +76,14 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-				<form class="form-horizontal" method="post" id="form" action="{% url 'Salvas' %}">
+				<form class="form-horizontal" method="post" id="form" action="{% url 'Salvas:Salvas' %}">
 
 						{% csrf_token %}
 					<div class="card-header-primary">
 
 						 	<div class="col-md-12 text-right">
 							 	<button id="submit" type="submit" class="btn btn-success">
-									<a href="{% url 'salvar'%}">
+									<a href="{% url 'Salvas:salvar'%}">
 								 	<span class="fa fa-save" style="color: #0e0f11;"> Salvar</span>
 								 	</a>
 								</button>
@@ -125,22 +125,24 @@
 
 										<td>
 											<span class="input-group-sm">
-											<a href="{% url 'restaurar' u.0.0 %}"
+											<a href="{% url 'Salvas:restaurar' u.0.0 %}"
 
 										   	class="btn btn-sm btn-primary" tit	le="Restaurar base de datos">
 												<i class="fa fa-history"></i>
 
 											</a>
-												<a href="{% url 'descargar' u.0.0 %}" class="btn btn-warning btn-sm"
+												<a href="{% url 'Salvas:descargar' u.0.0 %}" class="btn btn-warning btn-sm"
 												title="Descargar Archivo" download>
 												<i class="fa fa-download"></i>
 												</a>
 											
 											</a>
-											<a href="{% url 'eliminar' u.0.0 %}" class="btn btn-danger btn-sm"
-											title="Eliminar Archivo" >
-											<i class="fa fa-eraser"></i>
-											</a>
+											{% if forloop.counter > 2 %}
+												<a href="{% url 'Salvas:eliminar' u.0.0 %}" class="btn btn-danger btn-sm"
+												title="Eliminar Archivo" >
+												<i class="fa fa-eraser"></i>
+												</a>
+											{% endif %}
 											</span>
 										</td>
 									</tr>

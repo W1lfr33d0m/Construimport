@@ -14,6 +14,8 @@ DB_SAVE =reverse_lazy('db_save',)
 
 DB_RESTORE = reverse_lazy( 'db_restore',)
 
+app_name = 'Salvas'
+
 urlpatterns = [
     
     path('salvas/backups/', display, name='Salvas'),

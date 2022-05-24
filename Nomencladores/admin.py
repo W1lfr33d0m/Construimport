@@ -177,12 +177,15 @@ class PPAAdmin(ImportExportModelAdmin):
         if db_field.name == 'modelo': 
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
+           formfield.widget.can_delete_related = False
         elif db_field.name == 'marca':
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
+           formfield.widget.can_delete_related = False
         elif db_field.name == 'equipo':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
         return formfield
     
     def edit_link(self,obj):
@@ -201,6 +204,7 @@ class NeumaticoAdmin(ImportExportModelAdmin):
         if db_field.name == 'marca':
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
+           formfield.widget.can_delete_related = False
         return formfield
 
     def edit_link(self,obj):
@@ -220,6 +224,7 @@ class BateriaAdmin(ImportExportModelAdmin):
         if db_field.name == 'marca':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
         return formfield
     
     def edit_link(self,obj):

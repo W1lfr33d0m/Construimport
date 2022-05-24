@@ -124,7 +124,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
-    add_form_template = 'solicitud_form.html'
+    add_form_template = 'testplate.html'
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)

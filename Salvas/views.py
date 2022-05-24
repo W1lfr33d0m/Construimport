@@ -34,6 +34,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 #from cryptography.fernet import Fernet
 from django.urls import reverse_lazy
 
+
 from smuggler import settings
 from smuggler.forms import ImportForm
 from smuggler.utils import (
@@ -44,28 +45,30 @@ from smuggler.utils import (
  
 
 def save_address_dbs(address):
-    fich = open("static/db/dblist.txt")
-    lines = fich.readlines() 
-    address = address + '\n'
-    fich.close() 
-    if address not in lines:
-        if lines.__len__() == 0:
-            lines.append(address)
-        #elif lines.__len__() == 4:
-        #    for line in lines([3][0:-1]):
-        #        lines.remove(line)
-        elif lines.__len__() > 0 or lines.__len__() < 5:
-            first = lines[0:]
-            second = lines[1:]
-            third = lines[2:]
-            lines.clear()
-            lines.append(address)
-            lines.append(first)
-            lines.append(second)
-            lines.append(third)
-    fich = open("static/db/dblist.txt", "w")
-    for line in lines:
-        fich.writelines(line)
+    # fich = open("static/db/dblist.txt")
+    # lines = fich.readlines() 
+    # address = address + '\n'
+    # fich.close() 
+    # if address not in lines:
+    #     if lines.__len__() == 0:
+    #         lines.append(address)
+    #     #elif lines.__len__() == 4:
+    #     #    for line in lines([3][0:-1]):
+    #     #        lines.remove(line)
+    #     elif lines.__len__() > 0 or lines.__len__() < 5:
+    #         first = lines[0:]
+    #         second = lines[1:]
+    #         third = lines[2:]
+    #         lines.clear()
+    #         lines.append(address)
+    #         lines.append(first)
+    #         lines.append(second)
+    #         lines.append(third)
+    fich = open("static/db/dblist.txt", "a")
+    print(address)
+    fich.write(address + '\n')
+    # for line in lines:
+    #     fich.writelines(line)
     fich.close()
     
     
@@ -87,20 +90,28 @@ def list_address_db():
             Hour = date[8:9]
             Minute = date[10:11]
             res.append([fich,Year,Month,Day,Hour,Minute])
+    res.reverse()
     return res
 
 def remove_address_dbs(name):
     fich = open("static/db/dblist.txt")
     lines = fich.readlines() 
     fich.close() 
+    index = 0
     address = 'static/db/' + name + '\n'
-    for line in lines:
-        if address == line:
-            lines.remove(line)
-    fich = open("static/db/dblist.txt", "w")
-    for nline in lines:
-        fich.writelines(nline)
-    fich.close()    
+    
+    lines.remove(address)
+    
+    with open("static/db/dblist.txt", "w") as fich:
+        for nline in lines:
+            fich.writelines(nline)
+        
+      
+    # fich = open("static/db/dblist.txt", "w")
+    # for nline in lines:
+    #     fich.writelines(nline)
+    # fich.close()    
+            
 
 
 def display(request):
@@ -121,9 +132,9 @@ def db_save(request):
         save_address_dbs(address)
         list = list_address_db()
         messages.success(request, "Datos salvados")
-        return render(request, 'salvarestaura.html', {'dblist': list})
-    except:
-        
+        return redirect('Salvas:Salvas')
+        # return render(request, 'salvarestaura.html', {'dblist': list})
+    except:        
         return render(request, 'salvarestaura.html', {'dblist': list})      
     #return render(request, 'salvarestaura.html', {'dblist': list})
 
@@ -150,13 +161,17 @@ def db_restore(request:HttpRequest, name):
 @permission_required('auth.add_user', login_url='403')
 def download_file(request:HttpRequest, name):
     list = list_address_db()
-    #address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
-    #os.remove(os.path.join(address, name))
-    return render(request, 'salvarestaura.html',  {'dblist': list})
-    
+    address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
+    request.get(address)
+    return redirect('Salvas:Salvas')
     
 @permission_required('auth.add_user', login_url='403')    
 def remove_file(request:HttpResponse, name):
     list = list_address_db()
+    print(request.META.get("REMOTE_ADDR"))
     remove_address_dbs(name)
-    return render(request, 'salvarestaura.html',  {'dblist': list})
+    print(name)
+    address = "static/db/" + name
+    os.remove(address)
+    return redirect('Salvas:Salvas')
+    #return render(request, 'salvarestaura.html',  {'dblist': list})

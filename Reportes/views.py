@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from easy_pdf.views import PDFTemplateView
 from django.views.generic.base import TemplateView
 from Solicitudes.models import *
+from COMEX.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
@@ -19,7 +20,7 @@ class Reporte_SolicitudesView(TemplateView):
         solicitudes_equipo = []
         year = date.today().year
         for m in range(1, 13):
-            eq = Solicitud_Equipo.objects.filter(fechasol__year = year, fechasol__month = m).count()
+            eq = Solicitud_Equipo.objects.filter(fechasol__year = year, fechasol__month = m, estado = 'Aprobada').count()
             solicitudes_equipo.append(eq)
         return solicitudes_equipo
         
@@ -27,7 +28,7 @@ class Reporte_SolicitudesView(TemplateView):
         solicitudes_ppa = []
         year = date.today().year
         for m in range(1, 13):
-            eq = Solicitud_PPA.objects.filter(fechasol__year = year, fechasol__month = m).count()
+            eq = Solicitud_PPA.objects.filter(fechasol__year = year, fechasol__month = m, estado = 'Aprobada').count()
             solicitudes_ppa.append(eq)
         return solicitudes_ppa
         
@@ -35,7 +36,7 @@ class Reporte_SolicitudesView(TemplateView):
         solicitudes_neumatico = []
         year = date.today().year
         for m in range(1, 13):
-            eq = Solicitud_Neumatico.objects.filter(fechasol__year = year, fechasol__month = m).count()
+            eq = Solicitud_Neumatico.objects.filter(fechasol__year = year, fechasol__month = m, estado = 'Aprobada').count()
             solicitudes_neumatico.append(eq)
         return solicitudes_neumatico
     
@@ -43,7 +44,7 @@ class Reporte_SolicitudesView(TemplateView):
         solicitudes_bateria = []
         year = date.today().year
         for m in range(1, 13):
-            eq = Solicitud_Bateria.objects.filter(fechasol__year = year, fechasol__month = m).count()
+            eq = Solicitud_Bateria.objects.filter(fechasol__year = year, fechasol__month = m, estado = 'Aprobada').count()
             solicitudes_bateria.append(eq)
         return solicitudes_bateria
     
@@ -55,6 +56,14 @@ class Reporte_SolicitudesView(TemplateView):
         context['get_solicitudes_mensuales_neumatico']=self.get_solicitudes_mensuales_neumatico()
         context['get_solicitudes_mensuales_bateria']=self.get_solicitudes_mensuales_bateria()
         return context
+
+
+class Reporte_ProveedoresView(TemplateView):
+    template_name = 'reporte_proveedores.html'
+
+    def get_proveedor_equipos(self):
+        pass
+
 
 def pdf_dw(request):                                  
 

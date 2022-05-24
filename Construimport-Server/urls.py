@@ -28,7 +28,7 @@ from Solicitudes.views import *
 
 urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
-    path('Salvas/', include('Salvas.urls')),
+    path('Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('Reportes/', include('Reportes.urls')),
     path('Solicitudes/', include('Solicitudes.urls')),
     path('', admin.site.urls),

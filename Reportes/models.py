@@ -15,6 +15,14 @@ class Reporte_Solicitud(models.Model):
     class Meta:
         verbose_name = ('Reporte de Solicitud'),
         verbose_name_plural = ('Reportes de Solicitudes')
+        
+class Reporte_Proveedor(models.Model):
+    proxy = True
+    
+    class Meta:
+        verbose_name = ('Reporte de Proveedor'),
+        verbose_name_plural = ('Reportes de Proveedores')
+
 
 # Create your models here.
 #class MyReport(ModelReport):
