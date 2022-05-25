@@ -172,6 +172,7 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
         extra_context['changeform_template'] = 'solicitud_form.html'
         extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
         extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+        extra_context.update(admin.site.each_context(self.request))
         return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
     
     def edit_link(self,obj):

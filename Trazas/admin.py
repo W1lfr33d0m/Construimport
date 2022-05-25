@@ -14,7 +14,7 @@ class LogEntryResource(resources.ModelResource):
         model = LogEntry
         skip_unchanged = True
         report_skipped = False
-        fields = ('user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr')
+        fields = ('user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr', 'ip')
         
 
 @admin.register(LogEntry)
@@ -40,10 +40,12 @@ class LogEntryAdmin(ImportExportModelAdmin):
         'content_type',
         'action_time',
         'object_id',
-        'object_repr'
+        'object_repr',
+        'ip'
         
     ]
     
     def get_fields(self, request: HttpRequest, obj):
-        return['user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr']
+        obj.ip = request.META.get("REMOTE_ADDR")
+        return['user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr', 'ip']
         return super().get_fields(request, obj)

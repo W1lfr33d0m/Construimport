@@ -9,19 +9,36 @@ from reportlab.pdfgen import canvas
 from .models import *
 from .forms import *
 from django.views.generic import CreateView
+from .admin import *
 #from Solicitudes.models import Solicitud
  
 # Constuir solicitud       
-def salvar_solicitud(cliente, observaciones, valorestimado, producto, cantidad):
-    print(cliente, observaciones, valorestimado, producto, cantidad)
+#def salvar_solicitud(cliente, observaciones, valorestimado, producto, cantidad):
+#    Solicitud_EquipoAdmin.save(cliente, observaciones, valorestimado, producto, cantidad)
 
 
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
-    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy, ]
+    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'testplate.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nombre_url'] = 'solicitud_equipo'
+        context['opts'] = Solicitud_Equipo._meta,
+        context['change'] = True,
+        context['is_popup'] = False,
+        context['save_as'] = False,
+        context['has_delete_permission'] = False,
+        context['has_add_permission'] = True,
+        context['has_change_permission'] = False
+        context['changeform_template'] = 'solicitud_form.html'
+        context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
+        context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+        context.update(admin.site.each_context(self.request))
+        return context
+    
     def done(self, form_list, **kwargs):
         form_data = [form.cleaned_data for form in form_list]
         datos_f1 = form_data[0]
@@ -29,15 +46,9 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         print(form_data)
         print(datos_f1)
         print(datos_f2)
+        Solicitud_EquipoAdmin.save_form(self, form_data)
         # Procesar la solicitud
-        salvar_solicitud(
-            datos_f1['numcontratocliente'], 
-            datos_f1['observaciones'],
-            datos_f1['valor_estimado'],
-            datos_f2['idproducto'],
-            datos_f2['cantidad']
-        )
-        return redirect('/')
+        return render(self.request, 'testplate.html', {'data': form_data})
        
     def form_valid(self, form):
         return super().form_valid(form)

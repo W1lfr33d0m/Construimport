@@ -31,7 +31,9 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext_lazy
 from django.views.generic.edit import FormView
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib import admin
 #from cryptography.fernet import Fernet
+import wget
 from django.urls import reverse_lazy
 
 
@@ -162,7 +164,7 @@ def db_restore(request:HttpRequest, name):
 def download_file(request:HttpRequest, name):
     list = list_address_db()
     address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
-    request.get(address)
+    wget.download(address)
     return redirect('Salvas:Salvas')
     
 @permission_required('auth.add_user', login_url='403')    
@@ -175,3 +177,8 @@ def remove_file(request:HttpResponse, name):
     os.remove(address)
     return redirect('Salvas:Salvas')
     #return render(request, 'salvarestaura.html',  {'dblist': list})
+    
+# def get_context_data(self, **kwargs):
+#         context= super().get_context_data(**kwargs)
+#         context.update(admin.site.each_context(self.request))
+#         return context

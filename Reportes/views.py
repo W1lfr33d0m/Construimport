@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from requests import request
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from datetime import datetime
@@ -7,6 +8,7 @@ from easy_pdf.views import PDFTemplateView
 from django.views.generic.base import TemplateView
 from Solicitudes.models import *
 from COMEX.models import *
+from django.contrib import admin
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
@@ -55,6 +57,7 @@ class Reporte_SolicitudesView(TemplateView):
         context['get_solicitudes_mensuales_ppa']=self.get_solicitudes_mensuales_ppa()
         context['get_solicitudes_mensuales_neumatico']=self.get_solicitudes_mensuales_neumatico()
         context['get_solicitudes_mensuales_bateria']=self.get_solicitudes_mensuales_bateria()
+        context.update(admin.site.each_context(self.request))
         return context
 
 
