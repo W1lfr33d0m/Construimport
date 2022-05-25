@@ -125,12 +125,6 @@ class MarcaAdmin(ImportExportModelAdmin):
     
         return form
     
-    def delete(self, request:HttpRequest, obj):
-        marca = self.get_object(request, 'codigomarca')
-        if Equipo.objects.filter(marca = marca).exists() or PPA.objects.filter(marca = marca).exists() or Neumatico.objects.filter(marca = marca).exists() or Bateria.objects.filter(marca = marca).exists():
-            raise PermissionError()
-        else:
-            pass
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (

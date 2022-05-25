@@ -9,7 +9,8 @@ from reportlab.pdfgen import canvas
 from .models import *
 from .forms import *
 from django.views.generic import CreateView
-from .admin import *
+from django.contrib import admin
+from Solicitudes.admin import *
 #from Solicitudes.models import Solicitud
  
 # Constuir solicitud       
@@ -36,8 +37,12 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         context['changeform_template'] = 'solicitud_form.html'
         context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+        if self.steps.current == 2:
+            context.update({'proveedores': Proveedor})
         context.update(admin.site.each_context(self.request))
         return context
+    
+        
     
     def done(self, form_list, **kwargs):
         form_data = [form.cleaned_data for form in form_list]
@@ -48,10 +53,17 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         print(datos_f2)
         Solicitud_EquipoAdmin.save_form(self, form_data)
         # Procesar la solicitud
-        return render(self.request, 'testplate.html', {'data': form_data})
-       
+        return redirect('/Solicitudes/solicitud_equipo/')
+    
+    
+    
     def form_valid(self, form):
         return super().form_valid(form)
+    
+    def render(self, form=None, **kwargs):
+        form = form or self.get_form()
+        context = self.get_context_data(form=form, **kwargs)
+        return self.render_to_response(context)
     
 class Agregar_Solicitud_PPA(SessionWizardView):
     model = Solicitud_Equipo
