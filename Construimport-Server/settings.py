@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'import_export',
     'easy_pdf',
     'formtools',
+    'admin_wizard',
     
 ]
 

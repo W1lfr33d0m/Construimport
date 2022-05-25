@@ -116,7 +116,7 @@ class Ministerio(Empresa):
         return '{}'.format(self.nombre)
 
 class OSDE(Empresa):
-    ministerio = models.ForeignKey(Ministerio, models.DO_NOTHING, null=False, verbose_name='Ministerio')
+    ministerio = models.ForeignKey(Ministerio, on_delete=models.PROTECT, null=False, verbose_name='Ministerio')
     
     class Meta:
         managed = True
@@ -137,7 +137,7 @@ class Cliente(Empresa):
     person_name_validator = UnicodePersonNameValidator()
     
     OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
-    codigoprovincia = models.ForeignKey(Provincia, models.DO_NOTHING, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
+    codigoprovincia = models.ForeignKey(Provincia, on_delete=models.PROTECT, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
     
     class Meta:
@@ -155,7 +155,7 @@ class Marca(models.Model):
    
     codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
-    pais = models.ForeignKey(Pais, models.DO_NOTHING, db_column='codigopais', verbose_name='País')
+    pais = models.ForeignKey(Pais, on_delete=models.PROTECT, db_column='codigopais', verbose_name='País')
 
     class Meta:
         managed = True
@@ -201,8 +201,8 @@ class Producto(models.Model):
    
     idproducto = models.CharField(max_length=30, primary_key=True, verbose_name = 'Código')
     descripcion = models.CharField(max_length=50, unique=True, verbose_name = 'Descripción', validators = [desc_validator])
-    UM = models.ForeignKey(UM, models.DO_NOTHING, db_column='codigoum', null= False)
-    marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='codigomarca', verbose_name='Marca')
+    UM = models.ForeignKey(UM, on_delete=models.PROTECT, db_column='codigoum', null= False)
+    marca = models.ForeignKey(Marca, on_delete=models.PROTECT, db_column='codigomarca', verbose_name='Marca')
     
     
     class Meta:
@@ -251,13 +251,24 @@ class PPA(Producto):
 Clase Neumatico
     
 """ 
+def validate_diametro(diametro):
+    if diametro < 0:
+        raise ValidationError('El diámetro no puede ser negativo')
+
+
+def validate_grosor(grosor):
+    if grosor < 0:
+        raise ValidationError('El grosor no puede ser negativo')
+
 class Neumatico(Producto):
     diametro = models.FloatField(
-        max_length=4
+        max_length=4,
+        validators=[validate_diametro]
     )
     
     grosor = models.FloatField(
-        max_length=4
+        max_length=4,
+        validators=[validate_grosor]
     )
 
     class Meta:
@@ -336,7 +347,7 @@ class Proveedor(models.Model):
     
     codigopais = models.ForeignKey(
                                Pais, 
-                               models.CASCADE, 
+                               on_delete=models.PROTECT,
                                db_column='codigopais', 
                                verbose_name = 'País'
                                )
@@ -381,7 +392,7 @@ class Sucursal_Cuba(Datos):
     
     codmincex = models.ForeignKey(
                                   Proveedor,
-                                  models.CASCADE,
+                                  on_delete=models.PROTECT,
                                   db_column='codmincex',
                                   verbose_name='Sucursal en Cuba'
     )
@@ -401,7 +412,7 @@ class Casa_Matriz(Datos):
     
     proveedor = models.ForeignKey(
                                   Proveedor,
-                                  models.CASCADE,
+                                  on_delete=models.PROTECT,
                                   db_column='codmincex',
                                   verbose_name='Casa Matriz'
     )

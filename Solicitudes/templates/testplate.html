@@ -271,7 +271,7 @@ body {
                             {{ wizard.form.management_form }}
                             {% for form in wizard.form.forms %}
                                 <br>
-                                    {{ form }}
+                                    {{ form.as_table }}
                                 <br>
                             {% endfor %}
                         {% else %}

@@ -62,6 +62,10 @@ def validate_fecha(fechasol):
 Clase Abstracta de Solicitudess
     
 """
+def validate_valor_estimado(valor_estimado):
+    if valor_estimado <= 0:
+        raise ValidationError('Introduzca el valor correcto')
+
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
