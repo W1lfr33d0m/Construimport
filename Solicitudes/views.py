@@ -52,12 +52,25 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
     def get_form_instance( self, step ):
         return self.instance 
     
-    def save(self, request:HttpRequest, **kwargs):
-        return super(Solicitud_Equipo, self).save(request, **kwargs)
+    #def save(self, request:HttpRequest, **kwargs):
+    #    return super(Solicitud_Equipo, self).save(request, **kwargs)
     
     def done(self, form_list, **kwargs):
-        self.instance.save()
-        return redirect('Solicitudes/solicitud_equipo/')
+        form_data = [form.cleaned_data for form in form_list]
+        solicitud_equipo_proxy = form_data.pop(1)
+        print(solicitud_equipo_proxy)
+        instance = form_list[0].save()
+        lequipos = list(solicitud_equipo_proxy.values())
+        print(lequipos)
+        for p in lequipos:
+            print(p)
+            instance.equipo.add(p)
+        # instance = Solicitud_Equipo()
+        # for form in form_list:
+        #     instance = construct_instance(form, instance, form._meta.fields, form._meta.exclude)
+        # instance.save()
+        # instance.equipo.s
+        return render(self.request, 'testplate.html', {}, context_instance=self.get_context_data(self.request))
     
     
     def form_valid(self, form):
