@@ -56,21 +56,71 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
     #    return super(Solicitud_Equipo, self).save(request, **kwargs)
     
     def done(self, form_list, **kwargs):
+        # Crear la solicitud
+        # 
+        
+        # Recorrer los productos
+        # crear solicid
+        
         form_data = [form.cleaned_data for form in form_list]
-        solicitud_equipo_proxy = form_data.pop(1)
-        print(solicitud_equipo_proxy)
-        instance = form_list[0].save()
+        
+        print(form_data)
+        
+        datos_sol = form_data[0]
+        
+        solicitud = Solicitud_Equipo()
+        
+        solicitud.numcontratocliente = datos_sol['numcontratocliente']
+        solicitud.observaciones = datos_sol['observaciones']
+        solicitud.valor_estimado = datos_sol['valor_estimado']
+        
+        solicitud.save()
+        
+        print(solicitud)
+        
+        solicitud_equipo_proxy = form_data[1]
+        
         lequipos = list(solicitud_equipo_proxy.values())
-        print(lequipos)
-        for p in lequipos:
-            print(p)
-            instance.equipo.add(p)
+        
+        for equipo in Equipo.objects.filter(descripcion = lequipos[0]):
+            eproxy = Solicitud_Equipo_Proxy()
+            eproxy.numsolicitud_id = solicitud.numsolicitud
+            eproxy.idproducto_id= equipo.idproducto
+            eproxy.cantidad = lequipos[1]
+            eproxy.save()
+
+        
+        # #solicitud_equipo_proxy = form_data.pop(1)
+        # #print(form_data[1])
+        # #idproducto = solicitud_equipo_proxy
+        # print(form_data)
+        # solicitud_equipo = form_data.pop(0)
+        # ls = list(solicitud_equipo)
+        # print(ls[0])
+        # numero = Solicitud_Equipo.objects.filter(numsolicitude = solicitud_equipo.num)
+        # print(solicitud_equipo)
+        # # instance = form_list[0].save()
+        # lequipos = list(solicitud_equipo_proxy.values())
+        # print(lequipos[0])
+        # print(lequipos[1])
+        # # print(lequipos)
+        # # for p in lequipos:
+        # #     print(p)
+        # #     instance.equipo.add(p)
         # instance = Solicitud_Equipo()
+        # eproxy = Solicitud_Equipo_Proxy
         # for form in form_list:
         #     instance = construct_instance(form, instance, form._meta.fields, form._meta.exclude)
-        # instance.save()
-        # instance.equipo.s
-        return render(self.request, 'testplate.html', {}, context_instance=self.get_context_data(self.request))
+        #     instance.save(self)
+        # for equipo in Equipo.objects.filter(descripcion = lequipos[0]):
+        #     #eproxy.numsolicitud = fo
+        #     eproxy.idproducto= equipo.idproducto
+        #     eproxy.cantidad = lequipos[1]
+        #     eproxy.save()
+        #     instance.equipo.add(equipo)
+        
+        return redirect('Solicitudes/solicitude_equipo/')
+
     
     
     def form_valid(self, form):
