@@ -12,6 +12,12 @@ class FSolicitud_Equipo(forms.ModelForm):
         model =  Solicitud_Equipo
         fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
         
+    def save(self, commit=True):
+        return super().save(commit)
+    
+    def save(self, commit=True):
+        return super(FSolicitud_Equipo, self).save(commit)
+        
 class FSolicitud_Equipo_Proxy(forms.ModelForm):
     class Meta:
         model = Solicitud_Equipo_Proxy

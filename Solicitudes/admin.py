@@ -45,7 +45,7 @@ from django.utils.translation import gettext as _
 from COMEX.models import Oferta_Equipo, Oferta_Equipo_Proxy
 from django.http import HttpRequest, HttpResponse
 from COMEX.admin import *
-from .views import *
+#from .views import *
 from .forms import *
 # Register your models here.
 
@@ -147,12 +147,24 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
-
-    def done(self, form_list, **kwargs):
-        return render(self.request, 'done.html', {
-            'form_data': [form.cleaned_data for form in form_list],
-        })
-       
+    def get_fields(self, request, obj=None):
+        if request.user.groups.filter(name = 'Marketing').exists():
+            return ['numcontratocliente', 'observaciones', 'valor_estimado']
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
+            return ['estado', 'especialista']
+        return super().get_fields(request, obj)
+    
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['numcontratocliente', 'estado']
+        #form.base_fields['fechasol' ].readonly = True
+        if request.user.groups.filter(name = 'Marketing').exists():
+            form.base_fields['numcontratocliente'].widget.can_add_related = False
+            form.base_fields['numcontratocliente'].widget.can_delete_related = False
+            form.base_fields['numcontratocliente'].widget.can_change_related = False
+        
+        return form
+           
     def get(self, request, *args, **kwargs):
         try:
             return self.render(self.get_form())
@@ -259,6 +271,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
             form.base_fields['numcontratocliente'].widget.can_change_related = False
         
         return form
+    
     
     def get_proveedores(self, obj):
            return obj.proveedores.all().values_list('codmincex', flat=True)

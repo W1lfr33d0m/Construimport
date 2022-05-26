@@ -1,3 +1,4 @@
+from ast import Eq
 from multiprocessing import context
 from re import template
 from django.shortcuts import render
@@ -5,12 +6,15 @@ from django.views.generic.base import TemplateView
 from formtools.wizard.views import WizardView, SessionWizardView
 import io
 from django.http import FileResponse
+from pytest import Instance
 from reportlab.pdfgen import canvas
 from .models import *
 from .forms import *
 from django.views.generic import CreateView
 from django.contrib import admin
 from Solicitudes.admin import *
+from django.forms.models import construct_instance
+from django.db.models import base
 #from Solicitudes.models import Solicitud
  
 # Constuir solicitud       
@@ -23,7 +27,8 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
     form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'testplate.html'
-
+    instance = None
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['nombre_url'] = 'solicitud_equipo'
@@ -37,33 +42,28 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         context['changeform_template'] = 'solicitud_form.html'
         context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-        if self.steps.current == 2:
-            context.update({'proveedores': Proveedor})
         context.update(admin.site.each_context(self.request))
         return context
     
-        
+    def dispatch(self, request, *args, **kwargs):
+        self.instance = Solicitud_Equipo()
+        return super(Agregar_Solicitud_Equipo, self).dispatch(request, *args, **kwargs)
+    
+    def get_form_instance( self, step ):
+        return self.instance 
+    
+    def save(self, request:HttpRequest, **kwargs):
+        return super(Solicitud_Equipo, self).save(request, **kwargs)
     
     def done(self, form_list, **kwargs):
-        form_data = [form.cleaned_data for form in form_list]
-        datos_f1 = form_data[0]
-        datos_f2 = form_data[1]
-        print(form_data)
-        print(datos_f1)
-        print(datos_f2)
-        Solicitud_EquipoAdmin.save_form(self, form_data)
-        # Procesar la solicitud
-        return redirect('/Solicitudes/solicitud_equipo/')
-    
+        self.instance.save()
+        return redirect('Solicitudes/solicitud_equipo/')
     
     
     def form_valid(self, form):
         return super().form_valid(form)
     
-    def render(self, form=None, **kwargs):
-        form = form or self.get_form()
-        context = self.get_context_data(form=form, **kwargs)
-        return self.render_to_response(context)
+    
     
 class Agregar_Solicitud_PPA(SessionWizardView):
     model = Solicitud_Equipo

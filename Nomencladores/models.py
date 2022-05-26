@@ -92,14 +92,20 @@ def nombre_validator(nombre):
         if i.isnumeric():
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
        
-        
+def validate_telefono(telefono):
+    if telefono <= 0:
+        raise ValidationError(
+        _('%(telefono)s es incorrecto'),
+        params={'telefono': telefono},
+        )
+                
 class Empresa(models.Model):
     reeup = models.CharField(max_length=11, primary_key=True, validators=[UnicodeREEUPValidator, reeup_validator], verbose_name='Código REEUP')
     nombre = models.CharField(max_length=100, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Nombre')
     siglas = models.CharField(max_length=15, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Siglas')
     direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
     correo = models.EmailField(verbose_name='Correo electrónico', unique=True)
-    telefono = models.IntegerField(max_length=8, unique=True, verbose_name='Teléfono')
+    telefono = models.IntegerField(unique=True, validators=[validate_telefono], verbose_name='Teléfono')
     
     class Meta:
         abstract = True
@@ -307,12 +313,25 @@ class Bateria(Producto):
 Clase abstracta Datos
     
 """    
+def validate_identificador(identificador):
+    if identificador <= 0:
+        raise ValidationError(
+        _('%(identificador)s debe ser un valor positivo'),
+        params={'identificador': identificador},
+        )
+
+def validate_telefono(telefono):
+    if telefono <= 0:
+        raise ValidationError(
+        _('%(telefono)s es incorrecto'),
+        params={'telefono': telefono},
+        )
 
 class Datos(models.Model):
-    identificador = models.IntegerField(primary_key=True, max_length=4),
+    identificador = models.IntegerField(primary_key=True, validators=[validate_identificador]),
     direccion = models.CharField(max_length=100, verbose_name='Dirección')
     email = models.EmailField(verbose_name='Correo Eléctronico')
-    telefono = models.BigIntegerField(verbose_name='Teléfono')
+    telefono = models.IntegerField(validators=[validate_telefono], verbose_name='Teléfono')
     contacto = models.CharField(max_length=150, verbose_name='Persona de Contacto')
     
     class Meta:

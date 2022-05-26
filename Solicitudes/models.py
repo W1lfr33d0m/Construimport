@@ -369,7 +369,6 @@ class Solicitud_Neumatico_Proxy(models.Model):
         models.CASCADE, 
         db_column='idproducto',
         verbose_name= 'Neumático',
-        unique=True
         )
     
     cantidad = models.IntegerField(
@@ -423,14 +422,12 @@ class Solicitud_Bateria(Solicitud):
     bateria = models.ManyToManyField(
         Bateria,
         through= 'Solicitud_Bateria_Proxy',
-        null=False
     )
     
     proveedores = models.ManyToManyField(
         Proveedor,
         through='Solicitud_Bateria_Proveedor',
         verbose_name='Proveedores',
-        null=False
     )
     
     class Meta:
@@ -496,8 +493,6 @@ class Solicitud_Bateria_Proveedor(models.Model):
         Proveedor,
         models.CASCADE,
         verbose_name = 'Proveedor',
-        unique=True,
-        null=False
         )
     
     class Meta:
