@@ -17,6 +17,7 @@ from django import urls, views
 import static
 from django.conf import settings
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
 from django.urls.conf import include
 import notifications.urls
@@ -31,11 +32,11 @@ urlpatterns = [
     path('Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('Reportes/', include('Reportes.urls')),
     path('Solicitudes/', include('Solicitudes.urls')),
+    path('Nomencladores/', include('Nomencladores.urls')),
     path('', admin.site.urls),
     path('', include('Dashboard.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),
     #path('admin/doc/', include('django.contrib.admindocs.urls')),
-    
-]
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

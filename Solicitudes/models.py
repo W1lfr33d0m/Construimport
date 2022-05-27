@@ -94,10 +94,10 @@ class Solicitud(models.Model):
         verbose_name = 'Número'
         )
     
-    numcontratocliente = models.ForeignKey(
+    cliente = models.ForeignKey(
         Cliente, 
         models.DO_NOTHING,
-        db_column='numcontratocliente',
+        db_column='reeup',
         verbose_name = 'Cliente'
         )
     

@@ -27,4 +27,5 @@ urlpatterns = [
     path('descargar/<str:name>', download_file, name='descargar'),
     
     path('eliminar/<name>', remove_file, name='eliminar')
+    
 ]

@@ -20,7 +20,7 @@ from import_export.forms import ImportForm, ConfirmImportForm
 from django.http import HttpRequest, HttpResponse
 from django.utils.html import format_html
 from .models import *
-from .forms import *
+#from .forms import *
 
 # Register your models here.     
 class Sucursal_CubaInline(admin.StackedInline):
@@ -43,13 +43,30 @@ class Casa_MatrizInline(admin.StackedInline):
 class ProveedorAdmin(ImportExportModelAdmin):
     resource_class = ProveedorResource
     inlines = [Sucursal_CubaInline, Casa_MatrizInline]
+    add_form_template = 'proveedor_form.html'
     list_display = ('codmincex', 'nomproveedor', 'codigopais', 'clasificacion')
     #filter_horizontal = ['productos',]
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['codigopais'].widget.can_add_related = False
-    
+        #form.base_fields['equipos'] = Equipo.objects.filter(marca = Marca.objects.all())
+        # form.base_fields['marcas'].widget.can_add_related = False
+        # form.base_fields['marcas'].widget.can_change_related = False
+        # form.base_fields['marcas'].widget.can_delete_related = False
+        form.base_fields['equipos'].widget.can_add_related = False
+        form.base_fields['equipos'].widget.can_change_related = False
+        form.base_fields['equipos'].widget.can_delete_related = False
+        form.base_fields['ppa'].widget.can_add_related = False
+        form.base_fields['ppa'].widget.can_change_related = False
+        form.base_fields['ppa'].widget.can_delete_related = False
+        form.base_fields['neumaticos'].widget.can_add_related = False
+        form.base_fields['neumaticos'].widget.can_change_related = False
+        form.base_fields['neumaticos'].widget.can_delete_related = False
+        form.base_fields['baterias'].widget.can_add_related = False
+        form.base_fields['baterias'].widget.can_change_related = False
+        form.base_fields['baterias'].widget.can_delete_related = False
+        
         return form
     
 

@@ -15,6 +15,7 @@ from multiprocessing import context
 import os.path
 import subprocess
 import tempfile
+from django.conf import settings
 from datetime import datetime
 import mimetypes
 from django.contrib import messages
@@ -37,13 +38,13 @@ import wget
 from django.urls import reverse_lazy
 
 
-from smuggler import settings
-from smuggler.forms import ImportForm
-from smuggler.utils import (
-    load_fixtures,
-    save_uploaded_file_on_disk,
-    serialize_to_response,
-)
+# from smuggler import settings
+# from smuggler.forms import ImportForm
+# from smuggler.utils import (
+#     load_fixtures,
+#     save_uploaded_file_on_disk,
+#     serialize_to_response,
+# )
  
 
 def save_address_dbs(address):
@@ -163,9 +164,18 @@ def db_restore(request:HttpRequest, name):
 @permission_required('auth.add_user', login_url='403')
 def download_file(request:HttpRequest, name):
     list = list_address_db()
-    address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
-    wget.download(address)
-    return redirect('Salvas:Salvas')
+    file_path = os.path.join(settings.MEDIA_ROOT, 'static/db')
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="sql")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path) + name
+            return response
+    return render(request, 'salvarestaura.html', {'dblist': list}) 
+    # list = list_address_db()
+    # address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
+    # os.
+    # #wget.download(address)
+    # return redirect('Salvas:Salvas')
     
 @permission_required('auth.add_user', login_url='403')    
 def remove_file(request:HttpResponse, name):

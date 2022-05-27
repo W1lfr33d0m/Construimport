@@ -13,9 +13,9 @@ from .models import *
 class FSolicitud_Equipo(forms.ModelForm):
     class Meta:
         model =  Solicitud_Equipo
-        fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado']
         widgets = {
-            'numcontratocliente': forms.Select(attrs={
+            'cliente': forms.Select(attrs={
                 'placeholder': '',
                 'class': 'form-control'
             }),
@@ -65,9 +65,9 @@ FSolicitud_Equipo_ProxyFormset = forms.inlineformset_factory(
 class FSolicitud_PPA(forms.ModelForm):
     class Meta:
         model =  Solicitud_PPA
-        fields = ['numcontratocliente', 'observaciones', 'valor_estimado']   
+        fields = ['cliente', 'observaciones', 'valor_estimado']   
         widgets = {
-            'numcontratocliente': forms.Select(attrs={
+            'cliente': forms.Select(attrs={
                 'placeholder': '',
                 'class': 'form-control'
             }),
@@ -99,9 +99,9 @@ class FSolicitud_PPA_Proxy(forms.ModelForm):
 class FSolicitud_Neumatico(forms.ModelForm):
     class Meta:
         model =  Solicitud_Neumatico
-        fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado']
         widgets = {
-            'numcontratocliente': forms.Select(attrs={
+            'cliente': forms.Select(attrs={
                 'placeholder': '',
                 'class': 'form-control'
             }),
@@ -133,9 +133,9 @@ class FSolicitud_Neumatico_Proxy(forms.ModelForm):
 class FSolicitud_Bateria(forms.ModelForm):
     class Meta:
         model =  Solicitud_Bateria
-        fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado']
         widgets = {
-            'numcontratocliente': forms.Select(attrs={
+            'cliente': forms.Select(attrs={
                 'placeholder': '',
                 'class': 'form-control'
             }),

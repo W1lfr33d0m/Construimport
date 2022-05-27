@@ -70,7 +70,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         
         solicitud = Solicitud_Equipo()
         
-        solicitud.numcontratocliente = datos_sol['numcontratocliente']
+        solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
         
@@ -141,7 +141,7 @@ class Agregar_Solicitud_PPA(SessionWizardView):
         
         solicitud = Solicitud_PPA()
         
-        solicitud.numcontratocliente = datos_sol['numcontratocliente']
+        solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
         
@@ -210,7 +210,7 @@ class Agregar_Solicitud_Neumatico(SessionWizardView):
         
         solicitud = Solicitud_Neumatico()
         
-        solicitud.numcontratocliente = datos_sol['numcontratocliente']
+        solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
         
@@ -279,7 +279,7 @@ class Agregar_Solicitud_Bateria(SessionWizardView):
         
         solicitud = Solicitud_Bateria()
         
-        solicitud.numcontratocliente = datos_sol['numcontratocliente']
+        solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
         
