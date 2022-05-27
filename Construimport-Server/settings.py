@@ -154,7 +154,11 @@ LOGIN_REDIRECT_URL = '/accounts/profile/'
 
 NOTIFICATIONS_USE_JSONFIELD = True
 
-MEDIA_URL = '/img/'
+MEDIA_DIR = os.path.join(BASE_DIR,'media')
+
+MEDIA_ROOT = MEDIA_DIR
+
+MEDIA_URL = '/media/'
 
 TEMPLATES = [
     {
