@@ -124,19 +124,19 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(ImportExportModelAdmin):
-    add_form_template = 'testplate.html'
+    add_form_template = 'solicitud.html'
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
-    inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
+    inlines = (Solicitud_EquipoInline, )
     #readonly_fields = ('numsolicitud')
     
     
-    fieldsets = (
-        (None, {
-            "fields": (('numcontratocliente'), 'observaciones', 'valor_estimado'),
-        }),
+    # fieldsets = (
+    #     (None, {
+    #         "fields": (('numcontratocliente'), 'observaciones', 'valor_estimado'),
+    #     }),
         
-     )
+    #  )
     
     list_display = (
                    'numsolicitud', 
@@ -147,22 +147,34 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
                    'edit_link'
                    )
     
-    def get_fields(self, request, obj=None):
+    
+    def get_fields(self, request, obj):
+        
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['numcontratocliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-            return ['estado', 'especialista']
+           #print(User.objects.filter(groups = 'Especialista_COMEX_Equipo'))
+        #    for user in request.user.objects.all:
+        #     self.fields['especialista'] = request.user.groups.filter(name = 'Especialista_COMEX_Equipo')
+        #     print(self.fields['especialista'])
+           return ['estado', 'especialista']
         return super().get_fields(request, obj)
     
-    def get_form(self, request, obj=None, change=False, **kwargs):
+    def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        fields = ['numcontratocliente', 'estado']
+        fields = ['numcontratocliente', 'estado', 'especialista']
         #form.base_fields['fechasol' ].readonly = True
+        
         if request.user.groups.filter(name = 'Marketing').exists():
             form.base_fields['numcontratocliente'].widget.can_add_related = False
             form.base_fields['numcontratocliente'].widget.can_delete_related = False
             form.base_fields['numcontratocliente'].widget.can_change_related = False
-        
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj:
+             
+             form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 3))
+             form.base_fields['especialista'].widget.can_add_related = False
+             form.base_fields['especialista'].widget.can_delete_related = False
+             form.base_fields['especialista'].widget.can_change_related = False
         return form
            
     def get(self, request, *args, **kwargs):
@@ -193,6 +205,31 @@ class Solicitud_EquipoAdmin(ImportExportModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
 
+    # def response_change(self, request:HttpRequest, obj, post_url_continue=None):
+    #     print(Solicitud_EquipoInline.get_marca(self, obj))
+    #     if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+    #         for p in obj.proveedores.all().values_list('codmincex', flat=True):
+    #             print(p)
+    #             oferta_ppa = Oferta_PPA()
+    #             oferta_ppa.solicitud_id = obj.numsolicitud
+    #             oferta_ppa.proveedor_id = p
+    #             oferta_ppa.especialista = obj.especialista
+    #             oferta_ppa.valor_estimado = obj.valor_estimado
+    #             #oferta_equipo.save()
+    #             for ppa in obj.ppa.all().values_list('codmincex', flat=True):
+    #                print(ppa.numsolicitud)
+    #                oferta_ppa_proxy = Oferta_PPA_Proxy()
+    #                oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
+    #                oferta_ppa_proxy.equipo = ppa
+    #                oferta_ppa_proxy.cantidad = ppa.cantidad
+    #                oferta_ppa_proxy.save        
+    #             #super(Oferta_Equipo, self).response_post_save_add(request,obj)
+    #     #msg1 = "Tiene nuevas solicitudes de Ofertas"
+    #     #receiver = request.user.objects.filter(name = str(obj.especialista))
+    #     #self.message_user(receiver, msg1, level=messages.INFO)
+    #     msg2 = "Solicitud modificada correctamente"
+    #     self.message_user(request, msg2, level=messages.SUCCESS)
+    #     return self.response_post_save_change(request, obj)
    
     def get(self, request, *args, **kwargs):
         try:
@@ -239,10 +276,11 @@ class Solicitud_PPAInline(admin.StackedInline):
 
 @admin.register(Solicitud_PPA)
 class Solicitud_PPAAdmin(ImportExportModelAdmin):
+    add_form_template = 'solicitud_form.html'
     resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_PPA_ProveedorInline, Solicitud_PPAInline)
+    inlines = (Solicitud_PPAInline, )
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -289,7 +327,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
         return self.response_post_save_add(request, obj)
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
-        print(Solicitud_EquipoInline.get_marca(self, obj))
+        print(Solicitud_PPAInline.get_marca(self, obj))
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
                 print(p)
@@ -377,7 +415,7 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = (  Solicitud_NeumaticoInline, Solicitud_Neumatico_ProveedorInline)
+    inlines = (  Solicitud_NeumaticoInline, )
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 
@@ -479,7 +517,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     
-    inlines = ( Solicitud_BateriaInline, Solicitud_Bateria_ProveedorInline)
+    inlines = ( Solicitud_BateriaInline, )
     list_display = (
                    'numsolicitud', 
                    'numcontratocliente', 

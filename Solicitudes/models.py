@@ -18,7 +18,7 @@ from tkinter import Widget
 from django.db import models
 from operator import contains
 from django.dispatch import receiver
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -64,7 +64,8 @@ Clase Abstracta de Solicitudess
 """
 def validate_valor_estimado(valor_estimado):
     if valor_estimado <= 0:
-        raise ValidationError('Introduzca el valor correcto')
+        raise ValidationError('Introduzca un valor mayor que cero')
+    
 
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
@@ -97,7 +98,6 @@ class Solicitud(models.Model):
         Cliente, 
         models.DO_NOTHING,
         db_column='numcontratocliente',
-        default='Seleccione',
         verbose_name = 'Cliente'
         )
     
@@ -124,6 +124,7 @@ class Solicitud(models.Model):
     valor_estimado = models.FloatField(
         #max_length= 10,
         null= False,
+        validators=[validate_valor_estimado],
         verbose_name= 'Valor Estimado',
         )
         
@@ -152,6 +153,7 @@ class Solicitud(models.Model):
 Clase de Solicitud de Equipos
     
 """
+
 class Solicitud_Equipo(Solicitud):
     
     equipo = models.ManyToManyField(
@@ -160,12 +162,13 @@ class Solicitud_Equipo(Solicitud):
         related_name= 'Equipos'
     )
 
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_Equipo_Proveedor',
-        related_name='Proveedores'
-    )
-
+    # proveedores = models.ManyToManyField(
+    #     Proveedor,
+    #     through='Solicitud_Equipo_Proveedor',
+    #     related_name='Proveedores'
+    # )
+    
+    
     class Meta:
         verbose_name = _('Solicitud de Equipo')
         verbose_name_plural = _('Solicitudes de Equipos')
@@ -245,13 +248,11 @@ class Solicitud_PPA(Solicitud):
         through= 'Solicitud_PPA_proxy'
     )
     
-    
-    
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_PPA_Proveedor',
-        verbose_name='Proveedores'
-    )
+    # proveedores = models.ManyToManyField(
+    #     Proveedor,
+    #     through='Solicitud_PPA_Proveedor',
+    #     verbose_name='Proveedores'
+    # )
     
     class Meta:
         verbose_name = _('Solicitud de Partes, Piezas y Accesorios')
@@ -336,11 +337,11 @@ class Solicitud_Neumatico(Solicitud):
         through= 'Solicitud_Neumatico_Proxy'
     )
     
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_Neumatico_Proveedor',
-        verbose_name='Proveedores'
-    )
+    # proveedores = models.ManyToManyField(
+    #     Proveedor,
+    #     through='Solicitud_Neumatico_Proveedor',
+    #     verbose_name='Proveedores'
+    # )
     
     class Meta:
         verbose_name = _('Solicitud de Neumático')
@@ -424,11 +425,11 @@ class Solicitud_Bateria(Solicitud):
         through= 'Solicitud_Bateria_Proxy',
     )
     
-    proveedores = models.ManyToManyField(
-        Proveedor,
-        through='Solicitud_Bateria_Proveedor',
-        verbose_name='Proveedores',
-    )
+    # proveedores = models.ManyToManyField(
+    #     Proveedor,
+    #     through='Solicitud_Bateria_Proveedor',
+    #     verbose_name='Proveedores',
+    # )
     
     class Meta:
         verbose_name = _('Solicitud de Batería')

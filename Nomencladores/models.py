@@ -383,7 +383,7 @@ class Proveedor(models.Model):
                                 verbose_name='Marcas'
     )
     
-     
+    
     
     class Meta:
         managed = True
