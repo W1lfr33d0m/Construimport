@@ -17,7 +17,7 @@ from django.db import models
 from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
-from numpy import save
+from numpy import blackman, save
 from .validators import UnicodenameValidator
 from django.utils import timezone
 from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, UnicodeREEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator
@@ -84,7 +84,7 @@ Clase Cliente
 """
 def reeup_validator(reeup):
     for i in reeup:
-        if i.isalpha():
+        if i.isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
             raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
         
 def nombre_validator(nombre):
@@ -93,7 +93,7 @@ def nombre_validator(nombre):
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
        
 def validate_telefono(telefono):
-    if telefono <= 0:
+    if telefono <= 0 or len(telefono) > 8:
         raise ValidationError(
         _('%(telefono)s es incorrecto'),
         params={'telefono': telefono},
@@ -204,9 +204,9 @@ class Producto(models.Model):
     
     desc_validator = UnicodenameValidator
 
-   
-    idproducto = models.CharField(max_length=30, primary_key=True, verbose_name = 'Código')
-    descripcion = models.CharField(max_length=50, unique=True, verbose_name = 'Descripción', validators = [desc_validator])
+    
+    idproducto = models.CharField(max_length=50, primary_key=True, verbose_name = 'Código')
+    descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.ForeignKey(UM, on_delete=models.PROTECT, db_column='codigoum', null= False)
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT, db_column='codigomarca', verbose_name='Marca')
     
@@ -251,7 +251,7 @@ class PPA(Producto):
         db_table = 'ppa'
         
     def __str__(self):
-        return '{}'.format(self.idproducto, self.descripcion)
+        return '{}'.format( self.descripcion)
 
 """
 Clase Neumatico
@@ -380,10 +380,36 @@ class Proveedor(models.Model):
     
     marca = models.ManyToManyField(
                                 Marca,
-                                verbose_name='Marcas'
+                                verbose_name='Marcas',
     )
     
+    equipos = models.ManyToManyField(
+                                Equipo,
+                                verbose_name='Equipos',
+                                null= True,
+                                blank= True
+    )
     
+    ppa = models.ManyToManyField(
+                                PPA,
+                                verbose_name='Partes, Piezas y Accesorios',
+                                null= True,
+                                blank=True,
+    )
+    
+    neumaticos = models.ManyToManyField(
+                                Neumatico,
+                                verbose_name='Neumáticos',
+                                null= True,
+                                blank=True,
+    )
+    
+    baterias = models.ManyToManyField(
+                                Bateria,
+                                verbose_name= 'Baterías',
+                                null= True,
+                                blank=True,
+    )
     
     class Meta:
         managed = True
