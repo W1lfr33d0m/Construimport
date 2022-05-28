@@ -154,17 +154,26 @@ class UMAdmin(admin.ModelAdmin):
     list_display = ('codigoum', 'descripcionum')
 
 @admin.register(Equipo)
-class EquipoAdmin(ImportExportModelAdmin):
+class EquipoAdmin(admin.ModelAdmin):
     resource_class = EquipoResource
     list_display = ('idproducto', 'descripcion', 'modelo', 'marca', 'edit_link')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(EquipoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'marca' or db_field.name == 'OSDE':
+        if db_field.name == 'marca' or db_field == 'UM':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
         return formfield
+    
+    def get_form(self, request:HttpRequest, obj, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['idproducto', 'descripcion', 'UM', 'Marca', 'Modelo']
+        if request.user.groups.filter(name = 'Marketing').exists():
+            form.base_fields['UM'].widget.can_add_related = False
+            form.base_fields['UM'].widget.can_delete_related = False
+            form.base_fields['UM'].widget.can_change_related = False
+        return form
     
     def edit_link(self,obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (

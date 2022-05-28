@@ -93,7 +93,7 @@ def nombre_validator(nombre):
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
        
 def validate_telefono(telefono):
-    if telefono <= 0 or len(telefono) > 8:
+    if telefono <= 0 or telefono > 99999999:
         raise ValidationError(
         _('%(telefono)s es incorrecto'),
         params={'telefono': telefono},

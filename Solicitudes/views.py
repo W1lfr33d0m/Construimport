@@ -92,8 +92,9 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
                 eproveedor = Solicitud_Equipo_Proveedor()
                 eproveedor.numsolicitud_id = solicitud.numsolicitud
                 eproveedor.codmincex_id = p.codmincex
+                eproveedor.save()
             eproxy.save()
-            eproveedor.save()
+            
         
         
         messages.success(self.request,'Se agregó correctamente la Solicitud')
