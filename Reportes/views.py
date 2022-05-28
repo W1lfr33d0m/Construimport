@@ -64,8 +64,9 @@ class Reporte_SolicitudesView(TemplateView):
 class Reporte_ProveedoresView(TemplateView):
     template_name = 'reporte_proveedores.html'
 
-    def get_proveedor_equipos(self):
-        pass
+    # def get_proveedor_equipos(self):
+    #     proveedor_equipo = []
+    #     for p in Proveedor.objects.
 
 
 def pdf_dw(request):                                  

@@ -94,6 +94,7 @@ class Solicitud_Equipo_ProveedorInline(admin.StackedInline):
     model =  Solicitud_Equipo_Proveedor
     #fk_name = 'numsolicitud'
     extra = 1
+    max_num = 1
     fields = ('codmincex',)
     verbose = 'Proveedor'
     
@@ -135,7 +136,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     actions = ['exportar_solicitud',]
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
-    inlines = (Solicitud_EquipoInline, )
+    inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     #readonly_fields = ('numsolicitud')
     
     
@@ -188,21 +189,21 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         except KeyError:
             return super().get(request, *args, **kwargs)
     
-    def add_view(self, request: HttpRequest, form_url='solicitud_equipo', extra_context = None):
-        extra_context = extra_context or {}
-        extra_context['nombre_url'] = 'solicitud_equipo'
-        extra_context['opts'] = Solicitud_Equipo._meta,
-        extra_context['change'] = True,
-        extra_context['is_popup'] = False,
-        extra_context['save_as'] = False,
-        extra_context['has_delete_permission'] = False,
-        extra_context['has_add_permission'] = True,
-        extra_context['has_change_permission'] = False
-        extra_context['changeform_template'] = 'solicitud_form.html'
-        extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
-        extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-        extra_context.update(admin.site.each_context(self.request))
-        return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
+    # def add_view(self, request: HttpRequest, form_url='solicitud_equipo', extra_context = None):
+    #     extra_context = extra_context or {}
+    #     extra_context['nombre_url'] = 'solicitud_equipo'
+    #     extra_context['opts'] = Solicitud_Equipo._meta,
+    #     extra_context['change'] = True,
+    #     extra_context['is_popup'] = False,
+    #     extra_context['save_as'] = False,
+    #     extra_context['has_delete_permission'] = False,
+    #     extra_context['has_add_permission'] = True,
+    #     extra_context['has_change_permission'] = False
+    #     extra_context['changeform_template'] = 'solicitud_form.html'
+    #     extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
+    #     extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
+    #     extra_context.update(admin.site.each_context(self.request))
+    #     return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
     
     def edit_link(self, obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
@@ -266,22 +267,22 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         print(Solicitud_EquipoInline.get_marca(self, obj))
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
             
-            # for p in obj.proveedores.all().values_list('codmincex', flat=True):
-            #     print(p)
-            #     oferta_ppa = Oferta_PPA()
-            #     oferta_ppa.solicitud_id = obj.numsolicitud
-            #     oferta_ppa.proveedor_id = p
-            #     oferta_ppa.especialista = obj.especialista
-            #     oferta_ppa.valor_estimado = obj.valor_estimado
-            #     #oferta_equipo.save()
-            #     for ppa in obj.ppa.all().values_list('codmincex', flat=True):
-            #        print(ppa.numsolicitud)
-            #        oferta_ppa_proxy = Oferta_PPA_Proxy()
-            #        oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
-            #        oferta_ppa_proxy.equipo = ppa
-            #        oferta_ppa_proxy.cantidad = ppa.cantidad
-            #        oferta_ppa_proxy.save        
-                #super(Oferta_Equipo, self).response_post_save_add(request,obj)
+            for p in obj.proveedores.all().values_list('codmincex', flat=True):
+                print(p)
+                oferta_equipo = Oferta_Equipo()
+                oferta_equipo.solicitud_id = obj.numsolicitud
+                oferta_equipo.proveedor_id = p
+                oferta_equipo.especialista = obj.especialista
+                oferta_equipo.valor_estimado = obj.valor_estimado
+                oferta_equipo.save()
+                # for equipo in Equipo.objects.filter(descripcion = oferta_equipo):
+                # #        print(equipo.numsolicitud)
+                #     oferta_equipo_proxy = Oferta_Equipo_Proxy()
+                #     oferta_equipo_proxy.solicitud_id = equipo.numsolicitud
+                #     oferta_equipo_proxy.equipo_id = equipo.idproducto
+                #     oferta_equipo_proxy.cantidad = equipo.cantidad
+                #     oferta_equipo_proxy.save()        
+                #super(Oferta_EquipoAdmin, self).response_post_save_add(request,obj)
         #msg1 = "Tiene nuevas solicitudes de Ofertas"
         #receiver = request.user.objects.filter(name = str(obj.especialista))
         #self.message_user(receiver, msg1, level=messages.INFO)

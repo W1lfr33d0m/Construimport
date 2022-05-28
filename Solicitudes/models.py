@@ -162,11 +162,11 @@ class Solicitud_Equipo(Solicitud):
         related_name= 'Equipos'
     )
 
-    # proveedores = models.ManyToManyField(
-    #     Proveedor,
-    #     through='Solicitud_Equipo_Proveedor',
-    #     related_name='Proveedores'
-    # )
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Equipo_Proveedor',
+        related_name='Proveedores'
+    )
     
     
     class Meta:
@@ -248,11 +248,11 @@ class Solicitud_PPA(Solicitud):
         through= 'Solicitud_PPA_proxy'
     )
     
-    # proveedores = models.ManyToManyField(
-    #     Proveedor,
-    #     through='Solicitud_PPA_Proveedor',
-    #     verbose_name='Proveedores'
-    # )
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_PPA_Proveedor',
+        verbose_name='Proveedores'
+    )
     
     class Meta:
         verbose_name = _('Solicitud de Partes, Piezas y Accesorios')
@@ -337,11 +337,11 @@ class Solicitud_Neumatico(Solicitud):
         through= 'Solicitud_Neumatico_Proxy'
     )
     
-    # proveedores = models.ManyToManyField(
-    #     Proveedor,
-    #     through='Solicitud_Neumatico_Proveedor',
-    #     verbose_name='Proveedores'
-    # )
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Neumatico_Proveedor',
+        verbose_name='Proveedores'
+    )
     
     class Meta:
         verbose_name = _('Solicitud de Neumático')
@@ -425,11 +425,11 @@ class Solicitud_Bateria(Solicitud):
         through= 'Solicitud_Bateria_Proxy',
     )
     
-    # proveedores = models.ManyToManyField(
-    #     Proveedor,
-    #     through='Solicitud_Bateria_Proveedor',
-    #     verbose_name='Proveedores',
-    # )
+    proveedores = models.ManyToManyField(
+        Proveedor,
+        through='Solicitud_Bateria_Proveedor',
+        verbose_name='Proveedores',
+    )
     
     class Meta:
         verbose_name = _('Solicitud de Batería')
