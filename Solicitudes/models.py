@@ -45,9 +45,9 @@ def validate_numsolicitud(numsolicitud):
        )
             
 def validate_cantidad(cantidad):
-    if cantidad <= 0:
+    if cantidad <= 0 or cantidad > 5000:
         raise ValidationError(
-        _('%(cantidad)s debe ser un valor positivo'),
+        _('%(cantidad)s debe ser un valor positivo y hasta 5000'),
         params={'cantidad': cantidad},
         )
             
@@ -63,8 +63,8 @@ Clase Abstracta de Solicitudess
     
 """
 def validate_valor_estimado(valor_estimado):
-    if valor_estimado <= 0:
-        raise ValidationError('Introduzca un valor mayor que cero')
+    if valor_estimado <= 0 or valor_estimado > 9999999:
+        raise ValidationError('Introduzca un valor mayor que cero y menor que 10000')
     
 
 class Solicitud(models.Model):

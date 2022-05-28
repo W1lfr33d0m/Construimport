@@ -13,7 +13,7 @@ from msilib.schema import Verb
 from multiprocessing.sharedctypes import Value
 import re
 from io import BytesIO
-from settings import MEDIA_ROOT
+#from Construimport.settings import MEDIA_ROOT
 from docxtpl import DocxTemplate, InlineImage
 from django_x509.base.models import default_validity_start , default_cert_validity_end , default_ca_validity_end
 #from Construimport-Server.settings import MEDIA_ROOT
@@ -25,7 +25,7 @@ from django.contrib import admin
 from django.dispatch import receiver
 #from django import forms
 from django.shortcuts import render
-from numpy import character
+from numpy import character, integer
 from requests import post
 from attr import attributes, field
 from pydantic import Field
@@ -212,23 +212,39 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
 
     def exportar_solicitud_doc(self, solicitud):              
             file_docx = BytesIO()
-            base_url = MEDIA_ROOT + '/Solicitudes/'
+            base_url = os.path.join('media') + '/Solicitudes/'
             asset_url = base_url + 'Generar Solicitud.docx'
             doc = DocxTemplate(asset_url)
-            cliente = Cliente.objects.filter(nombre = solicitud.cliente)
-            equipos = []
+            cliente = Cliente.objects.get(nombre = solicitud.cliente)
+            idproducto = str
+            descricpion = character
+            UM = character
+            cantidad = integer
+            data_list = []
+            eqlist = []
             for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
-                equipos.append(Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud))
-            print(equipos)
+                equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
+                equipos = Equipo.objects.get(descripcion = i.idproducto)
+                data_list.append(equipos.idproducto)
+                data_list.append(equipos.descripcion)
+                data_list.append(equipos.UM)
+                data_list.append(equipos_proxy.cantidad)
+                #eqlist.append(data_list)
+            
+            print(eqlist)
             context = {
                 'numsolicitud':solicitud.numsolicitud,
                 'fecha': solicitud.fechasol,
                 'cliente': solicitud.cliente,
+                'representante': cliente.representante,
+                'telefono': cliente.telefono,
+                'correo': cliente.correo,
                 'valor_estimado': solicitud.valor_estimado,
-                'equipos': equipos,
+                'observaciones': solicitud.observaciones,
+                'equipos':data_list,
             }
             doc.render(context)
-            filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + 'docx'
+            filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
             doc.save(file_docx)
             file_docx.seek(0)
             content_type = "application/msword"
