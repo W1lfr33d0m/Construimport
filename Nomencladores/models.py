@@ -321,7 +321,7 @@ def validate_identificador(identificador):
         )
 
 def validate_telefono(telefono):
-    if telefono <= 0:
+    if telefono <= 0 or telefono > 99999999:
         raise ValidationError(
         _('%(telefono)s es incorrecto'),
         params={'telefono': telefono},

@@ -45,8 +45,49 @@ class FProveedor(forms.ModelForm):
                 'placeholder': '',
                 'class': 'form-control'
             }),
-            
-            
+        }
+        
+class FProveedor_Casa_matriz(forms.ModelForm):
+    email: forms.EmailField()
+    
+    class Meta:
+        model =  Casa_Matriz
+        fields = ['direccion', 'email', 'telefono', 'contacto', 'sitio_web']
+        widgets = {
+            'direccion': forms.TextInput(attrs={
+                'placeholder': 'Escriba la dirección',
+                'class': 'form-control'
+            }),
+           
+            'contacto': forms.TextInput(attrs={
+                'placeholder': 'Escriba el nombre y los apellidos del representante',
+                'class': 'form-control'
+            }),
+            'sitio_web': forms.TextInput(attrs={
+                'placeholder': 'Escriba el carnet de trabajo',
+                'class': 'form-control'
+            }),
+        }
+        
+class FProveedor_Sucursal(forms.ModelForm):
+    email: forms.EmailField()
+    
+    class Meta:
+        model =  Sucursal_Cuba
+        fields = ['direccion', 'email', 'telefono', 'contacto', 'carnet_trabajo']
+        widgets = {
+            'direccion': forms.TextInput(attrs={
+                'placeholder': 'Escriba la dirección',
+                'class': 'form-control'
+            }),
+            'contacto': forms.TextInput(attrs={
+                'placeholder': 'Escriba el nombre y los apellidos del representante',
+                'class': 'form-control'
+            }),
+            'carne_trabajo': forms.TextInput(attrs={
+                'placeholder': 'Escriba el carnet de trabajo',
+                'class': 'form-control'
+            }),
         }
         
 class FProveedor_Marca(forms.ModelForm):
@@ -88,45 +129,3 @@ class FProveedor_Baterias(forms.ModelForm):
         model =  Proveedor
         fields = ['baterias', ]
         
-class FProveedor_Sucursal(forms.ModelForm):
-    email: forms.EmailField()
-    
-    class Meta:
-        model =  Sucursal_Cuba
-        fields = ['direccion', 'email', 'telefono', 'contacto', 'carnet_trabajo']
-        widgets = {
-            'direccion': forms.TextInput(attrs={
-                'placeholder': 'Escriba la dirección',
-                'class': 'form-control'
-            }),
-            'contacto': forms.TextInput(attrs={
-                'placeholder': 'Escriba el nombre y los apellidos del representante',
-                'class': 'form-control'
-            }),
-            'carne_trabajo': forms.TextInput(attrs={
-                'placeholder': 'Escriba el carnet de trabajo',
-                'class': 'form-control'
-            }),
-        }
-
-class FProveedor_Casa_matriz(forms.ModelForm):
-    email: forms.EmailField()
-    
-    class Meta:
-        model =  Casa_Matriz
-        fields = ['direccion', 'email', 'telefono', 'contacto', 'sitio_web']
-        widgets = {
-            'direccion': forms.TextInput(attrs={
-                'placeholder': 'Escriba la dirección',
-                'class': 'form-control'
-            }),
-           
-            'contacto': forms.TextInput(attrs={
-                'placeholder': 'Escriba el nombre y los apellidos del representante',
-                'class': 'form-control'
-            }),
-            'sitio_web': forms.TextInput(attrs={
-                'placeholder': 'Escriba el carnet de trabajo',
-                'class': 'form-control'
-            }),
-        }

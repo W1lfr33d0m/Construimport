@@ -16,10 +16,10 @@ app_name = 'Nomencladores'
 
 urlpatterns = [
     path('proveedor/add/', Agregar_Proveedor.as_view([
-        FProveedor, 
-        FProveedor_Marca, 
+        FProveedor,  
         FProveedor_Casa_matriz, 
         FProveedor_Sucursal, 
+        FProveedor_Marca,
         FProveedor_Equipos, 
         FProveedor_PPA, 
         FProveedor_Neumaticos, 
