@@ -262,31 +262,32 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             return self.crear_planilla_zip(queryset)
     exportar_solicitud.short_description = 'Generar Documento'
     
-    # def response_change(self, request:HttpRequest, obj, post_url_continue=None):
-    #     print(Solicitud_EquipoInline.get_marca(self, obj))
-    #     if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
-    #         for p in obj.proveedores.all().values_list('codmincex', flat=True):
-    #             print(p)
-    #             oferta_ppa = Oferta_PPA()
-    #             oferta_ppa.solicitud_id = obj.numsolicitud
-    #             oferta_ppa.proveedor_id = p
-    #             oferta_ppa.especialista = obj.especialista
-    #             oferta_ppa.valor_estimado = obj.valor_estimado
-    #             #oferta_equipo.save()
-    #             for ppa in obj.ppa.all().values_list('codmincex', flat=True):
-    #                print(ppa.numsolicitud)
-    #                oferta_ppa_proxy = Oferta_PPA_Proxy()
-    #                oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
-    #                oferta_ppa_proxy.equipo = ppa
-    #                oferta_ppa_proxy.cantidad = ppa.cantidad
-    #                oferta_ppa_proxy.save        
-    #             #super(Oferta_Equipo, self).response_post_save_add(request,obj)
-    #     #msg1 = "Tiene nuevas solicitudes de Ofertas"
-    #     #receiver = request.user.objects.filter(name = str(obj.especialista))
-    #     #self.message_user(receiver, msg1, level=messages.INFO)
-    #     msg2 = "Solicitud modificada correctamente"
-    #     self.message_user(request, msg2, level=messages.SUCCESS)
-    #     return self.response_post_save_change(request, obj)
+    def response_change(self, request:HttpRequest, obj, post_url_continue=None):
+        print(Solicitud_EquipoInline.get_marca(self, obj))
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+            
+            # for p in obj.proveedores.all().values_list('codmincex', flat=True):
+            #     print(p)
+            #     oferta_ppa = Oferta_PPA()
+            #     oferta_ppa.solicitud_id = obj.numsolicitud
+            #     oferta_ppa.proveedor_id = p
+            #     oferta_ppa.especialista = obj.especialista
+            #     oferta_ppa.valor_estimado = obj.valor_estimado
+            #     #oferta_equipo.save()
+            #     for ppa in obj.ppa.all().values_list('codmincex', flat=True):
+            #        print(ppa.numsolicitud)
+            #        oferta_ppa_proxy = Oferta_PPA_Proxy()
+            #        oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
+            #        oferta_ppa_proxy.equipo = ppa
+            #        oferta_ppa_proxy.cantidad = ppa.cantidad
+            #        oferta_ppa_proxy.save        
+                #super(Oferta_Equipo, self).response_post_save_add(request,obj)
+        #msg1 = "Tiene nuevas solicitudes de Ofertas"
+        #receiver = request.user.objects.filter(name = str(obj.especialista))
+        #self.message_user(receiver, msg1, level=messages.INFO)
+        msg2 = "Solicitud modificada correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+        return self.response_post_save_change(request, obj)
    
     def get(self, request, *args, **kwargs):
         try:
@@ -480,7 +481,7 @@ class Solicitud_NeumaticoInline(admin.StackedInline):
 class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
-    
+    add_form_template = 'solicitud_form.html'
     inlines = (  Solicitud_NeumaticoInline, )
     list_display = (
                    'numsolicitud', 
@@ -587,7 +588,7 @@ class Solicitud_BateriaInline(admin.StackedInline):
 class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
-    
+    add_form_template = 'solicitud_form.hrml'
     inlines = ( Solicitud_BateriaInline, )
     list_display = (
                    'numsolicitud', 

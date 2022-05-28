@@ -19,7 +19,7 @@ from django.db.models import base
 
 class Agregar_Proveedor(SessionWizardView):
     model = Proveedor
-    form_list = [FProveedor, FProveedor_Marca, FProveedor_Casa_matriz, FProveedor_Sucursal, FProveedor_Equipos, FProveedor_PPA, FProveedor_Neumaticos, FProveedor_Baterias]
+    form_list = [FProveedor,  FProveedor_Casa_matriz, FProveedor_Sucursal, FProveedor_Marca, FProveedor_Equipos, FProveedor_PPA, FProveedor_Neumaticos, FProveedor_Baterias]
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'proveedor_form.html'
     instance = None
@@ -59,11 +59,7 @@ class Agregar_Proveedor(SessionWizardView):
         # crear solicitud
         
         form_data = [form.cleaned_data for form in form_list]
-        
         print(form_data)
-        
-        datos_sol = form_data[0]
-        
         proveedor = Proveedor()
         
         proveedor.codmincex = proveedor['codmincex']
@@ -71,9 +67,7 @@ class Agregar_Proveedor(SessionWizardView):
         proveedor.codigopais = proveedor['codigopais']
         proveedor.clasificacion = proveedor['clasificacion']
         
-        proveedor.save()
-        
-        
+        proveedor.save()        
         fcasa_matriz = form_data[1]
         fsucursal = form_data[2]
         fproductos = form_data[3]
