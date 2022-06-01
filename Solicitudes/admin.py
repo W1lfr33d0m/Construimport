@@ -55,6 +55,8 @@ from COMEX.admin import *
 #from .views import *
 from .forms import *
 import zipfile
+from djangoconvertvdoctopdf.convertor import ConvertFileModelField, StreamingConvertedPdf, StreamingHttpResponse
+from django.core.files import File
 # Register your models here.
 
 class SolicitudResource(resources.ModelResource):
@@ -269,6 +271,13 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             response = HttpResponse(file_docx, content_type=content_type)
             file_docx.close()
             response['Content-Disposition']= 'attachment ; filename="{0}"'.format(filename)
+            r_file = request.FILES['my_file']
+            inst = ConvertFileModelField(r_file)
+            r_file = inst.get_content()
+            doc_obj = models.Document()
+            doc_obj.pdf_doc = File(open(r_file.get('path'), 'rb'))
+            doc_obj.pdf_doc.name = r_file.get('name')
+            doc_obj.save()
             return response    
     
     def exportar_solicitudes_zip(self, request, queryset):  
@@ -293,7 +302,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                     #     data_list.append(equipos.descripcion)
                     #     data_list.append(equipos.UM)
                     #     data_list.append(equipos_proxy.cantidad)
-                        #eqlist.append(data_list)
+                    #    eqlist.append(data_list)
                     equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
                     equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
                     nomespecialista = request.user.first_name
