@@ -39,7 +39,6 @@ class LogEntryAdmin(ImportExportModelAdmin):
         'action_flag',
         'content_type',
         'action_time',
-        'object_id',
         'object_repr',
         'ip'
         
@@ -47,5 +46,5 @@ class LogEntryAdmin(ImportExportModelAdmin):
     
     def get_fields(self, request: HttpRequest, obj):
         obj.ip = request.META.get("REMOTE_ADDR")
-        return['user', 'action_flag', 'content_type', 'action_time', 'object_id', 'object_repr', 'ip']
+        return['user', 'action_flag', 'content_type', 'action_time', 'object_repr', 'ip']
         return super().get_fields(request, obj)
