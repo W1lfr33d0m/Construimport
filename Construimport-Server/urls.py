@@ -34,7 +34,7 @@ urlpatterns = [
     path('Solicitudes/', include('Solicitudes.urls')),
     path('Nomencladores/', include('Nomencladores.urls')),
     path('', admin.site.urls),
-    path('', include('Dashboard.urls')),
+    path('dashboard/', include('Dashboard.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),

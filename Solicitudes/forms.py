@@ -44,6 +44,15 @@ class FSolicitud_Equipo_Proxy(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+        
+class FSolicitud_Equipo_Confirmar(forms.Form):
+    class Meta:
+        fields = ['cliente', 'observaciones', 'valor_estimado']
+        widgets = {
+            'cliente': label,
+            'observaciones': label,
+            'valor_estimado': label,
+        }
 
 FSolicitud_Equipo_ProxyFormset = forms.inlineformset_factory(
                                                              model=Solicitud_Equipo_Proxy, 

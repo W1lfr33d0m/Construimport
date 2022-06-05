@@ -23,10 +23,19 @@ from django.db.models import base
 
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
-    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy]
+    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy, FSolicitud_Equipo_Confirmar]
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'solicitud_form.html'
     instance = None
+    
+    # def get_form(self, step=None, data=None, files=None):
+    #     form = super().get_form(step, data, files)
+    #     if step is None:
+    #         step = self.steps.current
+    #     if step == '2':
+    #         data = self.get_cleaned_data_for_step('0')['cliente']
+    #         form.fields['cliente'].label = data
+    #     return form
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -44,12 +44,7 @@ def validate_numsolicitud(numsolicitud):
         params={'numsolicitud': numsolicitud},
        )
             
-def validate_cantidad(cantidad):
-    if cantidad <= 0 or cantidad > 5000:
-        raise ValidationError(
-        _('%(cantidad)s debe ser un valor positivo y hasta 5000'),
-        params={'cantidad': cantidad},
-        )
+
             
 def validate_fecha(fechasol):
     if fechasol != date.today():
@@ -64,7 +59,7 @@ Clase Abstracta de Solicitudess
 """
 def validate_valor_estimado(valor_estimado):
     if valor_estimado <= 0 or valor_estimado > 9999999:
-        raise ValidationError('Introduzca un valor mayor que cero y menor que 10000')
+        raise ValidationError('Introduzca un valor mayor que cero y menor que 99999')
     
 
 class Solicitud(models.Model):
@@ -182,6 +177,10 @@ class Solicitud_Equipo(Solicitud):
 Clases para representar las relaciones de muchos a muchos.
     
 """
+def validate_cantidad(cantidad):
+    if cantidad <= 0 or cantidad > 5000:
+        raise ValidationError('Debe ser un valor positivo y hasta 5000')
+
 class Solicitud_Equipo_Proxy(models.Model):
     
     numsolicitud = models.ForeignKey(

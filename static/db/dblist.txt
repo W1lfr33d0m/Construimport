@@ -1,7 +1,2 @@
-static/db/202205241655construimport.sql
-static/db/202205250932construimport.sql
-static/db/202205260907construimport.sql
-static/db/202205262226construimport.sql
-static/db/202205271134construimport.sql
-static/db/202205271316construimport.sql
-static/db/202205271317construimport.sql
+static/db/20220604191518construimport.sql
+static/db/20220604191522construimport.sql

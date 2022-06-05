@@ -92,7 +92,8 @@ def list_address_db():
             Day = date[6:7]
             Hour = date[8:9]
             Minute = date[10:11]
-            res.append([fich,Year,Month,Day,Hour,Minute])
+            Seconds = date[12:13]
+            res.append([fich,Year,Month,Day,Hour,Minute, Seconds])
     res.reverse()
     return res
 
@@ -125,7 +126,7 @@ def display(request):
 @permission_required('auth.add_user', login_url='403')
 def db_save(request):
     list = list_address_db()
-    fecha_hora = str(datetime.today().strftime("%Y%m%d%H%M"))
+    fecha_hora = str(datetime.today().strftime("%Y%m%d%H%M%S"))
     address = "static/db/" + fecha_hora + "construimport.sql" 
     PASSWORD = '3693'                ##CONTRASEÑA DE LA BD##
     os.putenv('PGPASSWORD', PASSWORD)

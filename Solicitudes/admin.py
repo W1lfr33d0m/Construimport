@@ -271,13 +271,13 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             response = HttpResponse(file_docx, content_type=content_type)
             file_docx.close()
             response['Content-Disposition']= 'attachment ; filename="{0}"'.format(filename)
-            r_file = request.FILES['my_file']
-            inst = ConvertFileModelField(r_file)
-            r_file = inst.get_content()
-            doc_obj = models.Document()
-            doc_obj.pdf_doc = File(open(r_file.get('path'), 'rb'))
-            doc_obj.pdf_doc.name = r_file.get('name')
-            doc_obj.save()
+            # # r_file = request.FILES['my_file']
+            # inst = ConvertFileModelField(file_docx)
+            # # r_file = inst.get_content()
+            # doc_obj = models.Document()
+            # doc_obj.pdf_doc = File(open(file_docx.get('path'), 'rb'))
+            # doc_obj.pdf_doc.name = file_docx.get('name')
+            # doc_obj.save()
             return response    
     
     def exportar_solicitudes_zip(self, request, queryset):  
