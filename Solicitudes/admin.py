@@ -57,6 +57,13 @@ from .forms import *
 import zipfile
 from djangoconvertvdoctopdf.convertor import ConvertFileModelField, StreamingConvertedPdf, StreamingHttpResponse
 from django.core.files import File
+from docx2pdf import convert
+import win32com.client as client
+from smuggler.utils import (
+    load_fixtures,
+    save_uploaded_file_on_disk,
+    serialize_to_response,
+)
 # Register your models here.
 
 class SolicitudResource(resources.ModelResource):
@@ -214,8 +221,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
 
-    def exportar_solicitud_doc(self, request:HttpRequest, solicitud):              
-            file_docx = BytesIO()
+    def exportar_solicitud_pdf(self, request:HttpRequest, solicitud):              
+            #file_docx = BytesIO()
             base_url = os.path.join('media') + '/Solicitudes/'
             asset_url = base_url + 'Generar Solicitud.docx'
             doc = DocxTemplate(asset_url)
@@ -264,13 +271,16 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 'ap_director': apdirector,
             }
             doc.render(context)
-            filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
-            doc.save(file_docx)
-            file_docx.seek(0)
-            content_type = "application/msword"
-            response = HttpResponse(file_docx, content_type=content_type)
-            file_docx.close()
-            response['Content-Disposition']= 'attachment ; filename="{0}"'.format(filename)
+            filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
+            resultFilePath = 'media/Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
+            doc.save(resultFilePath)
+            convert(resultFilePath, 'D:\Downloads')
+            os.remove(resultFilePath)
+            #file_docx.seek(0)
+            content_type = "application/pdf"
+            response = serialize_to_response(app_label='Solicitudes')
+            response["Content-Disposition"] = "attachment; filename=%s" % filename
+            # #file_docx.close()
             # # r_file = request.FILES['my_file']
             # inst = ConvertFileModelField(file_docx)
             # # r_file = inst.get_content()
@@ -342,7 +352,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         if len(queryset) == 1:
             solicitud = queryset[0]
   #          messages.info(request, 'La solicitud fue exportada')
-            return self.exportar_solicitud_doc(request, solicitud)
+  
+            return self.exportar_solicitud_pdf(request, solicitud)
         else: 
             return self.exportar_solicitudes_zip(request, queryset)
     exportar_solicitud.short_description = 'Generar Documento'

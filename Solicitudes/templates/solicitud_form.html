@@ -280,10 +280,10 @@ body {
                     </div>
                 </table>
                 {% if wizard.steps.prev %}
-                <input  class="previous action-button-previous" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}"/>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
                 {% endif %}
-                <!--<button  class="next action-button-next" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next step" %}</button>-->
-                <input class="next action-button" name="next" type="submit" value="Siguiente"/>
+                <input type="submit" value="Siguiente"/>
                 <!--{{ wizard.steps.count }}-->
             </fieldset>
         </form>

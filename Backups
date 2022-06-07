@@ -1,0 +1,999 @@
+[
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_bateria"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_equipo"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_neumatico"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_ppa"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_ppa_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_ppa_proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_neumatico_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_neumatico_proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_equipo_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_equipo_proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_bateria_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Solicitudes",
+    "model": "solicitud_bateria_proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "especialistacomex"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_equipo"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_equipo_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "equipo"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "marca"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "pais"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "provincia"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "sucursal_cuba"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "ppa"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "neumatico"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "cliente"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "casa_matriz"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "bateria"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Trazas",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "reports",
+    "model": "savedreport"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_ppa"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_ppa_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_neumatico"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_bateria_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_neumatico_proxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "COMEX",
+    "model": "oferta_bateria"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Dashboard",
+    "model": "dashboard"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Datos",
+    "model": "salvas_restauras"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Reportes",
+    "model": "reporte_solicitud"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Salvas",
+    "model": "salvas"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "ministerio"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "osde"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Nomencladores",
+    "model": "um"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Reportes",
+    "model": "reporte_proveedor"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "Dashboard",
+    "model": "order"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "1ukkrrghuh6moglyum1anvvijvei9aj5",
+  "fields": {
+    "session_data": ".eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns3S6:iQPGfMzXXntkW2mw1I3BmHbMS0iOLLYTAhcPtxvh8fU",
+    "expire_date": "2022-06-03T10:18:02.779"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2c9iblmsobunn9lp4ybt7ojblu0r6qib",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apAvdnpk5LzXBtuZpa2mZZlYXFdXpd0OgRyo74DuUW9VUy7rMqHdFH7TpsXJ6Xg_37yBDy99aYhR0BMAefO8cdZLIWUY5Y-eMiLEBe_HCxCYMXfRoAxNFy2yGHtT7Ax4gOSI:1ntZZQ:tdal0dGZeHbp4R1zS8DRguJqbuyZfTrQ5OIHCZPQ_50",
+    "expire_date": "2022-06-07T14:47:52.172"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2tedanm81sheyl8tg66u1wkzvyubels9",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nuuxy:Vkagp1yPLpEJplaDCtwmiF8txP-3v5WSMXTLXkpTIy8",
+    "expire_date": "2022-06-11T07:50:46.090"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2x9vwghx8b2u9paxx0dkol0spfswkhjz",
+  "fields": {
+    "session_data": "e30:1npWvF:DChfb43h6FEhbChk84Sm54tCaVVPjewOFrOiLqxLOgw",
+    "expire_date": "2022-05-27T11:09:41.252"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "53hztnsp8g0hxy0gttc83rds7ozk0bw1",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nnVvO:GDYjtE8LclDc735PAgGd9AD8c4V-ifMpSybpB1blRkc",
+    "expire_date": "2022-05-21T21:41:30.836"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7ki5lqfd572whpr2fogj4u7tgj8d775p",
+  "fields": {
+    "session_data": "e30:1npWuw:lqNQHlb9UFbcG-c6pz2bbEEKYEouLmSa1Yb-WJBea-4",
+    "expire_date": "2022-05-27T11:09:22.305"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8okr7g1zmhtgwin2a0linhyr7zq45cqq",
+  "fields": {
+    "session_data": "e30:1npWkd:ZJcl6zIJXLlcum1syDhjJG6TUGKJS_ueGby43K_l3qI",
+    "expire_date": "2022-05-27T10:58:43.216"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "99nchg611zcg4v2pmvsp2obyuac0nci9",
+  "fields": {
+    "session_data": "e30:1npWtn:kv6sFW1jwl_OkLFpblo9-hwmbyI09l9EAMJ12xDmI68",
+    "expire_date": "2022-05-27T11:08:11.058"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9lmbnlqoiw58c7nv0s6d2u253utckq2x",
+  "fields": {
+    "session_data": "e30:1npWub:VxwTa8b5TsB_mu69CSGY2Z3QqFUL8DeIaFzUC7XAXjY",
+    "expire_date": "2022-05-27T11:09:01.823"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "avf3qro6wshlq0xs3p9skgk7r7kj4thu",
+  "fields": {
+    "session_data": ".eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns3PW:KI4hHDng-fqd9Wrx9kwWF5cZpGgJ20wKuLcDUxh3CcI",
+    "expire_date": "2022-06-03T10:15:22.166"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bpzdpjm61wfu9pjjppqe2d81b0to8cfl",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nxd6o:cWlec12FjJ-SABRPpcXGgxajlAaSjhT68-BwqC7vWKY",
+    "expire_date": "2022-06-18T19:23:06.361"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "bv4jtklk31xz0pb70o96e8bvvp7ed67l",
+  "fields": {
+    "session_data": ".eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns2CE:Xmm0sqyzH2lbBmoKdNeaKhqQ58NWPJuef1CeNbY3bRo",
+    "expire_date": "2022-06-03T08:57:34.135"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "c8c6or0qqvvg97dioxgwczkzr3zzrs64",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1nqJC4:TEXDCQuoRXYQtCx7h9SOWZKAtpoUubnhWDWl_z3xD_Y",
+    "expire_date": "2022-05-29T14:42:16.979"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ebivdfjkpg2l8wxey5658o3u8ro9f9yq",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQRO_iGlnGH9ampM8ZrLV3jQPIkeKkQtydREoBzRTz3sxbRFyXGtfOcxxJXEUQp98uYX5y2wE9sN0nmae2zGOSuyIP2uUwEb9uh_t3ULHXbc3JWO-0ITRbGOUBgrWcEbFoBXxx2imniyE4Z8eeoCTwKmEoWMAH8fkC2dw35Q:1nuwfl:GDeX3R-xM1eo8TNxIooWB5OvGbfiSLAoXTqqh41OaYk",
+    "expire_date": "2022-06-11T09:40:05.385"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fitkalcdkylqnsppfqrcz1ncpne3fw1j",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nnKH6:PrfnF3_cDDyyQfWxk23HvfYPPaqdlX-QfBRIya0Mnzk",
+    "expire_date": "2022-05-21T09:15:08.601"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fstow60qktqo7o65susnp3np60h29faj",
+  "fields": {
+    "session_data": "e30:1npWle:600Z8M5FmErmSpJPPZ9A0J1q158v0v3HHXq0LxKPR-c",
+    "expire_date": "2022-05-27T10:59:46.608"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "fsuo71xqa02043e6ww00qnjzwhi2104y",
+  "fields": {
+    "session_data": ".eJxVjDsOwyAQBe9CHSEMS1hSpvcZ0PILTiKQjF1FubttyUXSvpl5H-ZoXYpbe5rdFNmNDezyu3kKr1QPEJ9UH42HVpd58vxQ-Ek7H1tM7_vp_h0U6mWvVTRZaczSAHgZEQRpgQo8BmNzGK7CmiStRNCkSIO3RIhSESWRAwr23QDDwzdJ:1nxczB:a0OPeJgFBWq8uvMqve-cy9RqO4A9PY0dGQlH8pMYI80",
+    "expire_date": "2022-06-18T19:15:13.088"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hu0maevnoguinrzqr5h2oifq99u6s8dk",
+  "fields": {
+    "session_data": "e30:1npsKP:ZXYbtAtIcaZj-AGaVaSDaPRx4TI55YwciDZxxElC21k",
+    "expire_date": "2022-05-28T10:01:05.969"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "i6h3fkynch98217zxt3xsb7pysp042n8",
+  "fields": {
+    "session_data": "e30:1npWvZ:Q-x3viz1W0tMY68urVHR-BCYPSiotHsSpqk0BcUtGGU",
+    "expire_date": "2022-05-27T11:10:01.080"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "l1resar8t9jz61nsojf58j1c663bf54h",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1nqLWk:r9gzarOhyRlj9R3Kl0SbpeSuvOvyeE8ttpqe29laYsk",
+    "expire_date": "2022-05-29T17:11:46.821"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nghafven491k6kkry96hy35uibwk3cfz",
+  "fields": {
+    "session_data": "e30:1npWtT:ago4juFK9bOPl5OZ-z19s1JCc2EaIbiB14FfPWnsQq8",
+    "expire_date": "2022-05-27T11:07:51.466"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nwhy71vof72geoua6p1vgmclwrcm4eab",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apAvdnpk5LzXBtuZpa2mZZlYXFdXpd0OgRyo74DuUW9VUy7rMqHdFH7TpsXJ6Xg_37yBDy99aYhR0BMAefO8cdZLIWUY5Y-eMiLEBe_HCxCYMXfRoAxNFy2yGHtT7Ax4gOSI:1ntZ0W:sF_AWtF2X3sHKOJAn4fTDRF3zV0RKaFQKncagj4t_n4",
+    "expire_date": "2022-06-07T14:11:48.937"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "obud0ze9woxy93l67qojrt6to9f8n6pl",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1npho1:abzk9fhPlOZ9J8IbNEPFMudqWTE6LIXefV4dm6LYpuc",
+    "expire_date": "2022-05-27T22:46:57.410"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "t31horx6jadonrz27q7umgt44oy8z7y8",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1nqINg:kvzOZyCrwh3exSb2WwAm6initJeyQgBKzbE9kDarv4g",
+    "expire_date": "2022-05-29T13:50:12.251"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "v9hdrrxh630edxdvav2o2wsc6xqrwmrx",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1np8Ad:yI0-iHM67N9_vQxb4nxoxELqebKgfxRDcEWw_fxahPg",
+    "expire_date": "2022-05-26T08:43:55.584"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xbh9bex51bcet4h4qib4lxwxh3e0tmng",
+  "fields": {
+    "session_data": ".eJxVjM1uwjAQhN_FZxTZ2CGQI_c-w2qzXicuVkz9o1agvDsEoqq9zcw3M3cBWMsENXMCb0UvlBS7v-GAdOF5JfYT5zE2FOeS_NCslWajufmIlsN56_47mDBPzzWRkh0bRa5F5dhIVHpA3Ult2pPS-9MBO6MOpB0haSTV8b5t9dGoo9ODXE-__Q2TBRwTj5gAcgyefKkWgL-qv0bR30UufBX9XEPYvTRYLPgEy2adD5zfnn9Kwl--LA8JWlvS:1nucf3:ZoHyFg0UZSm2BbqdusUerlsvMLmcbDHk7rtkX_4lV3Y",
+    "expire_date": "2022-06-10T12:18:01.825"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zofrqtpf8o4gdoz6zvdv4ziac1yfsy4o",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apAvdnpk5LzXBtuZpa2mZZlYXFdXpd0OgRyo74DuUW9VUy7rMqHdFH7TpsXJ6Xg_37yBDy99aYhR0BMAefO8cdZLIWUY5Y-eMiLEBe_HCxCYMXfRoAxNFy2yGHtT7Ax4gOSI:1ns4EF:5kWw4gN03f0yVmVopE5jGQm7ay5Um4L9K4rH112py7Q",
+    "expire_date": "2022-06-03T11:07:47.407"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 42,
+  "fields": {
+    "numsolicitud": 104,
+    "idproducto": "59428400325",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 43,
+  "fields": {
+    "numsolicitud": 105,
+    "idproducto": "59428400325",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 44,
+  "fields": {
+    "numsolicitud": 106,
+    "idproducto": "647386-00-563",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 45,
+  "fields": {
+    "numsolicitud": 107,
+    "idproducto": "59428400325",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 46,
+  "fields": {
+    "numsolicitud": 108,
+    "idproducto": "59428400325",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 47,
+  "fields": {
+    "numsolicitud": 109,
+    "idproducto": "647386-00-563",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 48,
+  "fields": {
+    "numsolicitud": 110,
+    "idproducto": "647386-00-563",
+    "cantidad": 12
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 49,
+  "fields": {
+    "numsolicitud": 111,
+    "idproducto": "59428400325",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 50,
+  "fields": {
+    "numsolicitud": 112,
+    "idproducto": "647386-00-563",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 51,
+  "fields": {
+    "numsolicitud": 113,
+    "idproducto": "59428400325",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 52,
+  "fields": {
+    "numsolicitud": 114,
+    "idproducto": "647386-00-563",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 53,
+  "fields": {
+    "numsolicitud": 115,
+    "idproducto": "647386-00-563",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 54,
+  "fields": {
+    "numsolicitud": 116,
+    "idproducto": "647386-00-563",
+    "cantidad": 12
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 55,
+  "fields": {
+    "numsolicitud": 117,
+    "idproducto": "647386-00-563",
+    "cantidad": 1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 57,
+  "fields": {
+    "numsolicitud": 119,
+    "idproducto": "647386-00-563",
+    "cantidad": 3
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 58,
+  "fields": {
+    "numsolicitud": 120,
+    "idproducto": "647386-00-563",
+    "cantidad": 5
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 59,
+  "fields": {
+    "numsolicitud": 121,
+    "idproducto": "647386-00-563",
+    "cantidad": 6
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 60,
+  "fields": {
+    "numsolicitud": 124,
+    "idproducto": "59428400325",
+    "cantidad": 3
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 61,
+  "fields": {
+    "numsolicitud": 125,
+    "idproducto": "647386-00-563",
+    "cantidad": 12
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 62,
+  "fields": {
+    "numsolicitud": 126,
+    "idproducto": "647386-00-563",
+    "cantidad": 5
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 63,
+  "fields": {
+    "numsolicitud": 127,
+    "idproducto": "647386-35-5478",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 64,
+  "fields": {
+    "numsolicitud": 128,
+    "idproducto": "647386-35-5478",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 65,
+  "fields": {
+    "numsolicitud": 129,
+    "idproducto": "647386-35-5478",
+    "cantidad": 3
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 66,
+  "fields": {
+    "numsolicitud": 130,
+    "idproducto": "647386-35-5478",
+    "cantidad": 3
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 67,
+  "fields": {
+    "numsolicitud": 131,
+    "idproducto": "647386-35-5478",
+    "cantidad": 3
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 68,
+  "fields": {
+    "numsolicitud": 132,
+    "idproducto": "647386-00-563",
+    "cantidad": -1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 69,
+  "fields": {
+    "numsolicitud": 133,
+    "idproducto": "647386-00-563",
+    "cantidad": -1
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 70,
+  "fields": {
+    "numsolicitud": 134,
+    "idproducto": "59428400325",
+    "cantidad": 0
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 73,
+  "fields": {
+    "numsolicitud": 137,
+    "idproducto": "647386-00-563",
+    "cantidad": -2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 74,
+  "fields": {
+    "numsolicitud": 138,
+    "idproducto": "647386-00-563",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 75,
+  "fields": {
+    "numsolicitud": 139,
+    "idproducto": "647386-00-563",
+    "cantidad": 2
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 76,
+  "fields": {
+    "numsolicitud": 140,
+    "idproducto": "647386-35-5478",
+    "cantidad": 6
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 24,
+  "fields": {
+    "numsolicitud": 124,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 25,
+  "fields": {
+    "numsolicitud": 125,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 26,
+  "fields": {
+    "numsolicitud": 126,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 27,
+  "fields": {
+    "numsolicitud": 129,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 28,
+  "fields": {
+    "numsolicitud": 129,
+    "codmincex": "CN-0132"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 29,
+  "fields": {
+    "numsolicitud": 130,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 30,
+  "fields": {
+    "numsolicitud": 130,
+    "codmincex": "CN-0132"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 31,
+  "fields": {
+    "numsolicitud": 131,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 32,
+  "fields": {
+    "numsolicitud": 131,
+    "codmincex": "CN-0132"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 33,
+  "fields": {
+    "numsolicitud": 132,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 34,
+  "fields": {
+    "numsolicitud": 133,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 35,
+  "fields": {
+    "numsolicitud": 134,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 36,
+  "fields": {
+    "numsolicitud": 137,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 37,
+  "fields": {
+    "numsolicitud": 138,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 38,
+  "fields": {
+    "numsolicitud": 139,
+    "codmincex": "VG-0008"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 39,
+  "fields": {
+    "numsolicitud": 140,
+    "codmincex": "CN-1287"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proveedor",
+  "pk": 40,
+  "fields": {
+    "numsolicitud": 140,
+    "codmincex": "CN-0132"
+  }
+},
+{
+  "model": "Solicitudes.solicitud_neumatico_proxy",
+  "pk": 12,
+  "fields": {
+    "numsolicitud": 6,
+    "idproducto": "594284006",
+    "cantidad": 20
+  }
+},
+{
+  "model": "Solicitudes.solicitud_neumatico_proxy",
+  "pk": 13,
+  "fields": {
+    "numsolicitud": 7,
+    "idproducto": 
