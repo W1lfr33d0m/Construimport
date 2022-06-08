@@ -350,10 +350,10 @@ def validate_telefono(telefono):
 
 class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, validators=[validate_identificador]),
-    direccion = models.CharField(max_length=100, verbose_name='Dirección')
-    email = models.EmailField(verbose_name='Correo Eléctronico')
-    telefono = models.IntegerField(validators=[validate_telefono], verbose_name='Teléfono')
-    contacto = models.CharField(max_length=150, verbose_name='Persona de Contacto')
+    direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
+    email = models.EmailField(null=False, verbose_name='Correo Eléctronico')
+    telefono = models.IntegerField(null=False, validators=[validate_telefono], verbose_name='Teléfono')
+    contacto = models.CharField(null=False, max_length=150, verbose_name='Persona de Contacto')
     
     class Meta:
         abstract = True
@@ -362,6 +362,10 @@ class Datos(models.Model):
 Clase Proveedor
     
 """
+# def validate_codmincex(codmincex):
+#     for i in codmincex:
+#         if not i[0].isalpha() or not i[1].isalpha() or i[2] != '-' or not i[3].isnumeric
+
 class Proveedor(models.Model):
     
     code_validator = UnicodeCodeValidator
@@ -452,6 +456,7 @@ Clase Sucursal en Cuba
 class Sucursal_Cuba(Datos):    
            
     carnet_trabajo = models.CharField(
+                                      null=False,
                                       verbose_name='Carnet de Trabajo',
                                       max_length= 200,
                                       )

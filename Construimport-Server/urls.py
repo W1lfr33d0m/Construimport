@@ -28,13 +28,13 @@ from Solicitudes.views_create import *
 from Solicitudes.views import *
 
 urlpatterns = [
+    # path('', include('Dashboard.urls')),
     path('grappelli/', include('grappelli.urls')),
     path('Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('Reportes/', include('Reportes.urls')),
     path('Solicitudes/', include('Solicitudes.urls')),
     path('Nomencladores/', include('Nomencladores.urls')),
     path('', admin.site.urls),
-    path('dashboard/', include('Dashboard.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),

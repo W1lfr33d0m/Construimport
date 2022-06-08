@@ -51,7 +51,7 @@ class UnicodePersonNameValidator(validators.RegexValidator):
     
 @deconstructible
 class UnicodProveedorValidator(validators.RegexValidator):
-    regex = r'^[A-Z a-z áéóíñ 1-9 . & ()]+\Z'
+    regex = r'^[A-Z a-z áéóí 1-9 . & ()]+\Z'
     message = _(
         'Escriba correctamente el nombre '
     )

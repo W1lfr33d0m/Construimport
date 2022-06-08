@@ -267,9 +267,18 @@ body {
             <!-- fieldsets -->
             <fieldset>
                 <table>
-                    <h3>Introduzca los Datos del Proveedor</h3>
-                    <div>
-                        {{ wizard.management_form }}
+                    <h3>
+                    {% if wizard.steps.step1  %}
+                        Datos Generales
+                    {% elif wizard.steps.step2 %}
+                        Casa Matriz
+                    {% elif wizard.steps.count == 3 %}
+                        Sucursal en Cuba
+                    {% elif wizard.steps.count == 4 %}
+                        Marcas
+                    {% endif %}
+                    </h3>
+                    {{ wizard.management_form }}
                         {% if wizard.form.forms %}
                             {{ wizard.form.management_form }}
                             {% for form in wizard.form.forms %}
@@ -287,7 +296,6 @@ body {
                 {% endif %}
                 <!--<button  class="next action-button-next" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next step" %}</button>-->
                 <input class="next action-button" name="next" type="submit" value="Siguiente"/>
-                {{ wizard.steps.count }}
             </fieldset>
         </form>
     </div>

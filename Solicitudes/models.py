@@ -61,7 +61,10 @@ def validate_valor_estimado(valor_estimado):
     if valor_estimado <= 0 or valor_estimado > 9999999:
         raise ValidationError('Introduzca un valor mayor que cero y menor que 99999')
     
-
+def validate_cantidad(cantidad):
+    if cantidad == 0 or cantidad > 5000:
+        raise ValidationError(_('%(cantidad)sDebe ser un valor positivo y hasta 5000'), params={'cantidad': cantidad},)
+    
 class Solicitud(models.Model):
     Aprobada = 'Aprobada'
     Cancelada = 'Cancelada'
@@ -148,7 +151,6 @@ class Solicitud(models.Model):
 Clase de Solicitud de Equipos
     
 """
-
 class Solicitud_Equipo(Solicitud):
     
     equipo = models.ManyToManyField(
@@ -163,7 +165,6 @@ class Solicitud_Equipo(Solicitud):
         related_name='Proveedores'
     )
     
-    
     class Meta:
         verbose_name = _('Solicitud de Equipo')
         verbose_name_plural = _('Solicitudes de Equipos')
@@ -177,10 +178,6 @@ class Solicitud_Equipo(Solicitud):
 Clases para representar las relaciones de muchos a muchos.
     
 """
-def validate_cantidad(cantidad):
-    if cantidad <= 0 or cantidad > 5000:
-        raise ValidationError('Debe ser un valor positivo y hasta 5000')
-
 class Solicitud_Equipo_Proxy(models.Model):
     
     numsolicitud = models.ForeignKey(
@@ -195,10 +192,9 @@ class Solicitud_Equipo_Proxy(models.Model):
         db_column='idproducto',
         )
     
-    cantidad = models.IntegerField(
-        blank=False, 
+    cantidad = models.PositiveIntegerField(
         null=False, 
-        validators=[validate_cantidad]
+        validators=[validate_cantidad],
         )
     
     class Meta:
@@ -209,8 +205,7 @@ class Solicitud_Equipo_Proxy(models.Model):
      
     def __str__(self):
            return '{}'.format(self.idproducto)
-
-    
+ 
 
 class Solicitud_Equipo_Proveedor(models.Model):
     
@@ -284,10 +279,10 @@ class Solicitud_PPA_Proxy(models.Model):
         null=False,
         )
     
-    cantidad = models.IntegerField(
+    cantidad = models.PositiveIntegerField(
         blank=False, 
         null=False, 
-        validators=[validate_cantidad]
+        validators=[validate_cantidad],
         )
     
     
@@ -371,10 +366,10 @@ class Solicitud_Neumatico_Proxy(models.Model):
         verbose_name= 'Neumático',
         )
     
-    cantidad = models.IntegerField(
+    cantidad = models.PositiveIntegerField(
         blank=False, 
         null=False, 
-        validators=[validate_cantidad]
+        validators=[validate_cantidad],
         )
     
     
@@ -462,10 +457,10 @@ class Solicitud_Bateria_Proxy(models.Model):
         null=False
         )
     
-    cantidad = models.IntegerField(
+    cantidad = models.PositiveIntegerField(
         blank=False, 
         null=False, 
-        validators=[validate_cantidad]
+        validators=[validate_cantidad],
         )
     
     
