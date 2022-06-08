@@ -91,7 +91,6 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         
         l = list(solicitud_proxy.values())
         
-        
         for equipo in Equipo.objects.filter(descripcion = l[0]):
             eproxy = Solicitud_Equipo_Proxy()
             eproxy.numsolicitud_id = solicitud.numsolicitud
@@ -103,9 +102,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
                 eproveedor.codmincex_id = p.codmincex
                 eproveedor.save()
             eproxy.save()
-            
-        
-        
+                    
         messages.success(self.request,'Se agregó correctamente la Solicitud')
         
         return redirect('/Solicitudes/solicitud_equipo/')
