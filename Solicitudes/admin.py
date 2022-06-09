@@ -58,6 +58,8 @@ import zipfile
 from djangoconvertvdoctopdf.convertor import ConvertFileModelField, StreamingConvertedPdf, StreamingHttpResponse
 from django.core.files import File
 from docx2pdf import convert
+import os.path
+import webbrowser
 import win32com.client as client
 from smuggler.utils import (
     load_fixtures,
@@ -221,7 +223,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
 
-    def exportar_solicitud_pdf(self, request:HttpRequest, solicitud):              
+    def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
+        for solicitud in queryset:        
             #file_docx = BytesIO()
             base_url = os.path.join('media') + '/Solicitudes/'
             asset_url = base_url + 'Generar Solicitud.docx'
@@ -233,6 +236,10 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             # cantidad = integer
             # data_list = []
             eqlist = []
+            for i in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud):
+                for j in Equipo.objects.filter(descripcion = i.idproducto):
+                    eqdict = {'producto': {'idproducto': j.idproducto, 'descripcion': j.descripcion, 'UM': j.UM, 'cantidad': i.cantidad}}
+                    eqlist.append(eqdict)
             # for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
             #     equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
             #     equipos = Equipo.objects.get(descripcion = i.idproducto)
@@ -244,7 +251,6 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             #
             equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
             equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
-            print(equipo.idproducto)
             # eqlist.append(equipo.idproducto)
             # eqlist.append(equipo.descripcion)
             # eqlist.append(equipo.UM)
@@ -263,8 +269,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 'correo': cliente.correo,
                 'valor_estimado': solicitud.valor_estimado,
                 'observaciones': solicitud.observaciones,
-                'equipo':equipo,
-                'equipo_proxy':equipo_proxy,
+                'equipos':eqlist,
                 'nombre_usuario': nomespecialista,
                 'ap_usuario': apespecialista,
                 'nombre_director': nomdirector,
@@ -276,10 +281,12 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             doc.save(resultFilePath)
             convert(resultFilePath, 'D:\Downloads')
             os.remove(resultFilePath)
+            path = 'D:\Downloads'
+            webbrowser.open(path)
             #file_docx.seek(0)
-            content_type = "application/pdf"
-            response = serialize_to_response(app_label='Solicitudes')
-            response["Content-Disposition"] = "attachment; filename=%s" % filename
+            # content_type = "application/pdf"
+            # response = HttpResponse(resultFilePath, content_type = content_type)
+            # response["Content-Disposition"] = "attachment; filename=%s" % filename
             # #file_docx.close()
             # # r_file = request.FILES['my_file']
             # inst = ConvertFileModelField(file_docx)
@@ -288,75 +295,77 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             # doc_obj.pdf_doc = File(open(file_docx.get('path'), 'rb'))
             # doc_obj.pdf_doc.name = file_docx.get('name')
             # doc_obj.save()
-            return response    
+            # return response    
+        msg2 = "Documentos generados correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
     
-    def exportar_solicitudes_zip(self, request, queryset):  
-            zip_memory = BytesIO()
-            with zipfile.ZipFile(zip_memory, 'a', zipfile.ZIP_DEFLATED, False) as zip_file:
-                for solicitud in queryset:             
-                    file_docx = BytesIO()
-                    base_url = os.path.join('media') + '/Solicitudes/'
-                    asset_url = base_url + 'Generar Solicitud.docx'
-                    doc = DocxTemplate(asset_url)
-                    cliente = Cliente.objects.get(nombre = solicitud.cliente)
-                    # idproducto = str
-                    # descricpion = character
-                    # UM = character
-                    # cantidad = integer
-                    # data_list = []
-                    # eqlist = []
-                    # for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
-                    #     equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
-                    #     equipos = Equipo.objects.get(descripcion = i.idproducto)
-                    #     data_list.append(equipos.idproducto)
-                    #     data_list.append(equipos.descripcion)
-                    #     data_list.append(equipos.UM)
-                    #     data_list.append(equipos_proxy.cantidad)
-                    #    eqlist.append(data_list)
-                    equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
-                    equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
-                    nomespecialista = request.user.first_name
-                    apespecialista = request.user.last_name
-                    nomdirector = User.objects.get(username = 'director_desarrollo').first_name
-                    apdirector = User.objects.get(username = 'director_desarrollo').last_name
-                    context = {
-                        'numsolicitud':solicitud.numsolicitud,
-                        'fecha': solicitud.fechasol,
-                        'cliente': solicitud.cliente,
-                        'representante': cliente.representante,
-                        'telefono': cliente.telefono,
-                        'correo': cliente.correo,
-                        'valor_estimado': solicitud.valor_estimado,
-                        'observaciones': solicitud.observaciones,
-                        'equipo':equipo,
-                        'equipo_proxy':equipo_proxy,
-                        'nombre_usuario': nomespecialista,
-                        'ap_usuario': apespecialista,
-                        'nombre_director': nomdirector,
-                        'ap_director': apdirector,
-                        }
-                    doc.render(context)
-                    filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
-                    doc.save(file_docx)
-                    file_docx.seek(0)
-                    zip_file.writestr(filename, file_docx.getvalue())
-                    file_docx.close()
-            content_type="application/zip"  
-            zip_memory.seek(0)         
-            response = HttpResponse(zip_memory, content_type=content_type)
-          #  file_docx.close()
-            response['Content-Disposition']= 'attachment ; filename="Solicitudes.zip"'
-            return response    
+    # def exportar_solicitudes_zip(self, request, queryset):  
+    #         zip_memory = BytesIO()
+    #         with zipfile.ZipFile(zip_memory, 'a', zipfile.ZIP_DEFLATED, False) as zip_file:
+    #             for solicitud in queryset:             
+    #                 file_docx = BytesIO()
+    #                 base_url = os.path.join('media') + '/Solicitudes/'
+    #                 asset_url = base_url + 'Generar Solicitud.docx'
+    #                 doc = DocxTemplate(asset_url)
+    #                 cliente = Cliente.objects.get(nombre = solicitud.cliente)
+    #                 # idproducto = str
+    #                 # descricpion = character
+    #                 # UM = character
+    #                 # cantidad = integer
+    #                 # data_list = []
+    #                 # eqlist = []
+    #                 # for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
+    #                 #     equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
+    #                 #     equipos = Equipo.objects.get(descripcion = i.idproducto)
+    #                 #     data_list.append(equipos.idproducto)
+    #                 #     data_list.append(equipos.descripcion)
+    #                 #     data_list.append(equipos.UM)
+    #                 #     data_list.append(equipos_proxy.cantidad)
+    #                 #    eqlist.append(data_list)
+    #                 equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
+    #                 equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
+    #                 nomespecialista = request.user.first_name
+    #                 apespecialista = request.user.last_name
+    #                 nomdirector = User.objects.get(username = 'director_desarrollo').first_name
+    #                 apdirector = User.objects.get(username = 'director_desarrollo').last_name
+    #                 context = {
+    #                     'numsolicitud':solicitud.numsolicitud,
+    #                     'fecha': solicitud.fechasol,
+    #                     'cliente': solicitud.cliente,
+    #                     'representante': cliente.representante,
+    #                     'telefono': cliente.telefono,
+    #                     'correo': cliente.correo,
+    #                     'valor_estimado': solicitud.valor_estimado,
+    #                     'observaciones': solicitud.observaciones,
+    #                     'equipo':equipo,
+    #                     'equipo_proxy':equipo_proxy,
+    #                     'nombre_usuario': nomespecialista,
+    #                     'ap_usuario': apespecialista,
+    #                     'nombre_director': nomdirector,
+    #                     'ap_director': apdirector,
+    #                     }
+    #                 doc.render(context)
+    #                 filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
+    #                 doc.save(file_docx)
+    #                 file_docx.seek(0)
+    #                 zip_file.writestr(filename, file_docx.getvalue())
+    #                 file_docx.close()
+    #         content_type="application/zip"  
+    #         zip_memory.seek(0)         
+    #         response = HttpResponse(zip_memory, content_type=content_type)
+    #       #  file_docx.close()
+    #         response['Content-Disposition']= 'attachment ; filename="Solicitudes.zip"'
+    #         return response    
     
     def exportar_solicitud(self, request, queryset):   
-        if len(queryset) == 1:
-            solicitud = queryset[0]
+        # if len(queryset) == 1:
+        # solicitud = queryset[0]
   #          messages.info(request, 'La solicitud fue exportada')
   
-            return self.exportar_solicitud_pdf(request, solicitud)
-        else: 
-            return self.exportar_solicitudes_zip(request, queryset)
-    exportar_solicitud.short_description = 'Generar Documento'
+        return self.exportar_solicitud_pdf(request, queryset)
+        # else: 
+        # return self.exportar_solicitudes_zip(request, queryset)
+    exportar_solicitud.short_description = 'Generar Documento en PDF'
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         print(Solicitud_EquipoInline.get_marca(self, obj))

@@ -424,14 +424,6 @@
 },
 {
   "model": "sessions.session",
-  "pk": "bpzdpjm61wfu9pjjppqe2d81b0to8cfl",
-  "fields": {
-    "session_data": ".eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nxd6o:cWlec12FjJ-SABRPpcXGgxajlAaSjhT68-BwqC7vWKY",
-    "expire_date": "2022-06-18T19:23:06.361"
-  }
-},
-{
-  "model": "sessions.session",
   "pk": "bv4jtklk31xz0pb70o96e8bvvp7ed67l",
   "fields": {
     "session_data": ".eJw9iTsKgDAMQO-S2cG5lwnBxBIotKYpiqV3V1Tc3qfDricZI0WTSIZYc9JFvTGibE1LhtChuhQIMMP0IDI53X18umqS-rocbvT_MS7rsSOr:1ns2CE:Xmm0sqyzH2lbBmoKdNeaKhqQ58NWPJuef1CeNbY3bRo",
@@ -444,6 +436,14 @@
   "fields": {
     "session_data": ".eJxVjMsOwiAQRf-FtSG8oS7d-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2ZlJdvrdEuCD2g7yHdqtc-xtXebEd4UfdPBrz_S8HO7fQYVRv_WEjlS2SkgEr7QFq4yjZIT0oUgxERYLBq3LzksoCgIZ0EEbEM4oiez9AdIdN1s:1nqJC4:TEXDCQuoRXYQtCx7h9SOWZKAtpoUubnhWDWl_z3xD_Y",
     "expire_date": "2022-05-29T14:42:16.979"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "dhgsinuf9ezz76eueb9nnu810zlo0z5v",
+  "fields": {
+    "session_data": ".eJxVjM1uwyAQhN-Fc2QRwDX2sfc-w2qBxaZFJuFHjRL53eu0VtXeZuabmQcDbHWBVihDcGxiZ3b6mxm0H7Q-gXvHdU6dTWvNwXTPSnfQ0r0lR_H16P47WLAs-1q6wcteezEoZYTTimPPtVRG22H09vzCx4HEKLTqUWKvzIiotZCIxL3VfD_9DHfMDnDONGMGKCkGG2pzAHRt4ZLY9GCl0oVNa4vx9K3BYcUdbIf1IVL58XSrGX_5tn0BqE5bbg:1nyyYv:1bIywmzrpVWn_inv1TWUUsKW7NSIwcC2mvRsqImyNHU",
+    "expire_date": "2022-06-22T12:29:41.497"
   }
 },
 {
@@ -560,426 +560,61 @@
 },
 {
   "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 42,
+  "pk": 81,
   "fields": {
-    "numsolicitud": 104,
+    "numsolicitud": 145,
     "idproducto": "59428400325",
+    "cantidad": 6
+  }
+},
+{
+  "model": "Solicitudes.solicitud_equipo_proxy",
+  "pk": 82,
+  "fields": {
+    "numsolicitud": 146,
+    "idproducto": "647386-35-5478",
     "cantidad": 2
   }
 },
 {
   "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 43,
+  "pk": 83,
   "fields": {
-    "numsolicitud": 105,
-    "idproducto": "59428400325",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 44,
-  "fields": {
-    "numsolicitud": 106,
+    "numsolicitud": 147,
     "idproducto": "647386-00-563",
-    "cantidad": 2
+    "cantidad": 6
   }
 },
 {
-  "model": "Solicitudes.solicitud_equipo_proxy",
+  "model": "Solicitudes.solicitud_equipo_proveedor",
   "pk": 45,
   "fields": {
-    "numsolicitud": 107,
-    "idproducto": "59428400325",
-    "cantidad": 1
+    "numsolicitud": 145,
+    "codmincex": "CN-1287"
   }
 },
 {
-  "model": "Solicitudes.solicitud_equipo_proxy",
+  "model": "Solicitudes.solicitud_equipo_proveedor",
   "pk": 46,
   "fields": {
-    "numsolicitud": 108,
-    "idproducto": "59428400325",
-    "cantidad": 1
+    "numsolicitud": 146,
+    "codmincex": "CN-1287"
   }
 },
 {
-  "model": "Solicitudes.solicitud_equipo_proxy",
+  "model": "Solicitudes.solicitud_equipo_proveedor",
   "pk": 47,
   "fields": {
-    "numsolicitud": 109,
-    "idproducto": "647386-00-563",
-    "cantidad": 1
+    "numsolicitud": 146,
+    "codmincex": "CN-0132"
   }
 },
 {
-  "model": "Solicitudes.solicitud_equipo_proxy",
+  "model": "Solicitudes.solicitud_equipo_proveedor",
   "pk": 48,
   "fields": {
-    "numsolicitud": 110,
-    "idproducto": "647386-00-563",
-    "cantidad": 12
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 49,
-  "fields": {
-    "numsolicitud": 111,
-    "idproducto": "59428400325",
-    "cantidad": 1
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 50,
-  "fields": {
-    "numsolicitud": 112,
-    "idproducto": "647386-00-563",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 51,
-  "fields": {
-    "numsolicitud": 113,
-    "idproducto": "59428400325",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 52,
-  "fields": {
-    "numsolicitud": 114,
-    "idproducto": "647386-00-563",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 53,
-  "fields": {
-    "numsolicitud": 115,
-    "idproducto": "647386-00-563",
-    "cantidad": 1
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 54,
-  "fields": {
-    "numsolicitud": 116,
-    "idproducto": "647386-00-563",
-    "cantidad": 12
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 55,
-  "fields": {
-    "numsolicitud": 117,
-    "idproducto": "647386-00-563",
-    "cantidad": 1
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 57,
-  "fields": {
-    "numsolicitud": 119,
-    "idproducto": "647386-00-563",
-    "cantidad": 3
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 58,
-  "fields": {
-    "numsolicitud": 120,
-    "idproducto": "647386-00-563",
-    "cantidad": 5
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 59,
-  "fields": {
-    "numsolicitud": 121,
-    "idproducto": "647386-00-563",
-    "cantidad": 6
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 60,
-  "fields": {
-    "numsolicitud": 124,
-    "idproducto": "59428400325",
-    "cantidad": 3
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 61,
-  "fields": {
-    "numsolicitud": 125,
-    "idproducto": "647386-00-563",
-    "cantidad": 12
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 62,
-  "fields": {
-    "numsolicitud": 126,
-    "idproducto": "647386-00-563",
-    "cantidad": 5
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 63,
-  "fields": {
-    "numsolicitud": 127,
-    "idproducto": "647386-35-5478",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 64,
-  "fields": {
-    "numsolicitud": 128,
-    "idproducto": "647386-35-5478",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 65,
-  "fields": {
-    "numsolicitud": 129,
-    "idproducto": "647386-35-5478",
-    "cantidad": 3
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 66,
-  "fields": {
-    "numsolicitud": 130,
-    "idproducto": "647386-35-5478",
-    "cantidad": 3
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 67,
-  "fields": {
-    "numsolicitud": 131,
-    "idproducto": "647386-35-5478",
-    "cantidad": 3
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 68,
-  "fields": {
-    "numsolicitud": 132,
-    "idproducto": "647386-00-563",
-    "cantidad": -1
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 69,
-  "fields": {
-    "numsolicitud": 133,
-    "idproducto": "647386-00-563",
-    "cantidad": -1
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 70,
-  "fields": {
-    "numsolicitud": 134,
-    "idproducto": "59428400325",
-    "cantidad": 0
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 73,
-  "fields": {
-    "numsolicitud": 137,
-    "idproducto": "647386-00-563",
-    "cantidad": -2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 74,
-  "fields": {
-    "numsolicitud": 138,
-    "idproducto": "647386-00-563",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 75,
-  "fields": {
-    "numsolicitud": 139,
-    "idproducto": "647386-00-563",
-    "cantidad": 2
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proxy",
-  "pk": 76,
-  "fields": {
-    "numsolicitud": 140,
-    "idproducto": "647386-35-5478",
-    "cantidad": 6
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 24,
-  "fields": {
-    "numsolicitud": 124,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 25,
-  "fields": {
-    "numsolicitud": 125,
+    "numsolicitud": 147,
     "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 26,
-  "fields": {
-    "numsolicitud": 126,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 27,
-  "fields": {
-    "numsolicitud": 129,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 28,
-  "fields": {
-    "numsolicitud": 129,
-    "codmincex": "CN-0132"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 29,
-  "fields": {
-    "numsolicitud": 130,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 30,
-  "fields": {
-    "numsolicitud": 130,
-    "codmincex": "CN-0132"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 31,
-  "fields": {
-    "numsolicitud": 131,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 32,
-  "fields": {
-    "numsolicitud": 131,
-    "codmincex": "CN-0132"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 33,
-  "fields": {
-    "numsolicitud": 132,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 34,
-  "fields": {
-    "numsolicitud": 133,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 35,
-  "fields": {
-    "numsolicitud": 134,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 36,
-  "fields": {
-    "numsolicitud": 137,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 37,
-  "fields": {
-    "numsolicitud": 138,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 38,
-  "fields": {
-    "numsolicitud": 139,
-    "codmincex": "VG-0008"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 39,
-  "fields": {
-    "numsolicitud": 140,
-    "codmincex": "CN-1287"
-  }
-},
-{
-  "model": "Solicitudes.solicitud_equipo_proveedor",
-  "pk": 40,
-  "fields": {
-    "numsolicitud": 140,
-    "codmincex": "CN-0132"
   }
 },
 {

@@ -9,6 +9,8 @@ from .models import Order
 from django.core import serializers
 from Solicitudes.models import *
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
+
 # Create your views here.
 
 
@@ -27,25 +29,38 @@ from django.contrib import admin
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
         
+    def get_solicitudes_equipo(self):
+        solicitudes_equipo = []
+        eq = Solicitud_Equipo.objects.filter(estado = 'Pendiente').count()
+        solicitudes_equipo.append(eq)
+        return solicitudes_equipo
+        
+    def get_solicitudes_ppa(self):
+        solicitudes_ppa = []
+        ppa = Solicitud_PPA.objects.filter(estado = 'Pendiente').count()
+        solicitudes_ppa.append(ppa)
+        return solicitudes_ppa
+        
+    def get_solicitudes_neumatico(self):
+        solicitudes_neumaticos = []
+        nm = Solicitud_Neumatico.objects.filter(estado = 'Pendiente').count()
+        solicitudes_neumaticos.append(nm)
+        return solicitudes_neumaticos
+    
+    def get_solicitudes_bateria(self):
+        solicitudes_baterias = []
+        bt = Solicitud_Bateria.objects.filter(estado = 'Pendiente').count()
+        solicitudes_baterias.append(bt)
+        return solicitudes_baterias
+    
+    
     def get_context_data(self, **kwargs):
-        context= super().get_context_data(**kwargs)
-        
-        Solicitudes_Equipo = Solicitud_Equipo.objects.all
-        Solicitudes_PPA = Solicitud_PPA.objects.all
-        Solicitudes_Neumatico = Solicitud_Neumatico.objects.all
-        Solicitudes_Bateria = Solicitud_Bateria.objects.all
-        
-        
-        total_solicitudes_equipo = Solicitudes_Equipo.count
-        total_solicitudes_ppa = Solicitudes_PPA.count
-        total_solicitudes_neumatico = Solicitudes_Neumatico.count
-        total_solicitudes_bateria = Solicitudes_Bateria.count
-	            
-        
+        context= super().get_context_data(**kwargs)   
+               
         context['panel']='Panel de Administración'
-        context['solicitudes_equipo'] = total_solicitudes_equipo
-        context['solicitudes_ppa'] = total_solicitudes_ppa
-        context['solicitudes_neumatico'] = total_solicitudes_neumatico
-        context['solicitudes_bateria'] = total_solicitudes_bateria
+        context['solicitudes_equipo'] = self.get_solicitudes_equipo()
+        context['solicitudes_ppa'] = self.get_solicitudes_ppa()
+        context['solicitudes_neumatico'] = self.get_solicitudes_neumatico()
+        context['solicitudes_bateria'] = self.get_solicitudes_bateria()
         context.update(admin.site.each_context(self.request))
         return context

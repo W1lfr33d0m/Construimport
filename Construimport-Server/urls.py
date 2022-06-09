@@ -28,7 +28,8 @@ from Solicitudes.views_create import *
 from Solicitudes.views import *
 
 urlpatterns = [
-    # path('', include('Dashboard.urls')),
+    path('', RedirectView.as_view(url='Dashboard/dashboard' , permanent=False)),
+    path('', include('Dashboard.urls')),
     path('grappelli/', include('grappelli.urls')),
     path('Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('Reportes/', include('Reportes.urls')),
