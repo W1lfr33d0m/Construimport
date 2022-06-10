@@ -53,45 +53,45 @@ class Agregar_Proveedor(SessionWizardView):
     
    
     def done(self, form_list, **kwargs):
-        # Crear la solicitud
-           
-        # Recorrer los productos
-        # crear solicitud
-        
+               
         form_data = [form.cleaned_data for form in form_list]
         print(form_data)
         proveedor = Proveedor()
+        datos_proveedor = form_data[0]
         
-        proveedor.codmincex = proveedor['codmincex']
-        proveedor.nomproveedor = proveedor['nomproveedor']
-        proveedor.codigopais = proveedor['codigopais']
-        proveedor.clasificacion = proveedor['clasificacion']
-        
+        proveedor.codmincex = datos_proveedor['codmincex']
+        proveedor.nomproveedor = datos_proveedor['nomproveedor']
+        proveedor.codigopais = datos_proveedor['codigopais']
+        proveedor.clasificacion = datos_proveedor['clasificacion']
         proveedor.save()        
+        
+        print(proveedor.codmincex)
+        
         fcasa_matriz = form_data[1]
         fsucursal = form_data[2]
         fproductos = form_data[3]
-        
+        print(fcasa_matriz)
+        print(fsucursal)
         lcasa = list(fcasa_matriz.values())
         lsucursal = list(fsucursal.values())
         lproductos = list(fproductos.values())
         
         casa_matriz = Casa_Matriz()
-        casa_matriz.direccion = fcasa_matriz.direccion
-        casa_matriz.email = fcasa_matriz.email
-        casa_matriz.telefono = fcasa_matriz.telefono
-        casa_matriz.contacto = fcasa_matriz.contacto
-        casa_matriz.sitio_web = fcasa_matriz.sitio_web
-        casa_matriz.proveedor = proveedor.codmincex
+        casa_matriz.direccion = fcasa_matriz['direccion']
+        casa_matriz.email = fcasa_matriz['email']
+        casa_matriz.telefono = fcasa_matriz['telefono']
+        casa_matriz.contacto = fcasa_matriz['contacto']
+        casa_matriz.sitio_web = fcasa_matriz['sitio_web']
+        casa_matriz.codmincex_id = proveedor.codmincex
         casa_matriz.save()
         
         sucursal = Sucursal_Cuba()
-        sucursal.direccion = fsucursal.direccion
-        sucursal.email = fsucursal.email
-        sucursal.telefono = fsucursal.telefono
-        sucursal.contacto = fsucursal.contacto
-        sucursal.carnet_trabajo = fsucursal.sitio_web
-        sucursal.proveedor = proveedor.codmincex
+        sucursal.direccion = fsucursal['direccion']
+        sucursal.email = fsucursal['email']
+        sucursal.telefono = fsucursal['telefono']
+        sucursal.contacto = fsucursal['contacto']
+        sucursal.carnet_trabajo = fsucursal['carnet_trabajo']
+        sucursal.codmincex_id = proveedor.codmincex
         sucursal.save()
             
         
@@ -110,6 +110,8 @@ class Agregar_Proveedor(SessionWizardView):
         for bateria in Bateria.objects.filter(descripcion = lproductos[0]):
               proveedor.bateria_id = bateria.idproducto
               proveedor.save()
+        
+        
          
         messages.success(self.request,'Se agregó correctamente el Proveedor')
         

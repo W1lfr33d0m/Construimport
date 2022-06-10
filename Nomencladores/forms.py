@@ -6,7 +6,7 @@ from .models import *
 from django.core.exceptions import ValidationError
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from formtools.wizard.views import SessionWizardView
-from numpy import delete
+from numpy import delete, require
 from .models import Proveedor, Casa_Matriz, Sucursal_Cuba, Equipo, PPA, Neumatico, Bateria
 
 
@@ -92,14 +92,18 @@ class FProveedor_Sucursal(forms.ModelForm):
         
 class FProveedor_Marca(forms.ModelForm):
     marcas = Marca.objects.all()
-    marca = forms.ModelMultipleChoiceField(queryset= marcas, to_field_name='codigomarca', widget = CheckboxSelectMultiple)
+    marca = forms.ModelMultipleChoiceField(queryset= marcas)
     class Meta:
         model =  Proveedor
         fields = ['marca',]
+    def clean_field(self):
+        
+        data = self.cleaned_data.get("marca")
+        return data
+    
     
 class FProveedor_Equipos(forms.ModelForm):
-    
-    equipos = forms.ModelMultipleChoiceField(queryset=Equipo.objects.all())
+    equipos = forms.ModelMultipleChoiceField(queryset=Equipo.objects.all(), required=False)
    
     class Meta:
         model =  Proveedor
@@ -107,7 +111,7 @@ class FProveedor_Equipos(forms.ModelForm):
         
 class FProveedor_PPA(forms.ModelForm):
     
-    ppa = forms.ModelMultipleChoiceField(queryset=PPA.objects.all())
+    ppa = forms.ModelMultipleChoiceField(queryset=PPA.objects.all(), required=False)
     
     class Meta:
         model =  Proveedor
@@ -115,7 +119,7 @@ class FProveedor_PPA(forms.ModelForm):
         
 class FProveedor_Neumaticos(forms.ModelForm):
     
-    neumaticos = forms.ModelMultipleChoiceField(queryset=Neumatico.objects.all())
+    neumaticos = forms.ModelMultipleChoiceField(queryset=Neumatico.objects.all(), required=False)
     
     class Meta:
         model =  Proveedor
@@ -123,7 +127,7 @@ class FProveedor_Neumaticos(forms.ModelForm):
         
 class FProveedor_Baterias(forms.ModelForm):
     
-    baterias = forms.ModelMultipleChoiceField(queryset=Bateria.objects.all())
+    baterias = forms.ModelMultipleChoiceField(queryset=Bateria.objects.all(), required=False)
     
     class Meta:
         model =  Proveedor

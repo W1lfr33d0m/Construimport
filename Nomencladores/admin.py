@@ -186,6 +186,7 @@ class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
     list_display = ('idproducto', 'descripcion', 'marca', 'edit_link')
     
+    
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'marca':
             kwargs["queryset"] = Equipo.objects.filter(owner=request.marca)
