@@ -342,7 +342,7 @@ def validate_identificador(identificador):
         )
 
 def validate_telefono(telefono):
-    if telefono <= 0 or telefono > 99999999:
+    if telefono <= 0 or telefono > 999999999999:
         raise ValidationError(
         _('%(telefono)s es incorrecto'),
         params={'telefono': telefono},
@@ -352,7 +352,7 @@ class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, validators=[validate_identificador]),
     direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
     email = models.EmailField(null=False, verbose_name='Correo Eléctronico')
-    telefono = models.IntegerField(null=False, validators=[validate_telefono], verbose_name='Teléfono')
+    telefono = models.BigIntegerField(null=False, max_length= 12, validators=[validate_telefono], verbose_name='Teléfono')
     contacto = models.CharField(null=False, max_length=150, verbose_name='Persona de Contacto')
     
     class Meta:

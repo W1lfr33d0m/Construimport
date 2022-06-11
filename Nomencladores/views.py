@@ -69,12 +69,16 @@ class Agregar_Proveedor(SessionWizardView):
         
         fcasa_matriz = form_data[1]
         fsucursal = form_data[2]
-        fproductos = form_data[3]
+        fmarcas = form_data[3]
+        fequipos = form_data[4]
+        fppa = form_data[5]
+        fneumaticos = form_data[6]
+        fbaterias = form_data[7]
         print(fcasa_matriz)
         print(fsucursal)
         lcasa = list(fcasa_matriz.values())
         lsucursal = list(fsucursal.values())
-        lproductos = list(fproductos.values())
+        lmarcas = list(fmarcas.values())
         
         casa_matriz = Casa_Matriz()
         casa_matriz.direccion = fcasa_matriz['direccion']
@@ -82,8 +86,9 @@ class Agregar_Proveedor(SessionWizardView):
         casa_matriz.telefono = fcasa_matriz['telefono']
         casa_matriz.contacto = fcasa_matriz['contacto']
         casa_matriz.sitio_web = fcasa_matriz['sitio_web']
-        casa_matriz.codmincex_id = proveedor.codmincex
+        casa_matriz.proveedor_id = proveedor.codmincex
         casa_matriz.save()
+        
         
         sucursal = Sucursal_Cuba()
         sucursal.direccion = fsucursal['direccion']
@@ -94,6 +99,10 @@ class Agregar_Proveedor(SessionWizardView):
         sucursal.codmincex_id = proveedor.codmincex
         sucursal.save()
             
+        
+        for marca in lmarcas:
+            proveedor.marca_id = marca.codigomarca
+            proveedor.save()
         
         for equipo in Equipo.objects.filter(descripcion = lproductos[0]):
           proveedor.equipos_id = equipo.idproducto
