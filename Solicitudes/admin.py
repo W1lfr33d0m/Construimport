@@ -201,22 +201,6 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         except KeyError:
             return super().get(request, *args, **kwargs)
     
-    # def add_view(self, request: HttpRequest, form_url='solicitud_equipo', extra_context = None):
-    #     extra_context = extra_context or {}
-    #     extra_context['nombre_url'] = 'solicitud_equipo'
-    #     extra_context['opts'] = Solicitud_Equipo._meta,
-    #     extra_context['change'] = True,
-    #     extra_context['is_popup'] = False,
-    #     extra_context['save_as'] = False,
-    #     extra_context['has_delete_permission'] = False,
-    #     extra_context['has_add_permission'] = True,
-    #     extra_context['has_change_permission'] = False
-    #     extra_context['changeform_template'] = 'solicitud_form.html'
-    #     extra_context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
-    #     extra_context['mensaje'] = 'La solicitud fue adicionada correctamente.'
-    #     extra_context.update(admin.site.each_context(self.request))
-    #     return super(Solicitud_EquipoAdmin, self).add_view(request, form_url,extra_context)
-    
     def edit_link(self, obj):
         return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
@@ -225,37 +209,17 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
 
     def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
         for solicitud in queryset:        
-            #file_docx = BytesIO()
             base_url = os.path.join('media') + '/Solicitudes/'
             asset_url = base_url + 'Generar Solicitud.docx'
             doc = DocxTemplate(asset_url)
             cliente = Cliente.objects.get(nombre = solicitud.cliente)
-            # idproducto = str
-            # descricpion = character
-            # UM = character
-            # cantidad = integer
-            # data_list = []
             eqlist = []
             for i in Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud):
                 for j in Equipo.objects.filter(descripcion = i.idproducto):
                     eqdict = {'producto': {'idproducto': j.idproducto, 'descripcion': j.descripcion, 'UM': j.UM, 'cantidad': i.cantidad}}
                     eqlist.append(eqdict)
-            # for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
-            #     equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
-            #     equipos = Equipo.objects.get(descripcion = i.idproducto)
-            #     data_list.append(equipos.idproducto)
-            #     data_list.append(equipos.descripcion)
-            #     data_list.append(equipos.UM)
-            #     data_list.append(equipos_proxy.cantidad)
-                #eqlist.append(data_list)
-            #
             equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
             equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
-            # eqlist.append(equipo.idproducto)
-            # eqlist.append(equipo.descripcion)
-            # eqlist.append(equipo.UM)
-            # eqlist.append(equipo_proxy.cantidad)
-            # print(eqlist)
             nomespecialista = request.user.first_name
             apespecialista = request.user.last_name
             nomdirector = User.objects.get(username = 'director_desarrollo').first_name
@@ -283,19 +247,6 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             os.remove(resultFilePath)
             path = 'D:\Downloads'
             webbrowser.open(path)
-            #file_docx.seek(0)
-            # content_type = "application/pdf"
-            # response = HttpResponse(resultFilePath, content_type = content_type)
-            # response["Content-Disposition"] = "attachment; filename=%s" % filename
-            # #file_docx.close()
-            # # r_file = request.FILES['my_file']
-            # inst = ConvertFileModelField(file_docx)
-            # # r_file = inst.get_content()
-            # doc_obj = models.Document()
-            # doc_obj.pdf_doc = File(open(file_docx.get('path'), 'rb'))
-            # doc_obj.pdf_doc.name = file_docx.get('name')
-            # doc_obj.save()
-            # return response    
         msg2 = "Documentos generados correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
     
