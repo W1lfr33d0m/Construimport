@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'Solicitudes',
     'COMEX',
+    'account',
     'Nomencladores',
     'Trazas',
     'Reportes',
