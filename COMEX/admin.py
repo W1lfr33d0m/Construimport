@@ -2,7 +2,7 @@
 from logging import warning
 from unicodedata import name
 from django.db import connection, reset_queries
-from celery import group
+#from celery import group
 from fastapi import Query
 from requests import request
 import psycopg2

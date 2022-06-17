@@ -9,6 +9,8 @@ from .models import Order
 from django.core import serializers
 from Solicitudes.models import *
 from django.contrib import admin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
@@ -28,6 +30,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
+    
+    @method_decorator(login_required(login_url='/admin/login/'))
+    def dispatch(self, *args, **kwargs):
+        return super(DashboardView, self).dispatch(*args, **kwargs)
         
     def get_solicitudes_equipo(self):
         solicitudes_equipo = []
@@ -55,12 +61,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     
     
     def get_context_data(self, **kwargs):
-        context= super().get_context_data(**kwargs)   
-               
+        context= super(DashboardView, self).get_context_data(**kwargs)   
+        context.update(admin.site.each_context(self.request))       
         context['panel']='Panel de Administración'
         context['solicitudes_equipo'] = self.get_solicitudes_equipo()
         context['solicitudes_ppa'] = self.get_solicitudes_ppa()
         context['solicitudes_neumatico'] = self.get_solicitudes_neumatico()
         context['solicitudes_bateria'] = self.get_solicitudes_bateria()
-        context.update(admin.site.each_context(self.request))
+        
         return context

@@ -43,9 +43,7 @@ def validate_numsolicitud(numsolicitud):
         _('%(numsolicitud)s no es correcto'),
         params={'numsolicitud': numsolicitud},
        )
-            
-
-            
+                        
 def validate_fecha(fechasol):
     if fechasol != date.today():
         raise ValidationError(

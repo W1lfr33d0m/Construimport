@@ -24,3 +24,4 @@ class DashboardAdmin(admin.ModelAdmin):
             'title': 'Dashboard',
                 }
         return TemplateResponse(request, self.template_name, context)
+    

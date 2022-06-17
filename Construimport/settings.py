@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'crispy_forms',
     'Solicitudes',
     'COMEX',
@@ -67,6 +68,8 @@ INSTALLED_APPS = [
     'admin_wizard',
     
 ]
+
+SITE_ID = 1
 
 DJANGO_SETTINGS_MODULE = 'Construimport.settings'
 
