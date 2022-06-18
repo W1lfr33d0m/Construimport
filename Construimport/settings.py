@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django_crontab',
     'jazzmin',
-    'grappelli',
     #'admin_interface',
     #'colorfield',
     #'admin_tools_stats',

@@ -144,7 +144,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     
 @admin.register(Solicitud_Equipo)
 class Solicitud_EquipoAdmin(admin.ModelAdmin):
-    add_form_template = 'solicitud.html'
+    add_form_template = 'solicitud_form.html'
     actions = ['exportar_solicitud',]
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
@@ -250,72 +250,9 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         msg2 = "Documentos generados correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
     
-    # def exportar_solicitudes_zip(self, request, queryset):  
-    #         zip_memory = BytesIO()
-    #         with zipfile.ZipFile(zip_memory, 'a', zipfile.ZIP_DEFLATED, False) as zip_file:
-    #             for solicitud in queryset:             
-    #                 file_docx = BytesIO()
-    #                 base_url = os.path.join('media') + '/Solicitudes/'
-    #                 asset_url = base_url + 'Generar Solicitud.docx'
-    #                 doc = DocxTemplate(asset_url)
-    #                 cliente = Cliente.objects.get(nombre = solicitud.cliente)
-    #                 # idproducto = str
-    #                 # descricpion = character
-    #                 # UM = character
-    #                 # cantidad = integer
-    #                 # data_list = []
-    #                 # eqlist = []
-    #                 # for i in list(Solicitud_Equipo_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud)):
-    #                 #     equipos_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = i.numsolicitud)
-    #                 #     equipos = Equipo.objects.get(descripcion = i.idproducto)
-    #                 #     data_list.append(equipos.idproducto)
-    #                 #     data_list.append(equipos.descripcion)
-    #                 #     data_list.append(equipos.UM)
-    #                 #     data_list.append(equipos_proxy.cantidad)
-    #                 #    eqlist.append(data_list)
-    #                 equipo_proxy = Solicitud_Equipo_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
-    #                 equipo = Equipo.objects.get(descripcion = equipo_proxy.idproducto)
-    #                 nomespecialista = request.user.first_name
-    #                 apespecialista = request.user.last_name
-    #                 nomdirector = User.objects.get(username = 'director_desarrollo').first_name
-    #                 apdirector = User.objects.get(username = 'director_desarrollo').last_name
-    #                 context = {
-    #                     'numsolicitud':solicitud.numsolicitud,
-    #                     'fecha': solicitud.fechasol,
-    #                     'cliente': solicitud.cliente,
-    #                     'representante': cliente.representante,
-    #                     'telefono': cliente.telefono,
-    #                     'correo': cliente.correo,
-    #                     'valor_estimado': solicitud.valor_estimado,
-    #                     'observaciones': solicitud.observaciones,
-    #                     'equipo':equipo,
-    #                     'equipo_proxy':equipo_proxy,
-    #                     'nombre_usuario': nomespecialista,
-    #                     'ap_usuario': apespecialista,
-    #                     'nombre_director': nomdirector,
-    #                     'ap_director': apdirector,
-    #                     }
-    #                 doc.render(context)
-    #                 filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
-    #                 doc.save(file_docx)
-    #                 file_docx.seek(0)
-    #                 zip_file.writestr(filename, file_docx.getvalue())
-    #                 file_docx.close()
-    #         content_type="application/zip"  
-    #         zip_memory.seek(0)         
-    #         response = HttpResponse(zip_memory, content_type=content_type)
-    #       #  file_docx.close()
-    #         response['Content-Disposition']= 'attachment ; filename="Solicitudes.zip"'
-    #         return response    
     
     def exportar_solicitud(self, request, queryset):   
-        # if len(queryset) == 1:
-        # solicitud = queryset[0]
-  #          messages.info(request, 'La solicitud fue exportada')
-  
         return self.exportar_solicitud_pdf(request, queryset)
-        # else: 
-        # return self.exportar_solicitudes_zip(request, queryset)
     exportar_solicitud.short_description = 'Generar Documento en PDF'
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
@@ -330,17 +267,6 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 oferta_equipo.especialista = obj.especialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
                 oferta_equipo.save()
-                # for equipo in Equipo.objects.filter(descripcion = oferta_equipo):
-                # #        print(equipo.numsolicitud)
-                #     oferta_equipo_proxy = Oferta_Equipo_Proxy()
-                #     oferta_equipo_proxy.solicitud_id = equipo.numsolicitud
-                #     oferta_equipo_proxy.equipo_id = equipo.idproducto
-                #     oferta_equipo_proxy.cantidad = equipo.cantidad
-                #     oferta_equipo_proxy.save()        
-                #super(Oferta_EquipoAdmin, self).response_post_save_add(request,obj)
-        #msg1 = "Tiene nuevas solicitudes de Ofertas"
-        #receiver = request.user.objects.filter(name = str(obj.especialista))
-        #self.message_user(receiver, msg1, level=messages.INFO)
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)

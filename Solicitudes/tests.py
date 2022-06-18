@@ -56,5 +56,7 @@ class Solicitud_Test(TestCase):
     
     def test_solicitud_creation(self):
         solicitud1 = Solicitud_Equipo.objects.get(numsolicitud = 150)
+        cliente = Cliente.objects.get(reeup = '126.0.04878')
         #solicitud1 = Solicitud.objects.get(fechasol = date.today)
         self.assertEqual = solicitud1.numsolicitud == 150
+        self.assertEqual = solicitud1.cliente = cliente

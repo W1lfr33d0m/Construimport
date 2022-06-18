@@ -3,7 +3,6 @@ from . import views
 from django.views.generic import CreateView
 from . import forms
 from Solicitudes.views import *
-from Solicitudes.views_create import *
 # Registrar el espacio de nombres de esta aplicacion
 app_name = 'Solicitudes'
 # Lista con los patrones URL de la aplicacion...

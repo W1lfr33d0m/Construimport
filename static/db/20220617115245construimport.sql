@@ -99,6 +99,15 @@ ALTER TABLE ONLY public.auth_user_groups DROP CONSTRAINT auth_user_groups_group_
 ALTER TABLE ONLY public.auth_permission DROP CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm;
+ALTER TABLE ONLY public.account_signupcoderesult DROP CONSTRAINT account_signupcoderesult_user_id_c10dc604_fk_auth_user_id;
+ALTER TABLE ONLY public.account_signupcoderesult DROP CONSTRAINT account_signupcoderesult_signup_code_id_1adc486e_fk;
+ALTER TABLE ONLY public.account_signupcode DROP CONSTRAINT account_signupcode_inviter_id_9706983e_fk_auth_user_id;
+ALTER TABLE ONLY public.account_passwordhistory DROP CONSTRAINT account_passwordhistory_user_id_dc325181_fk_auth_user_id;
+ALTER TABLE ONLY public.account_passwordexpiry DROP CONSTRAINT account_passwordexpiry_user_id_905230ec_fk_auth_user_id;
+ALTER TABLE ONLY public.account_emailconfirmation DROP CONSTRAINT account_emailconfirmation_email_address_id_5b7f8c58_fk;
+ALTER TABLE ONLY public.account_emailaddress DROP CONSTRAINT account_emailaddress_user_id_2c513194_fk_auth_user_id;
+ALTER TABLE ONLY public.account_accountdeletion DROP CONSTRAINT account_accountdeletion_user_id_c205475f_fk_auth_user_id;
+ALTER TABLE ONLY public.account_account DROP CONSTRAINT account_account_user_id_8d4f4816_fk_auth_user_id;
 ALTER TABLE ONLY public."OSDE" DROP CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk";
 DROP INDEX public.um_descripcionum_4582a47e_like;
 DROP INDEX public.um_codigoum_8b14f118_like;
@@ -219,6 +228,7 @@ DROP INDEX public.equipo_marca_id_aef47c38;
 DROP INDEX public.equipo_idproducto_712e52c4_like;
 DROP INDEX public.equipo_codigoum_0cef5e26_like;
 DROP INDEX public.equipo_codigoum_0cef5e26;
+DROP INDEX public.django_site_domain_a2e37b91_like;
 DROP INDEX public.django_session_session_key_c0390e0f_like;
 DROP INDEX public.django_session_expire_date_a5c62663;
 DROP INDEX public.django_admin_log_user_id_c564eba6;
@@ -246,6 +256,16 @@ DROP INDEX public.auth_permission_content_type_id_2f476e4b;
 DROP INDEX public.auth_group_permissions_permission_id_84c5c92e;
 DROP INDEX public.auth_group_permissions_group_id_b120cbf9;
 DROP INDEX public.auth_group_name_a6ea08ec_like;
+DROP INDEX public.account_signupcoderesult_user_id_c10dc604;
+DROP INDEX public.account_signupcoderesult_signup_code_id_1adc486e;
+DROP INDEX public.account_signupcode_inviter_id_9706983e;
+DROP INDEX public.account_signupcode_code_e34edcf8_like;
+DROP INDEX public.account_passwordhistory_user_id_dc325181;
+DROP INDEX public.account_emailconfirmation_key_f43612bd_like;
+DROP INDEX public.account_emailconfirmation_email_address_id_5b7f8c58;
+DROP INDEX public.account_emailaddress_user_id_2c513194;
+DROP INDEX public.account_emailaddress_email_03be32b2_like;
+DROP INDEX public.account_accountdeletion_user_id_c205475f;
 DROP INDEX public."OSDE_siglas_bd5d3498_like";
 DROP INDEX public."OSDE_reeup_77593f2d_like";
 DROP INDEX public."OSDE_nombre_4efd2961_like";
@@ -305,6 +325,8 @@ ALTER TABLE ONLY public.ministerio DROP CONSTRAINT ministerio_correo_key;
 ALTER TABLE ONLY public.marca DROP CONSTRAINT marca_pkey;
 ALTER TABLE ONLY public.marca DROP CONSTRAINT marca_nommarca_2d378c86_uniq;
 ALTER TABLE ONLY public.equipo DROP CONSTRAINT equipo_pkey;
+ALTER TABLE ONLY public.django_site DROP CONSTRAINT django_site_pkey;
+ALTER TABLE ONLY public.django_site DROP CONSTRAINT django_site_domain_a2e37b91_uniq;
 ALTER TABLE ONLY public.django_session DROP CONSTRAINT django_session_pkey;
 ALTER TABLE ONLY public.django_migrations DROP CONSTRAINT django_migrations_pkey;
 ALTER TABLE ONLY public.django_content_type DROP CONSTRAINT django_content_type_pkey;
@@ -329,6 +351,19 @@ ALTER TABLE ONLY public.auth_group DROP CONSTRAINT auth_group_pkey;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissions_pkey;
 ALTER TABLE ONLY public.auth_group_permissions DROP CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq;
 ALTER TABLE ONLY public.auth_group DROP CONSTRAINT auth_group_name_key;
+ALTER TABLE ONLY public.account_signupcoderesult DROP CONSTRAINT account_signupcoderesult_pkey;
+ALTER TABLE ONLY public.account_signupcode DROP CONSTRAINT account_signupcode_pkey;
+ALTER TABLE ONLY public.account_signupcode DROP CONSTRAINT account_signupcode_code_key;
+ALTER TABLE ONLY public.account_passwordhistory DROP CONSTRAINT account_passwordhistory_pkey;
+ALTER TABLE ONLY public.account_passwordexpiry DROP CONSTRAINT account_passwordexpiry_user_id_key;
+ALTER TABLE ONLY public.account_passwordexpiry DROP CONSTRAINT account_passwordexpiry_pkey;
+ALTER TABLE ONLY public.account_emailconfirmation DROP CONSTRAINT account_emailconfirmation_pkey;
+ALTER TABLE ONLY public.account_emailconfirmation DROP CONSTRAINT account_emailconfirmation_key_key;
+ALTER TABLE ONLY public.account_emailaddress DROP CONSTRAINT account_emailaddress_pkey;
+ALTER TABLE ONLY public.account_emailaddress DROP CONSTRAINT account_emailaddress_email_key;
+ALTER TABLE ONLY public.account_accountdeletion DROP CONSTRAINT account_accountdeletion_pkey;
+ALTER TABLE ONLY public.account_account DROP CONSTRAINT account_account_user_id_key;
+ALTER TABLE ONLY public.account_account DROP CONSTRAINT account_account_pkey;
 ALTER TABLE ONLY public."Trazas_logentry" DROP CONSTRAINT "Trazas_logentry_pkey";
 ALTER TABLE ONLY public."Salvas_salvas" DROP CONSTRAINT "Salvas_salvas_pkey";
 ALTER TABLE ONLY public."Reportes_reporte_solicitud" DROP CONSTRAINT "Reportes_reporte_solicitud_pkey";
@@ -369,6 +404,7 @@ ALTER TABLE public.oferta_equipo_proxy ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.oferta_equipo ALTER COLUMN numero DROP DEFAULT;
 ALTER TABLE public.oferta_baterias ALTER COLUMN numero DROP DEFAULT;
 ALTER TABLE public.oferta_bateria_proxy ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.django_site ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_migrations ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_content_type ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.django_admin_log ALTER COLUMN id DROP DEFAULT;
@@ -379,6 +415,14 @@ ALTER TABLE public.auth_user ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.auth_permission ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.auth_group_permissions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.auth_group ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_signupcoderesult ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_signupcode ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_passwordhistory ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_passwordexpiry ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_emailconfirmation ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_emailaddress ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_accountdeletion ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.account_account ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Trazas_logentry" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Salvas_salvas" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public."Reportes_reporte_solicitud" ALTER COLUMN id DROP DEFAULT;
@@ -452,6 +496,8 @@ DROP TABLE public.ministerio;
 DROP SEQUENCE public.marca_codigomarca_seq;
 DROP TABLE public.marca;
 DROP TABLE public.equipo;
+DROP SEQUENCE public.django_site_id_seq;
+DROP TABLE public.django_site;
 DROP TABLE public.django_session;
 DROP SEQUENCE public.django_migrations_id_seq;
 DROP TABLE public.django_migrations;
@@ -475,6 +521,22 @@ DROP SEQUENCE public.auth_group_permissions_id_seq;
 DROP TABLE public.auth_group_permissions;
 DROP SEQUENCE public.auth_group_id_seq;
 DROP TABLE public.auth_group;
+DROP SEQUENCE public.account_signupcoderesult_id_seq;
+DROP TABLE public.account_signupcoderesult;
+DROP SEQUENCE public.account_signupcode_id_seq;
+DROP TABLE public.account_signupcode;
+DROP SEQUENCE public.account_passwordhistory_id_seq;
+DROP TABLE public.account_passwordhistory;
+DROP SEQUENCE public.account_passwordexpiry_id_seq;
+DROP TABLE public.account_passwordexpiry;
+DROP SEQUENCE public.account_emailconfirmation_id_seq;
+DROP TABLE public.account_emailconfirmation;
+DROP SEQUENCE public.account_emailaddress_id_seq;
+DROP TABLE public.account_emailaddress;
+DROP SEQUENCE public.account_accountdeletion_id_seq;
+DROP TABLE public.account_accountdeletion;
+DROP SEQUENCE public.account_account_id_seq;
+DROP TABLE public.account_account;
 DROP SEQUENCE public."Trazas_logentry_id_seq";
 DROP TABLE public."Trazas_logentry";
 DROP SEQUENCE public."Salvas_salvas_id_seq";
@@ -740,6 +802,297 @@ ALTER SEQUENCE public."Trazas_logentry_id_seq" OWNED BY public."Trazas_logentry"
 
 
 --
+-- Name: account_account; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_account (
+    id bigint NOT NULL,
+    timezone character varying(100) NOT NULL,
+    language character varying(10) NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_account OWNER TO const;
+
+--
+-- Name: account_account_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_account_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_account_id_seq OWNER TO const;
+
+--
+-- Name: account_account_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_account_id_seq OWNED BY public.account_account.id;
+
+
+--
+-- Name: account_accountdeletion; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_accountdeletion (
+    id bigint NOT NULL,
+    email character varying(254) NOT NULL,
+    date_requested timestamp with time zone NOT NULL,
+    date_expunged timestamp with time zone,
+    user_id integer
+);
+
+
+ALTER TABLE public.account_accountdeletion OWNER TO const;
+
+--
+-- Name: account_accountdeletion_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_accountdeletion_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_accountdeletion_id_seq OWNER TO const;
+
+--
+-- Name: account_accountdeletion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_accountdeletion_id_seq OWNED BY public.account_accountdeletion.id;
+
+
+--
+-- Name: account_emailaddress; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_emailaddress (
+    id bigint NOT NULL,
+    email character varying(254) NOT NULL,
+    verified boolean NOT NULL,
+    "primary" boolean NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_emailaddress OWNER TO const;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_emailaddress_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailaddress_id_seq OWNER TO const;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_emailaddress_id_seq OWNED BY public.account_emailaddress.id;
+
+
+--
+-- Name: account_emailconfirmation; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_emailconfirmation (
+    id bigint NOT NULL,
+    created timestamp with time zone NOT NULL,
+    sent timestamp with time zone,
+    key character varying(64) NOT NULL,
+    email_address_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.account_emailconfirmation OWNER TO const;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_emailconfirmation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailconfirmation_id_seq OWNER TO const;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_emailconfirmation_id_seq OWNED BY public.account_emailconfirmation.id;
+
+
+--
+-- Name: account_passwordexpiry; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_passwordexpiry (
+    id bigint NOT NULL,
+    expiry integer NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT account_passwordexpiry_expiry_check CHECK ((expiry >= 0))
+);
+
+
+ALTER TABLE public.account_passwordexpiry OWNER TO const;
+
+--
+-- Name: account_passwordexpiry_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_passwordexpiry_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_passwordexpiry_id_seq OWNER TO const;
+
+--
+-- Name: account_passwordexpiry_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_passwordexpiry_id_seq OWNED BY public.account_passwordexpiry.id;
+
+
+--
+-- Name: account_passwordhistory; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_passwordhistory (
+    id bigint NOT NULL,
+    password character varying(255) NOT NULL,
+    "timestamp" timestamp with time zone NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_passwordhistory OWNER TO const;
+
+--
+-- Name: account_passwordhistory_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_passwordhistory_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_passwordhistory_id_seq OWNER TO const;
+
+--
+-- Name: account_passwordhistory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_passwordhistory_id_seq OWNED BY public.account_passwordhistory.id;
+
+
+--
+-- Name: account_signupcode; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_signupcode (
+    id bigint NOT NULL,
+    code character varying(64) NOT NULL,
+    max_uses integer NOT NULL,
+    expiry timestamp with time zone,
+    email character varying(254) NOT NULL,
+    notes text NOT NULL,
+    sent timestamp with time zone,
+    created timestamp with time zone NOT NULL,
+    use_count integer NOT NULL,
+    inviter_id integer,
+    CONSTRAINT account_signupcode_max_uses_check CHECK ((max_uses >= 0)),
+    CONSTRAINT account_signupcode_use_count_check CHECK ((use_count >= 0))
+);
+
+
+ALTER TABLE public.account_signupcode OWNER TO const;
+
+--
+-- Name: account_signupcode_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_signupcode_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_signupcode_id_seq OWNER TO const;
+
+--
+-- Name: account_signupcode_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_signupcode_id_seq OWNED BY public.account_signupcode.id;
+
+
+--
+-- Name: account_signupcoderesult; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.account_signupcoderesult (
+    id bigint NOT NULL,
+    "timestamp" timestamp with time zone NOT NULL,
+    signup_code_id bigint NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_signupcoderesult OWNER TO const;
+
+--
+-- Name: account_signupcoderesult_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.account_signupcoderesult_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_signupcoderesult_id_seq OWNER TO const;
+
+--
+-- Name: account_signupcoderesult_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.account_signupcoderesult_id_seq OWNED BY public.account_signupcoderesult.id;
+
+
+--
 -- Name: auth_group; Type: TABLE; Schema: public; Owner: const
 --
 
@@ -978,7 +1331,7 @@ CREATE TABLE public.casa_matriz (
     id bigint NOT NULL,
     direccion character varying(100) NOT NULL,
     email character varying(254) NOT NULL,
-    telefono integer NOT NULL,
+    telefono bigint NOT NULL,
     contacto character varying(150) NOT NULL,
     sitio_web character varying(60) NOT NULL,
     codmincex character varying(7) NOT NULL
@@ -1151,6 +1504,41 @@ CREATE TABLE public.django_session (
 
 
 ALTER TABLE public.django_session OWNER TO const;
+
+--
+-- Name: django_site; Type: TABLE; Schema: public; Owner: const
+--
+
+CREATE TABLE public.django_site (
+    id integer NOT NULL,
+    domain character varying(100) NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.django_site OWNER TO const;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE; Schema: public; Owner: const
+--
+
+CREATE SEQUENCE public.django_site_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_site_id_seq OWNER TO const;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: const
+--
+
+ALTER SEQUENCE public.django_site_id_seq OWNED BY public.django_site.id;
+
 
 --
 -- Name: equipo; Type: TABLE; Schema: public; Owner: const
@@ -1938,7 +2326,8 @@ CREATE TABLE public.solicitud_bateria_proxy (
     id bigint NOT NULL,
     cantidad integer NOT NULL,
     idproducto character varying(50) NOT NULL,
-    numsolicitud integer NOT NULL
+    numsolicitud integer NOT NULL,
+    CONSTRAINT solicitud_bateria_proxy_cantidad_ba6bb57e_check CHECK ((cantidad >= 0))
 );
 
 
@@ -2046,7 +2435,8 @@ CREATE TABLE public.solicitud_equipo_proxy (
     id bigint NOT NULL,
     cantidad integer NOT NULL,
     idproducto character varying(50) NOT NULL,
-    numsolicitud integer NOT NULL
+    numsolicitud integer NOT NULL,
+    CONSTRAINT solicitud_equipo_proxy_cantidad_625ae9fe_check CHECK ((cantidad >= 0))
 );
 
 
@@ -2154,7 +2544,8 @@ CREATE TABLE public.solicitud_neumatico_proxy (
     id bigint NOT NULL,
     cantidad integer NOT NULL,
     idproducto character varying(50) NOT NULL,
-    numsolicitud integer NOT NULL
+    numsolicitud integer NOT NULL,
+    CONSTRAINT solicitud_neumatico_proxy_cantidad_74db7dfe_check CHECK ((cantidad >= 0))
 );
 
 
@@ -2262,7 +2653,8 @@ CREATE TABLE public.solicitud_ppa_proxy (
     id bigint NOT NULL,
     cantidad integer NOT NULL,
     idproducto character varying(50) NOT NULL,
-    numsolicitud integer NOT NULL
+    numsolicitud integer NOT NULL,
+    CONSTRAINT solicitud_ppa_proxy_cantidad_a7230713_check CHECK ((cantidad >= 0))
 );
 
 
@@ -2297,7 +2689,7 @@ CREATE TABLE public.sucursal_cuba (
     id bigint NOT NULL,
     direccion character varying(100) NOT NULL,
     email character varying(254) NOT NULL,
-    telefono integer NOT NULL,
+    telefono bigint NOT NULL,
     contacto character varying(150) NOT NULL,
     carnet_trabajo character varying(200) NOT NULL,
     codmincex character varying(7) NOT NULL
@@ -2389,6 +2781,62 @@ ALTER TABLE ONLY public."Trazas_logentry" ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: account_account id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_account ALTER COLUMN id SET DEFAULT nextval('public.account_account_id_seq'::regclass);
+
+
+--
+-- Name: account_accountdeletion id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_accountdeletion ALTER COLUMN id SET DEFAULT nextval('public.account_accountdeletion_id_seq'::regclass);
+
+
+--
+-- Name: account_emailaddress id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailaddress ALTER COLUMN id SET DEFAULT nextval('public.account_emailaddress_id_seq'::regclass);
+
+
+--
+-- Name: account_emailconfirmation id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation ALTER COLUMN id SET DEFAULT nextval('public.account_emailconfirmation_id_seq'::regclass);
+
+
+--
+-- Name: account_passwordexpiry id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordexpiry ALTER COLUMN id SET DEFAULT nextval('public.account_passwordexpiry_id_seq'::regclass);
+
+
+--
+-- Name: account_passwordhistory id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordhistory ALTER COLUMN id SET DEFAULT nextval('public.account_passwordhistory_id_seq'::regclass);
+
+
+--
+-- Name: account_signupcode id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcode ALTER COLUMN id SET DEFAULT nextval('public.account_signupcode_id_seq'::regclass);
+
+
+--
+-- Name: account_signupcoderesult id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcoderesult ALTER COLUMN id SET DEFAULT nextval('public.account_signupcoderesult_id_seq'::regclass);
+
+
+--
 -- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: const
 --
 
@@ -2456,6 +2904,13 @@ ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: django_site id; Type: DEFAULT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.django_site ALTER COLUMN id SET DEFAULT nextval('public.django_site_id_seq'::regclass);
 
 
 --
@@ -2721,6 +3176,70 @@ COPY public."Trazas_logentry" (id) FROM stdin;
 
 
 --
+-- Data for Name: account_account; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_account (id, timezone, language, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_accountdeletion; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_accountdeletion (id, email, date_requested, date_expunged, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_emailaddress; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_emailaddress (id, email, verified, "primary", user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_emailconfirmation; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_emailconfirmation (id, created, sent, key, email_address_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_passwordexpiry; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_passwordexpiry (id, expiry, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_passwordhistory; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_passwordhistory (id, password, "timestamp", user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_signupcode; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_signupcode (id, code, max_uses, expiry, email, notes, sent, created, use_count, inviter_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: account_signupcoderesult; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.account_signupcoderesult (id, "timestamp", signup_code_id, user_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: const
 --
 
@@ -2729,10 +3248,10 @@ COPY public.auth_group (id, name) FROM stdin;
 7	Especialista_COMEX_Bateria
 5	Especialista_COMEX_PPA
 6	Especialista_COMEX_Neumatico
-8	Administrador
 1	Director_COMEX
 3	Especialista_COMEX_Equipo
 4	Marketing
+8	Administrador
 \.
 
 
@@ -2898,6 +3417,7 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 193	3	88
 194	3	124
 195	3	184
+196	8	20
 \.
 
 
@@ -3102,6 +3622,42 @@ COPY public.auth_permission (id, name, codename, content_type_id) FROM stdin;
 194	Can change order	change_order	49
 195	Can delete order	delete_order	49
 196	Can view order	view_order	49
+197	Can add site	add_site	50
+198	Can change site	change_site	50
+199	Can delete site	delete_site	50
+200	Can view site	view_site	50
+201	Can add account	add_account	51
+202	Can change account	change_account	51
+203	Can delete account	delete_account	51
+204	Can view account	view_account	51
+205	Can add account deletion	add_accountdeletion	52
+206	Can change account deletion	change_accountdeletion	52
+207	Can delete account deletion	delete_accountdeletion	52
+208	Can view account deletion	view_accountdeletion	52
+209	Can add email address	add_emailaddress	53
+210	Can change email address	change_emailaddress	53
+211	Can delete email address	delete_emailaddress	53
+212	Can view email address	view_emailaddress	53
+213	Can add email confirmation	add_emailconfirmation	54
+214	Can change email confirmation	change_emailconfirmation	54
+215	Can delete email confirmation	delete_emailconfirmation	54
+216	Can view email confirmation	view_emailconfirmation	54
+217	Can add signup code	add_signupcode	55
+218	Can change signup code	change_signupcode	55
+219	Can delete signup code	delete_signupcode	55
+220	Can view signup code	view_signupcode	55
+221	Can add signup code result	add_signupcoderesult	56
+222	Can change signup code result	change_signupcoderesult	56
+223	Can delete signup code result	delete_signupcoderesult	56
+224	Can view signup code result	view_signupcoderesult	56
+225	Can add password expiry	add_passwordexpiry	57
+226	Can change password expiry	change_passwordexpiry	57
+227	Can delete password expiry	delete_passwordexpiry	57
+228	Can view password expiry	view_passwordexpiry	57
+229	Can add password history	add_passwordhistory	58
+230	Can change password history	change_passwordhistory	58
+231	Can delete password history	delete_passwordhistory	58
+232	Can view password history	view_passwordhistory	58
 \.
 
 
@@ -3114,11 +3670,11 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 7	pbkdf2_sha256$320000$VOWXzkjOaXtJD1PNQP0jSx$kfiQ3zg1iv1RG72BS4UDnBXyTWARj6L+S9DuJE8jg+8=	\N	f	jose.luis	José Luis	García Hernández	jose.luis@construimport.cu	t	t	2022-05-06 01:52:15.675036-04
 8	pbkdf2_sha256$320000$idikVvFMhdaE6np39F8sa8$8pNPeEsF0EFGE6VXcyxbbW84QudiXIjN+qCNnJtIhcg=	2022-05-06 01:54:00.810238-04	f	armando.tellez	Armando	Téllez Mesa	armando.tellez@construimport.cu	t	t	2022-05-06 01:53:45.115393-04
 4	pbkdf2_sha256$320000$DLZ5BZ0lvVpSZJDKjish7V$0HJD2J23W2r2ZDKYy+7Xeiuc1a59LBaaHTKwEzupzQs=	2022-05-27 19:40:01.097948-04	f	director_comex	Roberto	Perez Fernandez	dircomex@construimport.cu	t	t	2022-04-28 10:38:33.023523-04
-2	pbkdf2_sha256$320000$6itfcQdOsiwen7H29ns2yi$HzkZRdx2Fv1pwW+bmXkyaJ0oJl+dvItEg9AdYXxAboY=	2022-05-28 03:49:19.368457-04	f	director_desarrollo	Maria	García Marrero	didrdesarrollo@construimport.cu	t	t	2022-04-28 10:29:16.889474-04
-5	pbkdf2_sha256$320000$DTERCJcMatk2LUfd2rw2Ao$oznDJKIHvpZVi61mHAoCehvBxHvgU5JS8g2DtQ8xz0Y=	2022-05-28 03:50:30.295399-04	f	comex1	Maria de las Mercedes	Valdes Rodriguez	comex1@construimport.cu	t	t	2022-04-28 10:39:06.1783-04
-9	pbkdf2_sha256$320000$igzeiKT9B1tzS4HPXpUCDN$pOEvtBTWtm1uzqj1K0IxLGmjkRlUaIl/ierSAEACor4=	2022-05-31 03:15:51.540924-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04
-10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-06-03 07:38:59.047439-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04
-1	pbkdf2_sha256$320000$YTWXKPkOxQ5eNpjLg9d0lN$yUnSIwPVvAlACsca9LsmYpZgjDrJqAh4ru7khqtF2dw=	2022-06-04 15:15:13.083024-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04
+10	pbkdf2_sha256$320000$SlohlapM1hWAl0A6WMBi4T$Ra8ZN/RPP33phOb2SfGuLrrVRQNrhEyhqSL52EVT2jo=	2022-06-17 07:11:46.230568-04	f	marketing	Ana	Lopez Hernandez	marketing@construimport.cu	t	t	2022-05-07 02:26:15.057662-04
+2	pbkdf2_sha256$320000$6itfcQdOsiwen7H29ns2yi$HzkZRdx2Fv1pwW+bmXkyaJ0oJl+dvItEg9AdYXxAboY=	2022-06-17 07:14:21.263168-04	f	director_desarrollo	Maria	García Marrero	didrdesarrollo@construimport.cu	t	t	2022-04-28 10:29:16.889474-04
+5	pbkdf2_sha256$320000$cXmnKaoYHTnm0rbZHF3Hft$BAe5KHeNO+ilJSp7XObiV4yxLYULqhiDGl2lm9JF1tI=	2022-06-17 07:29:36.416621-04	f	comex1	Maria de las Mercedes	Valdes Rodriguez	comex1@construimport.cu	t	t	2022-04-28 10:39:06.1783-04
+1	pbkdf2_sha256$320000$YTWXKPkOxQ5eNpjLg9d0lN$yUnSIwPVvAlACsca9LsmYpZgjDrJqAh4ru7khqtF2dw=	2022-06-17 07:29:54.139103-04	t	admin			informatico@construimport.cu	t	t	2022-04-28 10:18:48.074706-04
+9	pbkdf2_sha256$320000$JnA7OK8Evl9cru5NPuXO1g$0Hr/XucRJk/1Q+y6+SaSBetHwUzMQqooqU/hb31hFK0=	2022-06-17 07:51:59.40384-04	f	administrador	Wilfredo	Ferreira Rabí	informatico@construimport.cu	t	t	2022-05-07 02:23:28.192872-04
 \.
 
 
@@ -3171,6 +3727,8 @@ COPY public.bateria (idproducto, descripcion, codigoum, voltaje, amperaje, codig
 --
 
 COPY public.casa_matriz (id, direccion, email, telefono, contacto, sitio_web, codmincex) FROM stdin;
+1	AVE DE LA ESTACIÓN S/N	info@rocamoraimportexport.com	3467007659	Samuel	www.rocamora.com	ES-4286
+4	AVE DE LA ESTACIÓN S/N	info@rocamoraimportexport.com	45823671	RAFAEL ORTIZ GIMÉNEZ	www.rocamora.com	VG-0012
 \.
 
 
@@ -3217,6 +3775,12 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 1000	2022-05-28 05:07:25.812273-04	9	administrador	2	[{"changed": {"fields": ["password"]}}]	4	9	127.0.0.1
 1001	2022-05-31 03:16:47.280802-04	4	Marketing	2	[{"changed": {"fields": ["Permissions"]}}]	3	1	127.0.0.1
 1004	2022-06-04 15:15:03.458681-04	1	admin	2	[{"changed": {"fields": ["password"]}}]	4	1	127.0.0.1
+1005	2022-06-11 06:05:51.062139-04	ES-4286	ROCAMORA IMPORT EXPORT S.L	2	[{"changed": {"fields": ["Marcas", "Equipos"]}}, {"added": {"name": "Casa Matriz", "object": "Casa_Matriz object (1)"}}]	25	1	127.0.0.1
+1006	2022-06-14 09:12:31.9794-04	8	Administrador	2	[{"changed": {"fields": ["Permissions"]}}]	3	1	127.0.0.1
+1007	2022-06-14 09:17:37.275514-04	9	administrador	2	[{"changed": {"fields": ["password"]}}]	4	1	127.0.0.1
+1008	2022-06-17 07:12:51.308808-04	5	comex1	2	[{"changed": {"fields": ["password"]}}]	4	1	127.0.0.1
+1009	2022-06-17 07:13:54.367115-04	142	142	2	[{"changed": {"fields": ["Estado", "especialista"]}}]	8	2	127.0.0.1
+1010	2022-06-17 07:14:06.435516-04	143	143	2	[{"changed": {"fields": ["Estado", "especialista"]}}]	8	2	127.0.0.1
 \.
 
 
@@ -3274,6 +3838,15 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 47	Nomencladores	um
 48	Reportes	reporte_proveedor
 49	Dashboard	order
+50	sites	site
+51	account	account
+52	account	accountdeletion
+53	account	emailaddress
+54	account	emailconfirmation
+55	account	signupcode
+56	account	signupcoderesult
+57	account	passwordexpiry
+58	account	passwordhistory
 \.
 
 
@@ -3467,6 +4040,44 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 183	Solicitudes	0041_alter_solicitud_bateria_fechasol_and_more	2022-06-03 07:37:54.398913-04
 184	auth	0004_alter_user_email	2022-06-03 07:37:54.479953-04
 185	Nomencladores	0067_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-03 08:41:07.1124-04
+186	COMEX	0038_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-06-11 06:00:09.409788-04
+187	COMEX	0039_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-06-11 06:00:09.52304-04
+188	COMEX	0040_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-06-11 06:00:09.697961-04
+189	Nomencladores	0068_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:09.77588-04
+190	Nomencladores	0069_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:09.856342-04
+191	Nomencladores	0070_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:09.936282-04
+192	Nomencladores	0071_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.017711-04
+193	Nomencladores	0072_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.102001-04
+194	Nomencladores	0073_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.4206-04
+195	Nomencladores	0074_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.509944-04
+196	Nomencladores	0075_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.591045-04
+197	Nomencladores	0076_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.675275-04
+198	Nomencladores	0077_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.7731-04
+199	Nomencladores	0078_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:00:10.875145-04
+200	Nomencladores	0079_alter_casa_matriz_telefono_alter_cliente_telefono_and_more	2022-06-11 06:00:11.087883-04
+201	Solicitudes	0042_alter_solicitud_bateria_fechasol_and_more	2022-06-11 06:00:11.422845-04
+202	Solicitudes	0043_alter_solicitud_equipo_proxy_cantidad	2022-06-11 06:02:55.757271-04
+203	Solicitudes	0044_alter_solicitud_bateria_proxy_cantidad_and_more	2022-06-11 06:02:55.952341-04
+204	Solicitudes	0045_alter_solicitud_bateria_fechasol_and_more	2022-06-11 06:02:56.172477-04
+205	Solicitudes	0046_alter_solicitud_bateria_fechasol_and_more	2022-06-11 06:02:56.308335-04
+206	Nomencladores	0080_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-11 06:03:40.434274-04
+207	COMEX	0041_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-06-14 09:15:32.759647-04
+208	Nomencladores	0081_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-14 09:15:32.833138-04
+209	Solicitudes	0047_alter_solicitud_bateria_fechasol_and_more	2022-06-14 09:15:32.936513-04
+210	account	0001_initial	2022-06-14 09:15:33.292158-04
+211	account	0002_fix_str	2022-06-14 09:15:33.329623-04
+212	account	0003_passwordexpiry_passwordhistory	2022-06-14 09:15:33.426259-04
+213	account	0004_auto_20170416_1821	2022-06-14 09:15:33.452452-04
+214	account	0005_update_default_language	2022-06-14 09:15:33.47243-04
+215	account	0006_alter_account_id_alter_account_language_and_more	2022-06-14 09:15:34.076024-04
+216	sites	0001_initial	2022-06-14 09:15:34.141033-04
+217	sites	0002_alter_domain_unique	2022-06-14 09:15:34.156044-04
+218	COMEX	0042_alter_oferta_bateria_fecha_alter_oferta_equipo_fecha_and_more	2022-06-15 11:43:44.999187-04
+219	Nomencladores	0082_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-15 11:43:45.093074-04
+220	Solicitudes	0048_alter_solicitud_bateria_fechasol_and_more	2022-06-15 11:43:45.276288-04
+221	Nomencladores	0083_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-15 13:51:22.035514-04
+222	Nomencladores	0084_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-15 13:55:09.361048-04
+223	Nomencladores	0002_alter_cliente_telefono_alter_ministerio_telefono_and_more	2022-06-15 19:15:04.418554-04
 \.
 
 
@@ -3500,8 +4111,18 @@ nwhy71vof72geoua6p1vgmclwrcm4eab	.eJxVjMsOwiAUBf-FtSGFghSX7vsNzX1wpWogKe3K-O_apA
 2tedanm81sheyl8tg66u1wkzvyubels9	.eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nuuxy:Vkagp1yPLpEJplaDCtwmiF8txP-3v5WSMXTLXkpTIy8	2022-06-11 03:50:46.090078-04
 ebivdfjkpg2l8wxey5658o3u8ro9f9yq	.eJxVjDsOwjAQRO_iGlnGH9ampM8ZrLV3jQPIkeKkQtydREoBzRTz3sxbRFyXGtfOcxxJXEUQp98uYX5y2wE9sN0nmae2zGOSuyIP2uUwEb9uh_t3ULHXbc3JWO-0ITRbGOUBgrWcEbFoBXxx2imniyE4Z8eeoCTwKmEoWMAH8fkC2dw35Q:1nuwfl:GDeX3R-xM1eo8TNxIooWB5OvGbfiSLAoXTqqh41OaYk	2022-06-11 05:40:05.385298-04
 xbh9bex51bcet4h4qib4lxwxh3e0tmng	.eJxVjM1uwjAQhN_FZxTZ2CGQI_c-w2qzXicuVkz9o1agvDsEoqq9zcw3M3cBWMsENXMCb0UvlBS7v-GAdOF5JfYT5zE2FOeS_NCslWajufmIlsN56_47mDBPzzWRkh0bRa5F5dhIVHpA3Ult2pPS-9MBO6MOpB0haSTV8b5t9dGoo9ODXE-__Q2TBRwTj5gAcgyefKkWgL-qv0bR30UufBX9XEPYvTRYLPgEy2adD5zfnn9Kwl--LA8JWlvS:1nucf3:ZoHyFg0UZSm2BbqdusUerlsvMLmcbDHk7rtkX_4lV3Y	2022-06-10 08:18:01.825445-04
-5i747txoqp9p30xc981ilihomul86z54	.eJxVjDsOwyAQBe9CHSEMS1hSpvcZ0PILTiKQjF1FubttyUXSvpl5H-ZoXYpbe5rdFNmNDezyu3kKr1QPEJ9UH42HVpd58vxQ-Ek7H1tM7_vp_h0U6mWvVTRZaczSAHgZEQRpgQo8BmNzGK7CmiStRNCkSIO3RIhSESWRAwr23QDDwzdJ:1nxcz1:rcOChp42ii975uO8G3crxbS7dBMxemp4ZKP-9qXei2U	2022-06-18 15:15:03.478287-04
 fsuo71xqa02043e6ww00qnjzwhi2104y	.eJxVjDsOwyAQBe9CHSEMS1hSpvcZ0PILTiKQjF1FubttyUXSvpl5H-ZoXYpbe5rdFNmNDezyu3kKr1QPEJ9UH42HVpd58vxQ-Ek7H1tM7_vp_h0U6mWvVTRZaczSAHgZEQRpgQo8BmNzGK7CmiStRNCkSIO3RIhSESWRAwr23QDDwzdJ:1nxczB:a0OPeJgFBWq8uvMqve-cy9RqO4A9PY0dGQlH8pMYI80	2022-06-18 15:15:13.088153-04
+bpzdpjm61wfu9pjjppqe2d81b0to8cfl	.eJxVjEEOwiAQRe_C2hCmA6V16d4zNMMwSNVAUtqV8e7apAvd_vfef6mJtjVPW5NlmqM6KzDq9DsG4oeUncQ7lVvVXMu6zEHvij5o09ca5Xk53L-DTC1_a2YwXixwcgRJrCHAQOgNWjcCdmNP3kLPmJgYicFL5xwOFoaEwUT1_gD-3Det:1nxd6o:cWlec12FjJ-SABRPpcXGgxajlAaSjhT68-BwqC7vWKY	2022-06-18 15:23:06.361303-04
+xmy7zomw3grssyfvdaid7n9wpy1ico3i	.eJxVjMsOwiAQRf-FtSGUUh4u3fsNZIYZpGogKe3K-O_apAvd3nPOfYkI21ri1nmJM4mzCOL0uyGkB9cd0B3qrcnU6rrMKHdFHrTLayN-Xg7376BAL9961EgKUvboNQIgsdWGvNOjcVYpgyoPZjITggNUY4bMkIOBkDwPqKx4fwADITiq:1o2EGN:YKlcMvaZ5SmTRHIT70beH0b1nm3H1GfIdvtST3zgeCo	2022-07-01 07:51:59.405838-04
+\.
+
+
+--
+-- Data for Name: django_site; Type: TABLE DATA; Schema: public; Owner: const
+--
+
+COPY public.django_site (id, domain, name) FROM stdin;
+1	example.com	example.com
 \.
 
 
@@ -3597,11 +4218,10 @@ COPY public.oferta_baterias (numero, fecha, validez, estado, valor_estimado, use
 --
 
 COPY public.oferta_equipo (numero, fecha, validez, username, idpais, codmincex, numsolicitud, estado, valor_estimado, monto_total) FROM stdin;
-8913	2022-05-27	30 Días	5	\N	CN-1287	124	Pendiente	34000	\N
-8914	2022-05-27	30 Días	5	\N	VG-0008	125	Pendiente	12344	\N
-8916	2022-05-27	30 Días	5	\N	VG-0008	126	Pendiente	75000	\N
-8917	2022-05-28	30 Días	5	\N	CN-1287	129	Pendiente	75000	\N
-8918	2022-05-28	30 Días	5	\N	CN-0132	129	Pendiente	75000	\N
+8919	2022-06-17	30 Días	5	\N	VG-0008	142	Pendiente	69300	\N
+8920	2022-06-17	30 Días	5	\N	ES-4286	142	Pendiente	69300	\N
+8921	2022-06-17	30 Días	5	\N	CN-1287	143	Pendiente	4567	\N
+8922	2022-06-17	30 Días	5	\N	CN-0132	143	Pendiente	4567	\N
 \.
 
 
@@ -3954,6 +4574,10 @@ VG-0008	FOREGO INTERNATIONAL LTD	Comercializador	GBR
 ES-4425	CICLAUTO AUTOMOCION S.L	Comercializador	ESP
 CN-1287	(CAMCE) CHINA NATIONAL CONSTRUCTION & AGRICULTURAL MACHINARY IMPOT AND EXPORT CORPORATION	Productor	CHN
 CN-0132	CHINA AUTO CAIEC  LTD(CAIEC)	Productor	CHN
+ES-4286	ROCAMORA IMPORT EXPORT S.L	Comercializador	ESP
+VG-0010	RIRFN A	Comercializador	DEU
+VG-0011	RIRFN B	Comercializador	DEU
+VG-0012	RIRFN C	Comercializador	DEU
 \.
 
 
@@ -3974,6 +4598,7 @@ COPY public.proveedor_equipos (id, proveedor_id, equipo_id) FROM stdin;
 2	CN-1287	59428400325
 3	CN-1287	647386-35-5478
 4	CN-0132	647386-35-5478
+5	ES-4286	647386-00-563
 \.
 
 
@@ -3998,6 +4623,7 @@ COPY public.proveedor_marca (id, proveedor_id, marca_id) FROM stdin;
 14	CN-0132	13
 15	CN-0132	14
 16	CN-0132	9
+17	ES-4286	1
 \.
 
 
@@ -4080,40 +4706,8 @@ COPY public.solicitud_bateria_proxy (id, cantidad, idproducto, numsolicitud) FRO
 --
 
 COPY public.solicitud_equipo (numsolicitud, fechasol, estado, observaciones, valor_estimado, username, reeup) FROM stdin;
-119	2022-05-27	Pendiente	Solicitude KAMAZ	45000	\N	126.0.04877
-120	2022-05-27	Pendiente	Solicitud Kamaz 27-05-2022	10000	\N	126.0.04877
-122	2022-05-27	Pendiente	Solicitud 1	34000	\N	126.0.04877
-124	2022-05-27	Aprobada	Solicitud 1	34000	5	126.0.04877
-125	2022-05-27	Aprobada	qq	12344	5	126.0.04878
-123	2022-05-27	Aprobada	Solicitud 1	34000	5	126.0.04877
-121	2022-05-27	Aprobada	Solicitud 1	85000	5	126.0.04878
-116	2022-05-26	Aprobada	2	2111	5	126.0.04878
-126	2022-05-27	Aprobada	wd	75000	5	126.0.04878
-127	2022-05-28	Pendiente	Solicitud de Motoniveladora ISUZU 3675	65000	\N	126.0.03524
-128	2022-05-28	Pendiente	Solicitud de Motoniveladora ISUZU 3675	65000	\N	126.0.03524
-129	2022-05-28	Aprobada	Solicitud de Motoniveladora ISUZU 3675 28-05-2022	75000	5	126.0.03524
-103	2022-05-26	Pendiente	6	64000	\N	126.0.04878
-104	2022-05-26	Pendiente	wss	45000	\N	126.0.04878
-105	2022-05-26	Pendiente	qs	23444	\N	126.0.04878
-106	2022-05-26	Pendiente	wqd	12	\N	126.0.04878
-107	2022-05-26	Pendiente	1ww	12333	\N	126.0.04878
-108	2022-05-26	Pendiente	1ww	12333	\N	126.0.04878
-109	2022-05-26	Pendiente	dwd	2334	\N	126.0.04878
-110	2022-05-26	Pendiente	1	12333	\N	126.0.04878
-111	2022-05-26	Pendiente	1	12333	\N	126.0.04878
-112	2022-05-26	Pendiente	w	2	\N	126.0.04878
-113	2022-05-26	Pendiente	fe4f3	12222	\N	126.0.04878
-114	2022-05-26	Pendiente	qsaazq	33444	\N	126.0.04878
-115	2022-05-26	Pendiente	2	2111	\N	126.0.04878
-117	2022-05-26	Aprobada	w	1	5	126.0.04878
-130	2022-05-28	Pendiente	Solicitud De Motniveladora ISUZU	45000	\N	126.0.03524
-131	2022-06-01	Pendiente	qwe	36000	\N	126.0.03524
-132	2022-06-03	Pendiente	\N	6	\N	126.0.04878
-133	2022-06-03	Pendiente	\N	35000	\N	126.0.04878
-134	2022-06-03	Pendiente	\N	3	\N	126.0.04878
-137	2022-06-03	Pendiente	\N	65000	\N	126.0.03524
-138	2022-06-03	Pendiente	\N	3455	\N	126.0.04878
-139	2022-06-03	Pendiente	\N	2333	\N	126.0.04877
+142	2022-06-17	Aprobada	Solicitud 1	69300	5	126.0.04878
+143	2022-06-17	Aprobada	qe2q	4567	5	126.0.03524
 \.
 
 
@@ -4122,21 +4716,10 @@ COPY public.solicitud_equipo (numsolicitud, fechasol, estado, observaciones, val
 --
 
 COPY public.solicitud_equipo_proveedor (id, codmincex, numsolicitud) FROM stdin;
-24	CN-1287	124
-25	VG-0008	125
-26	VG-0008	126
-27	CN-1287	129
-28	CN-0132	129
-29	CN-1287	130
-30	CN-0132	130
-31	CN-1287	131
-32	CN-0132	131
-33	VG-0008	132
-34	VG-0008	133
-35	CN-1287	134
-36	VG-0008	137
-37	VG-0008	138
-38	VG-0008	139
+42	VG-0008	142
+43	ES-4286	142
+44	CN-1287	143
+45	CN-0132	143
 \.
 
 
@@ -4145,37 +4728,8 @@ COPY public.solicitud_equipo_proveedor (id, codmincex, numsolicitud) FROM stdin;
 --
 
 COPY public.solicitud_equipo_proxy (id, cantidad, idproducto, numsolicitud) FROM stdin;
-42	2	59428400325	104
-43	2	59428400325	105
-44	2	647386-00-563	106
-45	1	59428400325	107
-46	1	59428400325	108
-47	1	647386-00-563	109
-48	12	647386-00-563	110
-49	1	59428400325	111
-50	2	647386-00-563	112
-51	2	59428400325	113
-52	2	647386-00-563	114
-53	1	647386-00-563	115
-54	12	647386-00-563	116
-55	1	647386-00-563	117
-57	3	647386-00-563	119
-58	5	647386-00-563	120
-59	6	647386-00-563	121
-60	3	59428400325	124
-61	12	647386-00-563	125
-62	5	647386-00-563	126
-63	2	647386-35-5478	127
-64	2	647386-35-5478	128
-65	3	647386-35-5478	129
-66	3	647386-35-5478	130
-67	3	647386-35-5478	131
-68	-1	647386-00-563	132
-69	-1	647386-00-563	133
-70	0	59428400325	134
-73	-2	647386-00-563	137
-74	2	647386-00-563	138
-75	2	647386-00-563	139
+78	6	647386-00-563	142
+79	3	647386-35-5478	143
 \.
 
 
@@ -4188,6 +4742,7 @@ COPY public.solicitud_neumatico (numsolicitud, fechasol, estado, observaciones, 
 7	2022-05-27	Aprobada	qssq	46000	7	126.0.04878
 8	2022-05-27	Pendiente	Solicitud	45000	\N	126.0.04878
 9	2022-05-27	Aprobada	123	35000	7	126.0.04878
+10	2022-06-17	Pendiente	Solicitud 9	65000	\N	126.0.04878
 \.
 
 
@@ -4208,6 +4763,7 @@ COPY public.solicitud_neumatico_proxy (id, cantidad, idproducto, numsolicitud) F
 13	3	﻿594284001	7
 14	5	594284007	8
 15	1	594284005	9
+16	20	594284009	10
 \.
 
 
@@ -4216,6 +4772,7 @@ COPY public.solicitud_neumatico_proxy (id, cantidad, idproducto, numsolicitud) F
 --
 
 COPY public.solicitud_ppa (numsolicitud, fechasol, estado, observaciones, valor_estimado, username, reeup) FROM stdin;
+7	2022-06-17	Pendiente	Solicitud 7	59000	\N	126.0.03524
 \.
 
 
@@ -4240,6 +4797,7 @@ COPY public.solicitud_ppa_proxy (id, cantidad, idproducto, numsolicitud) FROM st
 --
 
 COPY public.sucursal_cuba (id, direccion, email, telefono, contacto, carnet_trabajo, codmincex) FROM stdin;
+1	AVE DE LA ESTACIÓN S/N	info@rocamoraimportexport.com	647528	Armando Lopez	ERNESTO BROOKS/ MAR24---LEON TER/ OCT/23	VG-0012
 \.
 
 
@@ -4306,6 +4864,62 @@ SELECT pg_catalog.setval('public."Trazas_logentry_id_seq"', 1, false);
 
 
 --
+-- Name: account_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_account_id_seq', 1, false);
+
+
+--
+-- Name: account_accountdeletion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_accountdeletion_id_seq', 1, false);
+
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_emailaddress_id_seq', 1, false);
+
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_emailconfirmation_id_seq', 1, false);
+
+
+--
+-- Name: account_passwordexpiry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_passwordexpiry_id_seq', 1, false);
+
+
+--
+-- Name: account_passwordhistory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_passwordhistory_id_seq', 1, false);
+
+
+--
+-- Name: account_signupcode_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_signupcode_id_seq', 1, false);
+
+
+--
+-- Name: account_signupcoderesult_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.account_signupcoderesult_id_seq', 1, false);
+
+
+--
 -- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
@@ -4316,14 +4930,14 @@ SELECT pg_catalog.setval('public.auth_group_id_seq', 8, true);
 -- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 195, true);
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 196, true);
 
 
 --
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 196, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 232, true);
 
 
 --
@@ -4351,28 +4965,35 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: casa_matriz_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.casa_matriz_id_seq', 1, false);
+SELECT pg_catalog.setval('public.casa_matriz_id_seq', 4, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1004, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1010, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 49, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 58, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 185, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 223, true);
+
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
+--
+
+SELECT pg_catalog.setval('public.django_site_id_seq', 1, true);
 
 
 --
@@ -4407,7 +5028,7 @@ SELECT pg_catalog.setval('public.oferta_baterias_numero_seq', 1, false);
 -- Name: oferta_equipo_numero_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.oferta_equipo_numero_seq', 8918, true);
+SELECT pg_catalog.setval('public.oferta_equipo_numero_seq', 8922, true);
 
 
 --
@@ -4463,14 +5084,14 @@ SELECT pg_catalog.setval('public.proveedor_baterias_id_seq', 1, false);
 -- Name: proveedor_equipos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.proveedor_equipos_id_seq', 4, true);
+SELECT pg_catalog.setval('public.proveedor_equipos_id_seq', 5, true);
 
 
 --
 -- Name: proveedor_marca_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.proveedor_marca_id_seq', 16, true);
+SELECT pg_catalog.setval('public.proveedor_marca_id_seq', 17, true);
 
 
 --
@@ -4519,28 +5140,28 @@ SELECT pg_catalog.setval('public.solicitud_bateria_proxy_id_seq', 2, true);
 -- Name: solicitud_equipo_numsolicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_equipo_numsolicitud_seq', 139, true);
+SELECT pg_catalog.setval('public.solicitud_equipo_numsolicitud_seq', 143, true);
 
 
 --
 -- Name: solicitud_equipo_proveedor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_equipo_proveedor_id_seq', 38, true);
+SELECT pg_catalog.setval('public.solicitud_equipo_proveedor_id_seq', 45, true);
 
 
 --
 -- Name: solicitud_equipo_proxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_equipo_proxy_id_seq', 75, true);
+SELECT pg_catalog.setval('public.solicitud_equipo_proxy_id_seq', 79, true);
 
 
 --
 -- Name: solicitud_neumatico_numsolicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_neumatico_numsolicitud_seq', 9, true);
+SELECT pg_catalog.setval('public.solicitud_neumatico_numsolicitud_seq', 10, true);
 
 
 --
@@ -4554,14 +5175,14 @@ SELECT pg_catalog.setval('public.solicitud_neumatico_proveedor_id_seq', 10, true
 -- Name: solicitud_neumatico_proxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_neumatico_proxy_id_seq', 15, true);
+SELECT pg_catalog.setval('public.solicitud_neumatico_proxy_id_seq', 16, true);
 
 
 --
 -- Name: solicitud_ppa_numsolicitud_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.solicitud_ppa_numsolicitud_seq', 6, true);
+SELECT pg_catalog.setval('public.solicitud_ppa_numsolicitud_seq', 7, true);
 
 
 --
@@ -4582,7 +5203,7 @@ SELECT pg_catalog.setval('public.solicitud_ppa_proxy_id_seq', 6, true);
 -- Name: sucursal_cuba_id_seq; Type: SEQUENCE SET; Schema: public; Owner: const
 --
 
-SELECT pg_catalog.setval('public.sucursal_cuba_id_seq', 1, false);
+SELECT pg_catalog.setval('public.sucursal_cuba_id_seq', 1, true);
 
 
 --
@@ -4679,6 +5300,110 @@ ALTER TABLE ONLY public."Salvas_salvas"
 
 ALTER TABLE ONLY public."Trazas_logentry"
     ADD CONSTRAINT "Trazas_logentry_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: account_account account_account_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_account
+    ADD CONSTRAINT account_account_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_account account_account_user_id_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_account
+    ADD CONSTRAINT account_account_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: account_accountdeletion account_accountdeletion_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_accountdeletion
+    ADD CONSTRAINT account_accountdeletion_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_email_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_email_key UNIQUE (email);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_key_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_key_key UNIQUE (key);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_passwordexpiry account_passwordexpiry_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordexpiry
+    ADD CONSTRAINT account_passwordexpiry_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_passwordexpiry account_passwordexpiry_user_id_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordexpiry
+    ADD CONSTRAINT account_passwordexpiry_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: account_passwordhistory account_passwordhistory_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordhistory
+    ADD CONSTRAINT account_passwordhistory_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_signupcode account_signupcode_code_key; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcode
+    ADD CONSTRAINT account_signupcode_code_key UNIQUE (code);
+
+
+--
+-- Name: account_signupcode account_signupcode_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcode
+    ADD CONSTRAINT account_signupcode_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_signupcoderesult account_signupcoderesult_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcoderesult
+    ADD CONSTRAINT account_signupcoderesult_pkey PRIMARY KEY (id);
 
 
 --
@@ -4871,6 +5596,22 @@ ALTER TABLE ONLY public.django_migrations
 
 ALTER TABLE ONLY public.django_session
     ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: django_site django_site_domain_a2e37b91_uniq; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_domain_a2e37b91_uniq UNIQUE (domain);
+
+
+--
+-- Name: django_site django_site_pkey; Type: CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_pkey PRIMARY KEY (id);
 
 
 --
@@ -5340,6 +6081,76 @@ CREATE INDEX "OSDE_siglas_bd5d3498_like" ON public."OSDE" USING btree (siglas va
 
 
 --
+-- Name: account_accountdeletion_user_id_c205475f; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_accountdeletion_user_id_c205475f ON public.account_accountdeletion USING btree (user_id);
+
+
+--
+-- Name: account_emailaddress_email_03be32b2_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_emailaddress_email_03be32b2_like ON public.account_emailaddress USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: account_emailaddress_user_id_2c513194; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_emailaddress_user_id_2c513194 ON public.account_emailaddress USING btree (user_id);
+
+
+--
+-- Name: account_emailconfirmation_email_address_id_5b7f8c58; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_emailconfirmation_email_address_id_5b7f8c58 ON public.account_emailconfirmation USING btree (email_address_id);
+
+
+--
+-- Name: account_emailconfirmation_key_f43612bd_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_emailconfirmation_key_f43612bd_like ON public.account_emailconfirmation USING btree (key varchar_pattern_ops);
+
+
+--
+-- Name: account_passwordhistory_user_id_dc325181; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_passwordhistory_user_id_dc325181 ON public.account_passwordhistory USING btree (user_id);
+
+
+--
+-- Name: account_signupcode_code_e34edcf8_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_signupcode_code_e34edcf8_like ON public.account_signupcode USING btree (code varchar_pattern_ops);
+
+
+--
+-- Name: account_signupcode_inviter_id_9706983e; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_signupcode_inviter_id_9706983e ON public.account_signupcode USING btree (inviter_id);
+
+
+--
+-- Name: account_signupcoderesult_signup_code_id_1adc486e; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_signupcoderesult_signup_code_id_1adc486e ON public.account_signupcoderesult USING btree (signup_code_id);
+
+
+--
+-- Name: account_signupcoderesult_user_id_c10dc604; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX account_signupcoderesult_user_id_c10dc604 ON public.account_signupcoderesult USING btree (user_id);
+
+
+--
 -- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: const
 --
 
@@ -5526,6 +6337,13 @@ CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING 
 --
 
 CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: django_site_domain_a2e37b91_like; Type: INDEX; Schema: public; Owner: const
+--
+
+CREATE INDEX django_site_domain_a2e37b91_like ON public.django_site USING btree (domain varchar_pattern_ops);
 
 
 --
@@ -6367,6 +7185,78 @@ CREATE INDEX um_descripcionum_4582a47e_like ON public.um USING btree (descripcio
 
 ALTER TABLE ONLY public."OSDE"
     ADD CONSTRAINT "OSDE_ministerio_id_dd8f8290_fk" FOREIGN KEY (ministerio_id) REFERENCES public.ministerio(reeup) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_account account_account_user_id_8d4f4816_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_account
+    ADD CONSTRAINT account_account_user_id_8d4f4816_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_accountdeletion account_accountdeletion_user_id_c205475f_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_accountdeletion
+    ADD CONSTRAINT account_accountdeletion_user_id_c205475f_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_emailaddress account_emailaddress_user_id_2c513194_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_user_id_2c513194_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_email_address_id_5b7f8c58_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_email_address_id_5b7f8c58_fk FOREIGN KEY (email_address_id) REFERENCES public.account_emailaddress(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_passwordexpiry account_passwordexpiry_user_id_905230ec_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordexpiry
+    ADD CONSTRAINT account_passwordexpiry_user_id_905230ec_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_passwordhistory account_passwordhistory_user_id_dc325181_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_passwordhistory
+    ADD CONSTRAINT account_passwordhistory_user_id_dc325181_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_signupcode account_signupcode_inviter_id_9706983e_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcode
+    ADD CONSTRAINT account_signupcode_inviter_id_9706983e_fk_auth_user_id FOREIGN KEY (inviter_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_signupcoderesult account_signupcoderesult_signup_code_id_1adc486e_fk; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcoderesult
+    ADD CONSTRAINT account_signupcoderesult_signup_code_id_1adc486e_fk FOREIGN KEY (signup_code_id) REFERENCES public.account_signupcode(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_signupcoderesult account_signupcoderesult_user_id_c10dc604_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: const
+--
+
+ALTER TABLE ONLY public.account_signupcoderesult
+    ADD CONSTRAINT account_signupcoderesult_user_id_c10dc604_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

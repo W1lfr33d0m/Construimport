@@ -20,6 +20,10 @@ from import_export.forms import ImportForm, ConfirmImportForm
 from django.http import HttpRequest, HttpResponse
 from django.utils.html import format_html
 from .models import *
+from docx2pdf import convert
+from docxtpl import DocxTemplate, InlineImage
+import webbrowser
+from django.contrib import messages
 #from .forms import *
 
 # Register your models here.     
@@ -70,7 +74,6 @@ class ProveedorAdmin(ImportExportModelAdmin):
         return form
     
 
-@admin.register(Ministerio)
 class MinisterioAdmin(admin.ModelAdmin):
     list_display = ('reeup', 'nombre', 'siglas', 'correo', 'telefono', 'edit_link')
     
@@ -115,6 +118,31 @@ class ClienteAdmin(admin.ModelAdmin):
              obj._meta.app_label, obj._meta.model_name, obj.reeup))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
+    
+    def exportar_clientes_pdf(self, request:HttpRequest, queryset):
+        for traza in queryset:
+            base_url = os.path.join('media') + '/Trazas/'
+            asset_url = base_url + 'Generar Traza.docx'
+            doc = DocxTemplate(asset_url)
+            cliente = Cliente.objects.all(queryset)
+            context = {
+            'Cliente': cliente
+            }
+            doc.render(context)
+            print(context['Clientes'])
+            filename = 'Clientes.pdf'
+            resultFilePath = 'media/Trazas/Trazas.docx'
+            doc.save(resultFilePath)
+            convert(resultFilePath, 'D:\Downloads')
+            os.remove(resultFilePath)
+            path = 'D:\Downloads'
+            webbrowser.open(path)
+        msg = "Trazas exportadas"
+        self.message_user(request, msg, level=messages.SUCCESS)
+        
+    def exportar_trazas(self, request, queryset):     
+        return self.exportar_trazas_pdf(request, queryset)
+    exportar_trazas.short_description = 'Exportar Trazas'
     
 @admin.register(Pais)
 class PaisAdmin(admin.ModelAdmin):
