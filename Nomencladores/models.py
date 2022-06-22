@@ -166,6 +166,7 @@ class Cliente(Empresa):
     OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
     codigoprovincia = models.ForeignKey(Provincia, on_delete=models.PROTECT, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
+    fecha_contrato = models.DateField(default = date.today)
     
     class Meta:
         managed = True

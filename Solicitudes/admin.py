@@ -202,7 +202,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             return super().get(request, *args, **kwargs)
     
     def edit_link(self, obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -421,7 +421,7 @@ class Solicitud_PPAAdmin(ImportExportModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -521,7 +521,7 @@ class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
     #jazzmin_section_order = ('solicitud', 'Productos')
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
@@ -628,7 +628,7 @@ class Solicitud_BateriaAdmin(ImportExportModelAdmin):
     #jazzmin_section_order = ('solicitud', 'Productos')
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"

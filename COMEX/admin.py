@@ -105,7 +105,7 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numero))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
@@ -186,7 +186,7 @@ class Oferta_PPAAdmin(admin.ModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numero))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
@@ -267,7 +267,7 @@ class Oferta_NeumaticoAdmin(admin.ModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numero))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"
@@ -349,7 +349,7 @@ class Oferta_BateriAdmin(admin.ModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Editar</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Editar</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.numero))
     edit_link.allow_tags = True
     edit_link.short_description = "Editar"

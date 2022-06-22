@@ -78,7 +78,7 @@ class MinisterioAdmin(admin.ModelAdmin):
     list_display = ('reeup', 'nombre', 'siglas', 'correo', 'telefono', 'edit_link')
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.reeup))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -114,7 +114,7 @@ class ClienteAdmin(admin.ModelAdmin):
        return formfield
         
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.reeup))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -172,7 +172,7 @@ class MarcaAdmin(ImportExportModelAdmin):
     
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.codigomarca))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -204,7 +204,7 @@ class EquipoAdmin(admin.ModelAdmin):
         return form
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
         obj._meta.app_label, obj._meta.model_name, obj.idproducto))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -238,7 +238,7 @@ class PPAAdmin(ImportExportModelAdmin):
         return formfield
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
         obj._meta.app_label, obj._meta.model_name, obj.idproducto))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -257,7 +257,7 @@ class NeumaticoAdmin(ImportExportModelAdmin):
         return formfield
 
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
         obj._meta.app_label, obj._meta.model_name, obj.idproducto))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -277,7 +277,7 @@ class BateriaAdmin(ImportExportModelAdmin):
         return formfield
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
         obj._meta.app_label, obj._meta.model_name, obj.idproducto))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"

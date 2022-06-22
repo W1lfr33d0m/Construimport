@@ -105,7 +105,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
                     
         messages.success(self.request,'Se agregó correctamente la Solicitud')
         
-        return redirect('/Solicitudes/solicitud_equipo/')
+        return redirect('/admin/Solicitudes/solicitud_equipo/')
 
     def form_valid(self, form):
         return super().form_valid(form)
