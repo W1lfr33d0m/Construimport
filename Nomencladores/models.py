@@ -169,6 +169,7 @@ class Cliente(Empresa):
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
     fecha_contrato = models.DateTimeField(default = date.today)
     fecha_caducidad = models.DateTimeField(default=date.today)
+    activo = models.BooleanField(default=False)
     
     class Meta:
         managed = True
@@ -186,6 +187,7 @@ class Marca(models.Model):
     codigomarca = models.AutoField(primary_key=True, verbose_name='Código')
     nommarca = models.CharField(max_length=30, unique=True,verbose_name='Nombre')
     pais = models.ForeignKey(Pais, on_delete=models.PROTECT, db_column='codigopais', verbose_name='País')
+    activa = models.BooleanField(default=False)
 
     class Meta:
         managed = True
@@ -233,7 +235,7 @@ class Producto(models.Model):
     descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.ForeignKey(UM, on_delete=models.PROTECT, db_column='codigoum', null= False)
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT, db_column='codigomarca', verbose_name='Marca')
-    
+    activo = models.BooleanField(default=False)
     
     class Meta:
         abstract = True
@@ -438,6 +440,8 @@ class Proveedor(models.Model):
                                 null= True,
                                 blank=True,
     )
+    
+    activo = models.BooleanField(default=False)
     
     class Meta:
         managed = True
