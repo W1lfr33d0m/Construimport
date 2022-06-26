@@ -105,6 +105,11 @@ class OSDEAdmin(admin.ModelAdmin):
 class ClienteAdmin(admin.ModelAdmin):
     list_display = ('reeup', 'nombre', 'OSDE', 'codigoprovincia', 'representante', 'edit_link')
     
+    def get_fields(self, request: HttpRequest, obj=None):
+        #if request.user.groups.filter(name = 'Marketing').exists():
+            #return['reeup', 'nombre', 'siglas', 'direccion', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
+        return super().get_fields(request, obj)
+    
     def formfield_for_dbfield(self, db_field, request, **kwargs):
        formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
        if db_field.name == 'OSDE':
@@ -118,6 +123,10 @@ class ClienteAdmin(admin.ModelAdmin):
              obj._meta.app_label, obj._meta.model_name, obj.reeup))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
+    
+    def response_post_save_add(self, request: HttpRequest, obj=None):
+        self.fec
+        return super().response_post_save_add(request, obj)
     
     def exportar_clientes_pdf(self, request:HttpRequest, queryset):
         for traza in queryset:
@@ -232,6 +241,10 @@ class PPAAdmin(ImportExportModelAdmin):
            formfield.widget.can_change_related = False
            formfield.widget.can_delete_related = False
         elif db_field.name == 'equipo':
+            formfield.widget.can_add_related = False
+            formfield.widget.can_change_related = False
+            formfield.widget.can_delete_related = False
+        elif db_field.name == 'UM':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False

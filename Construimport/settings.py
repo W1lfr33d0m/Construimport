@@ -194,7 +194,7 @@ DATABASES = {
         'USER': 'const',
         'PASSWORD': 'C0nst*22',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
 
     }
 }

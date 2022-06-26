@@ -83,30 +83,31 @@ Clase Cliente
     
 """
 def reeup_validator(reeup):
-    l = list(reeup)
-    for i in l:
-        if i[0].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[1].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[2].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[3] != '.':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[4] != 0:
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[5] != '.':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[6].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[7].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[8].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[9].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-        elif i[10].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-            raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    pass
+    # l = list(reeup)
+    # for i in l:
+    #     if i[0].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[1].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[2].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[3] != '.':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[4] != 0:
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[5] != '.':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[6].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[7].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[8].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[9].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
+    #     elif i[10].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
+    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
         
 def nombre_validator(nombre):
     for i in nombre:
@@ -166,7 +167,8 @@ class Cliente(Empresa):
     OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
     codigoprovincia = models.ForeignKey(Provincia, on_delete=models.PROTECT, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
-    fecha_contrato = models.DateField(default = date.today)
+    fecha_contrato = models.DateTimeField(default = date.today)
+    fecha_caducidad = models.DateTimeField(default=date.today)
     
     class Meta:
         managed = True

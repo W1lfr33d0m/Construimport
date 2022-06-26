@@ -315,7 +315,7 @@ class Solicitud_PPAInline(admin.StackedInline):
     
 
 @admin.register(Solicitud_PPA)
-class Solicitud_PPAAdmin(ImportExportModelAdmin):
+class Solicitud_PPAAdmin(admin.ModelAdmin):
     add_form_template = 'solicitud_form.html'
     resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
@@ -460,7 +460,7 @@ class Solicitud_NeumaticoInline(admin.StackedInline):
 
 
 @admin.register(Solicitud_Neumatico)
-class Solicitud_NeumaticoAdmin(ImportExportModelAdmin):
+class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     add_form_template = 'solicitud_form.html'
@@ -567,7 +567,7 @@ class Solicitud_BateriaInline(admin.StackedInline):
 
 
 @admin.register(Solicitud_Bateria)
-class Solicitud_BateriaAdmin(ImportExportModelAdmin):
+class Solicitud_BateriaAdmin(admin.ModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     add_form_template = 'solicitud_form.hrml'

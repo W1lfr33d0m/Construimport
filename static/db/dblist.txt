@@ -7,3 +7,4 @@ static/db/20220617213325construimport.sql
 static/db/20220618104415construimport.sql
 static/db/20220618104417construimport.sql
 static/db/20220621210848construimport.sql
+static/db/20220625215758construimport.sql
