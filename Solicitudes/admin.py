@@ -1,5 +1,6 @@
 from argparse import Action
 from cProfile import label
+import email
 from fileinput import filename
 from http import client
 from sre_constants import SUCCESS
@@ -270,6 +271,16 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
+    
+    def response_post_save_add(self, request, obj=None):
+        if request.user.groups.filter(name='Marketing').exists():
+          send_mail(
+                'Nueva solicitud',
+                'Tiene solicitudes pendientes a aprobar',
+                'wilferreira3@nauta.cu',
+                 [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
+                 fail_silently=False,
+                  )
    
     def get(self, request, *args, **kwargs):
         try:
@@ -401,15 +412,15 @@ class Solicitud_PPAAdmin(admin.ModelAdmin):
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
     
-    #def response_post_save_add(self, request, obj=None):
-    #    if request.user.groups.filter(name='Marketing').exists():
-           #send_mail(
-            #       'Nueva solicitud',
-            #       'Tiene solicitudes pendientes a aprobar',
-            #       'wilferreira3@nauta.cu',
-              #     ['informatico@construimport.cu'],
-              #     fail_silently=False,
-              #      )
+    def response_post_save_add(self, request, obj=None):
+        if request.user.groups.filter(name='Marketing').exists():
+          send_mail(
+                'Nueva solicitud',
+                'Tiene solicitudes pendientes a aprobar',
+                'wilferreira3@nauta.cu',
+                 [User.groups.filter(name='Marketing').values_list('email', flat=True)],
+                 fail_silently=False,
+                  )
         #return super().response_post_save_add(request, obj)
         
     def save(self, request:HttpResponse, obj=None):

@@ -254,9 +254,9 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Bottom of the file
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'smtp.nauta.cu'
-#EMAIL_PORT = 25
-#EMAIL_USE_TLS = False
-#EMAIL_HOST_USER = 'wilferreira3@nauta.cu'
-#EMAIL_HOST_PASSWORD = '123'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.nauta.cu'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'wilferreira3@nauta.cu'
+EMAIL_HOST_PASSWORD = '123'

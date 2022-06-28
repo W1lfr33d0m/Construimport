@@ -57,8 +57,8 @@ class Oferta(models.Model):
         verbose_name='Número'
     )
             
-    fecha = models.DateField(
-        default= date.today(), 
+    fecha = models.DateTimeField(
+        default= timezone.now, 
         verbose_name = 'Fecha de la Oferta',
         blank=True
     )

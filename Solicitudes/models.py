@@ -97,8 +97,8 @@ class Solicitud(models.Model):
         verbose_name = 'Cliente'
         )
     
-    fechasol = models.DateField(
-        default= date.today(), 
+    fechasol = models.DateTimeField(
+        default= timezone.now, 
         #validators=[validate_fecha], 
         editable=False,
         verbose_name = 'Fecha de la Solicitud'
@@ -394,7 +394,6 @@ class Solicitud_Neumatico_Proveedor(models.Model):
         Proveedor,
         models.CASCADE,
         verbose_name = 'Proveedor',
-        unique=True
         )
     
     class Meta:
@@ -451,7 +450,6 @@ class Solicitud_Bateria_Proxy(models.Model):
         models.CASCADE, 
         db_column='idproducto',
         verbose_name= 'Batería',
-        unique=True,
         null=False
         )
     

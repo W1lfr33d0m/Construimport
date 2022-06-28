@@ -73,7 +73,7 @@ class ProveedorAdmin(ImportExportModelAdmin):
         
         return form
     
-
+@admin.register(Ministerio)
 class MinisterioAdmin(admin.ModelAdmin):
     list_display = ('reeup', 'nombre', 'siglas', 'correo', 'telefono', 'edit_link')
     
@@ -103,11 +103,11 @@ class OSDEAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('reeup', 'nombre', 'OSDE', 'codigoprovincia', 'representante', 'edit_link')
+    list_display = ('reeup', 'nombre', 'OSDE', 'codigoprovincia', 'representante', 'fecha_caducidad', 'edit_link')
     
     def get_fields(self, request: HttpRequest, obj=None):
         #if request.user.groups.filter(name = 'Marketing').exists():
-            #return['reeup', 'nombre', 'siglas', 'direccion', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
+        return['reeup', 'nombre', 'siglas', 'direccion', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
         return super().get_fields(request, obj)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
@@ -125,7 +125,8 @@ class ClienteAdmin(admin.ModelAdmin):
     edit_link.short_description = "Detalles"
     
     def response_post_save_add(self, request: HttpRequest, obj=None):
-        self.fec
+        delta = timezone.timedelta(days=365)
+        obj.fecha_caducidad = obj.fecha_contrato + delta
         return super().response_post_save_add(request, obj)
     
     def exportar_clientes_pdf(self, request:HttpRequest, queryset):

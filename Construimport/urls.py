@@ -28,14 +28,14 @@ from Solicitudes.views import *
 
 
 urlpatterns = [
-    #path('admin/', RedirectView.as_view(url='Dashboard/dashboard' , permanent=False)),
+    path('admin/', RedirectView.as_view(url='Dashboard/dashboard' , permanent=False)),
     path('admin/Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('admin/Reportes/', include('Reportes.urls')),
     path('admin/Solicitudes/', include('Solicitudes.urls')),
     path('admin/Nomencladores/', include('Nomencladores.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
-    path('admin/', admin.site.urls),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     #path('admin_tools_stats/', include('admin_tools_stats.urls')),
     #path('pdf/', include('django_pdf.urls')),
+    path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

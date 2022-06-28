@@ -61,7 +61,7 @@ Clase Provincia
 """
 def nombre_validator(nombre):
     for i in nombre:
-        if not i.isalpha():
+        if i.isnumeric():
             raise ValidationError(_('%(nombre)s no puede contener números ni caracteres especiales'), params={'nombre': nombre},)
         
 class  Provincia(models.Model):
@@ -167,7 +167,7 @@ def fecha_caducidad_cliente():
 
 class Cliente(Empresa):
     
-    delta = timezone.timedelta(days=365*5) # create a timedelta object
+    delta = timezone.timedelta(days=365) # create a timedelta object
     
     person_name_validator = UnicodePersonNameValidator()
     
@@ -175,7 +175,7 @@ class Cliente(Empresa):
     codigoprovincia = models.ForeignKey(Provincia, on_delete=models.PROTECT, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
     fecha_contrato = models.DateField(default = timezone.now)
-    fecha_caducidad = models.DateField(null = True, blank= True, default= fecha_caducidad_cliente)
+    fecha_caducidad = models.DateField(null = True, blank= True, default= fecha_caducidad_cliente, verbose_name='Caducidad del Contrato')
     activo = models.BooleanField(default=False)
     
     class Meta:
@@ -364,7 +364,7 @@ class Datos(models.Model):
     identificador = models.IntegerField(primary_key=True, validators=[validate_identificador]),
     direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
     email = models.EmailField(null=False, verbose_name='Correo Eléctronico')
-    telefono = models.BigIntegerField(null=False, max_length= 12, validators=[validate_telefono], verbose_name='Teléfono')
+    telefono = models.BigIntegerField(null=False, validators=[validate_telefono], verbose_name='Teléfono')
     contacto = models.CharField(null=False, max_length=150, verbose_name='Persona de Contacto')
     
     class Meta:
@@ -423,28 +423,24 @@ class Proveedor(models.Model):
     equipos = models.ManyToManyField(
                                 Equipo,
                                 verbose_name='Equipos',
-                                null= True,
                                 blank= True
     )
     
     ppa = models.ManyToManyField(
                                 PPA,
                                 verbose_name='Partes, Piezas y Accesorios',
-                                null= True,
                                 blank=True,
     )
     
     neumaticos = models.ManyToManyField(
                                 Neumatico,
                                 verbose_name='Neumáticos',
-                                null= True,
                                 blank=True,
     )
     
     baterias = models.ManyToManyField(
                                 Bateria,
                                 verbose_name= 'Baterías',
-                                null= True,
                                 blank=True,
     )
     

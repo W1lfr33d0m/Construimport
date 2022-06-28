@@ -36,10 +36,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return super(DashboardView, self).dispatch(*args, **kwargs)
         
     def get_solicitudes_equipo(self):
-        solicitudes_equipo = []
         eq = Solicitud_Equipo.objects.filter(estado = 'Pendiente').count()
-        solicitudes_equipo.append(eq)
-        return solicitudes_equipo
+       
+        return eq
         
     def get_solicitudes_ppa(self):
         solicitudes_ppa = []
