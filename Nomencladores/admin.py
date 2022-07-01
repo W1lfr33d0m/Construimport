@@ -73,6 +73,7 @@ class ProveedorAdmin(ImportExportModelAdmin):
         
         return form
     
+    
 @admin.register(Ministerio)
 class MinisterioAdmin(admin.ModelAdmin):
     list_display = ('reeup', 'nombre', 'siglas', 'correo', 'telefono', 'edit_link')
@@ -172,7 +173,7 @@ class ProvinciaAdmin(admin.ModelAdmin):
 @admin.register(Marca)
 class MarcaAdmin(ImportExportModelAdmin):
     resource_class = MarcaResource
-    list_display = ('nommarca', 'pais', 'edit_link')
+    list_display = ('nommarca', 'pais', 'activa')
         
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)

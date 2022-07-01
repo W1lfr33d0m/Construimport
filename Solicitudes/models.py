@@ -73,6 +73,14 @@ class Solicitud(models.Model):
                       (Pendiente, 'Pendiente')
                       ]
     
+    Tres = '3 días'
+    Siete = '7 días'
+    
+    PLAZO_CHOICES = [
+                     (Tres, '3 días'),
+                     (Siete, '7 días')
+                    ]
+    
     Equipo = 'Equipo'
     PPA = 'Partes, piezas y accesorios'
     Bateria = 'Batería'
@@ -99,9 +107,16 @@ class Solicitud(models.Model):
     
     fechasol = models.DateTimeField(
         default= timezone.now, 
-        #validators=[validate_fecha], 
+
         editable=False,
         verbose_name = 'Fecha de la Solicitud'
+        )
+    
+    fecha_venc = models.DateTimeField(
+        blank=True,
+        null = True,
+        editable=False,
+        verbose_name = 'Fecha de Caducidad la Solicitud'
         )
     
     estado = models.CharField(
@@ -123,6 +138,12 @@ class Solicitud(models.Model):
         validators=[validate_valor_estimado],
         verbose_name= 'Valor Estimado',
         )
+    
+    plazo = models.CharField(
+        max_length= 15,
+        choices=PLAZO_CHOICES,
+        default=Tres
+    )
         
     especialista = models.ForeignKey(
         User,

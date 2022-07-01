@@ -132,7 +132,10 @@ class Solicitud_EquipoInline(admin.StackedInline):
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['', ]
-        
+    
+    def __init__(self, parent_model: Solicitud_Equipo_Proxy, admin_site):
+        super(Solicitud_EquipoInline, self).__init__(parent_model, admin_site)    
+    
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_EquipoInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto':
@@ -166,7 +169,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                    'fechasol', 
                    'estado',
                    'valor_estimado',
-                   'edit_link'
+                   'edit_link',
+                   'fecha_venc'
                    )
     
     
@@ -225,9 +229,13 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             apespecialista = request.user.last_name
             nomdirector = User.objects.get(username = 'director_desarrollo').first_name
             apdirector = User.objects.get(username = 'director_desarrollo').last_name
+            fecha = "{:%d - %m - %Y}".format(solicitud.fechasol)
+            fecha_venc = "{:%d - %m - %Y}".format(solicitud.fecha_venc)
+            print(fecha)
             context = {
                 'numsolicitud':solicitud.numsolicitud,
-                'fecha': solicitud.fechasol,
+                'fecha': fecha,
+                'fecha_caducidad': fecha_venc,
                 'cliente': solicitud.cliente,
                 'representante': cliente.representante,
                 'telefono': cliente.telefono,
@@ -256,10 +264,10 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         return self.exportar_solicitud_pdf(request, queryset)
     exportar_solicitud.short_description = 'Generar Documento en PDF'
     
+    
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         print(Solicitud_EquipoInline.get_marca(self, obj))
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
-            
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
                 print(p)
                 oferta_equipo = Oferta_Equipo()
@@ -268,12 +276,13 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 oferta_equipo.especialista = obj.especialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
                 oferta_equipo.save()
+            for e in Equipo.objects.filter(idproducto = )
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
     
     def response_post_save_add(self, request, obj=None):
-        if request.user.groups.filter(name='Marketing').exists():
+        if request.user.groups.filter(name='Especialista_Marketing').exists():
           send_mail(
                 'Nueva solicitud',
                 'Tiene solicitudes pendientes a aprobar',
@@ -281,7 +290,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                  [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
                  fail_silently=False,
                   )
-   
+        return super(Solicitud_EquipoAdmin, self).response_post_save_add(request, obj)
+    
     def get(self, request, *args, **kwargs):
         try:
             return self.render(self.get_form())

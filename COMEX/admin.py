@@ -68,8 +68,8 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
     inlines = [Oferta_EquipoInline,]
     list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
         
-    def get_fields(self, request, obj=None):
-        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists():
+    def get_fields(self, request, obj):
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj:
             return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
@@ -80,11 +80,12 @@ class Oferta_EquipoAdmin(admin.ModelAdmin):
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists():
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj:
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
             form.base_fields['proveedor'].disabled = True
+            form.base_fields['especialista'].can_delete_related = False
             form.base_fields['especialista'].disabled = True
             form.base_fields['solicitud'].disabled = True
             form.base_fields['valor_estimado'].disabled = True

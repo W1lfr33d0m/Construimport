@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block bodyclass %}{{ block.super }} 
-<link rel="stylesheet" type="text/css" href = "{% static 'jazzmin/css/main.css' %}">
+{% comment %} <link rel="stylesheet" type="text/css" href = "{% static 'jazzmin/css/main.css' %}"> {% endcomment %}
 dashboard
 
 {% endblock %}
@@ -29,7 +29,7 @@ dashboard
     {% endif %}
 
     <br>
-    <div class="container-fluid py-4">
+    {% comment %} <div class="container-fluid py-4"> {% endcomment %}
         {% comment %} {% if request.user|has_group:"Especialista_Marketing" %} {% endcomment %}
    
         <div class="row">

@@ -280,8 +280,11 @@ body {
                     </div>
                 </table>
                 {% if wizard.steps.prev %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="Datos Generales">{% trans "first step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="Equipos">{% trans "prev step" %}</button>
+                {% endif %}
+                {% if wizard.steps. %}
+                <button name="wizard_goto_step" type="submit" value="Equipos">Agregar otro</button>
                 {% endif %}
                 <input type="submit" value="Siguiente"/>
                 <!--{{ wizard.steps.count }}-->

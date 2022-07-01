@@ -24,7 +24,7 @@ class CustomConfirmImportForm(ConfirmImportForm):
     
     
 class FProveedor(forms.ModelForm):
-        
+    
     class Meta:
         model =  Proveedor
         fields = ['codmincex', 'nomproveedor', 'codigopais', 'clasificacion']
@@ -91,23 +91,28 @@ class FProveedor_Sucursal(forms.ModelForm):
         }
         
 class FProveedor_Marca(forms.ModelForm):
-    marcas = Marca.objects.all()
+    
+    marcas = Marca.objects.filter(activa = True)
     marca = forms.ModelMultipleChoiceField(queryset= marcas)
+    
     class Meta:
         model =  Proveedor
-        fields = ['marca',]
-    def clean_field(self):
+        fields = ['marca', ]
         
+    def clean_field(self):
         data = self.cleaned_data.get("marca")
         return data
     
-    
 class FProveedor_Equipos(forms.ModelForm):
-    equipos = forms.ModelMultipleChoiceField(queryset=Equipo.objects.all(), required=False)
+    
+    marcas = FProveedor_Marca.marcas
+    print(marcas)
+    equipos = forms.ModelMultipleChoiceField(queryset= Equipo.objects.all(), required=False)
    
     class Meta:
         model =  Proveedor
         fields = ['equipos', ]
+    
         
 class FProveedor_PPA(forms.ModelForm):
     

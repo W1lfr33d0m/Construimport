@@ -454,7 +454,6 @@ class Proveedor(models.Model):
         unique_together = (('codmincex', 'codigopais'),)
         
     def __str__(self):
-        
         return '{}'.format(self.nomproveedor)
     
     
@@ -483,6 +482,9 @@ class Sucursal_Cuba(Datos):
         managed = True
         db_table = 'sucursal_cuba'
         
+    def __str__(self):
+        return '{}'.format('Sucursal')
+        
 """
 Clase Casa Matriz
     
@@ -504,4 +506,5 @@ class Casa_Matriz(Datos):
         managed = True
         db_table = 'casa_matriz' 
         
-        
+    def __str__(self):
+        return '{}'.format('Casa Matriz')

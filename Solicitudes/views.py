@@ -23,7 +23,10 @@ from django.db.models import base
 
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
-    form_list = [FSolicitud_Equipo, FSolicitud_Equipo_Proxy, FSolicitud_Equipo_Confirmar]
+    form_list = (('Datos Generales', FSolicitud_Equipo), 
+                 ( 'Equipos', FSolicitud_Equipo_Proxy), 
+                 ('Confirmar', FSolicitud_Equipo_Confirmar)
+                )
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
     template_name = 'solicitud_form.html'
     instance = None
@@ -72,9 +75,7 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         # crear solicitud
         
         form_data = [form.cleaned_data for form in form_list]
-        
-        print(form_data)
-        
+                
         datos_sol = form_data[0]
         
         solicitud = Solicitud_Equipo()
@@ -82,14 +83,29 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
-        
+        solicitud.plazo = datos_sol['plazo']
+        solicitud.fechasol = timezone.now()
+        if solicitud.plazo == '3 días':
+            delta1 = timezone.timedelta(days=3)
+            solicitud.fecha_venc = solicitud.fechasol + delta1
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1)    
+        elif solicitud.plazo == '7 días':
+            delta2 = timezone.timedelta(days=7)
+            solicitud.fecha_venc = solicitud.fechasol + delta2
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1) 
         solicitud.save()
-        
-        print(solicitud)
-        
+                
         solicitud_proxy = form_data[1]
         
         l = list(solicitud_proxy.values())
+        
+        count = 0
         
         for equipo in Equipo.objects.filter(descripcion = l[0]):
             eproxy = Solicitud_Equipo_Proxy()
@@ -97,15 +113,22 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
             eproxy.idproducto_id = equipo.idproducto
             eproxy.cantidad = l[1]
             for p in Proveedor.objects.filter(equipos = eproxy.idproducto):
-                eproveedor = Solicitud_Equipo_Proveedor()
-                eproveedor.numsolicitud_id = solicitud.numsolicitud
-                eproveedor.codmincex_id = p.codmincex
-                eproveedor.save()
+                print(p.activo)
+                if p.activo == True:
+                    eproveedor = Solicitud_Equipo_Proveedor()
+                    eproveedor.numsolicitud_id = solicitud.numsolicitud
+                    eproveedor.codmincex_id = p.codmincex
+                    eproveedor.save()
+                    count += 1
             eproxy.save()
-                    
-        messages.success(self.request,'Se agregó correctamente la Solicitud')
+        print(count)
+        if count >= 2:
+            messages.success(self.request,'Se agregó correctamente la Solicitud')
+        else:
+            solicitud.delete()
+            messages.error(self.request, 'No hay suficientes proveedores para procesar la solicitud')
+        return redirect('/admin/Solicitudes/solicitud_equipo/')  
         
-        return redirect('/admin/Solicitudes/solicitud_equipo/')
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -148,9 +171,7 @@ class Agregar_Solicitud_PPA(SessionWizardView):
         # crear solicitud
         
         form_data = [form.cleaned_data for form in form_list]
-        
-        print(form_data)
-        
+                
         datos_sol = form_data[0]
         
         solicitud = Solicitud_PPA()

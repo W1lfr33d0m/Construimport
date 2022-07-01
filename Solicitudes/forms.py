@@ -1,4 +1,5 @@
 from django import forms
+from attr import attr, attrs
 #from formtools.wizard import FormWizard
 from formtools.wizard.views import SessionWizardView
 from django.shortcuts import render
@@ -13,7 +14,7 @@ from .models import *
 class FSolicitud_Equipo(forms.ModelForm):
     class Meta:
         model =  Solicitud_Equipo
-        fields = ['cliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado', 'plazo']
         widgets = {
             'cliente': forms.Select(attrs={
                 'placeholder': '',
@@ -34,6 +35,7 @@ class FSolicitud_Equipo_Proxy(forms.ModelForm):
     class Meta:
         model = Solicitud_Equipo_Proxy
         fields = ['idproducto', 'cantidad']
+        extra = 1
         widgets = {
             'idproducto': forms.Select(attrs={
                 'placeholder': '',
