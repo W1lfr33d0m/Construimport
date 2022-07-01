@@ -132,10 +132,7 @@ class Solicitud_EquipoInline(admin.StackedInline):
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['', ]
-    
-    def __init__(self, parent_model: Solicitud_Equipo_Proxy, admin_site):
-        super(Solicitud_EquipoInline, self).__init__(parent_model, admin_site)    
-    
+        
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(Solicitud_EquipoInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'idproducto':
@@ -276,7 +273,8 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 oferta_equipo.especialista = obj.especialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
                 oferta_equipo.save()
-            for e in Equipo.objects.filter(idproducto = )
+            # for i in Solicitud_EquipoInline.get
+            #     for e in Equipo.objects.filter(idproducto = )
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
