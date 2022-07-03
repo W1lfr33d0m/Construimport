@@ -120,9 +120,9 @@ class Oferta(models.Model):
     def __str__(self):
         return '{}'.format(self.solicitud)
     
-        """
-        Clase Oferta de Equipos
-        """
+"""
+Clase Oferta de Equipos
+"""
 
 class Oferta_Equipo(Oferta):
     
@@ -149,10 +149,10 @@ class Oferta_Equipo(Oferta):
 
 class Oferta_Equipo_Proxy(models.Model):
     
-    solicitud = models.ForeignKey(
+    oferta = models.ForeignKey(
         Oferta_Equipo,
         models.DO_NOTHING,
-        db_column='numsolicitud',
+        db_column='numero',
         db_constraint=False
     )
     
@@ -161,6 +161,7 @@ class Oferta_Equipo_Proxy(models.Model):
         models.DO_NOTHING,
         db_column='idproducto',
     )
+    
     
     cantidad = models.IntegerField(
         #max_length=8,

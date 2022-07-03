@@ -191,12 +191,17 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             form.base_fields['cliente'].widget.can_delete_related = False
             form.base_fields['cliente'].widget.can_change_related = False
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj: 
-            form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 3))
+            form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 4))
             form.base_fields['especialista'].widget.can_add_related = False
             form.base_fields['especialista'].widget.can_delete_related = False
-            form.base_fields['especialista'].widget.can_change_related = False
+            form.base_fields['especialista'].widget.can_change_related = False            
         return form
-           
+    
+    def has_change_permission(self, request: HttpRequest, obj=None):
+        if request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj and obj.estado == 'Aprobada': 
+            return False    
+        return super(Solicitud_EquipoAdmin, self).has_change_permission(request, obj)       
+    
     def get(self, request, *args, **kwargs):
         try:
             return self.render(self.get_form())
@@ -261,20 +266,37 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
         return self.exportar_solicitud_pdf(request, queryset)
     exportar_solicitud.short_description = 'Generar Documento en PDF'
     
+    # def changeform_view(self, request: HttpRequest, object_id=None, form_url='', extra_context=None):
+    #     extra_context = extra_context or {}
+    #     extra_context['show_save_and_continue'] = False
+    #     extra_context['show_save_and_add_another'] = False
+    #     extra_context['show_delete'] = False
+        
+    #     return super(Solicitud_EquipoAdmin, self).changeform_view(request, object_id, form_url, extra_context)
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         print(Solicitud_EquipoInline.get_marca(self, obj))
-        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
-                print(p)
                 oferta_equipo = Oferta_Equipo()
                 oferta_equipo.solicitud_id = obj.numsolicitud
                 oferta_equipo.proveedor_id = p
                 oferta_equipo.especialista = obj.especialista
                 oferta_equipo.valor_estimado = obj.valor_estimado
                 oferta_equipo.save()
-            # for i in Solicitud_EquipoInline.get
-            #     for e in Equipo.objects.filter(idproducto = )
+                for i in obj.equipo.all().values():
+                    q1 = Q(numsolicitud=obj.numsolicitud)
+                    q2 = Q(idproducto=i['descripcion'])
+                    equipo_proxy = Solicitud_Equipo_Proxy.objects.get(q1 | q2)
+                    # idproducto = i['idproducto']
+                    # equipo_proxy.idproducto = Equipo.objects.get(idproducto)
+                    print(obj.numsolicitud)
+                    print(equipo_proxy.cantidad)
+                    oferta = Oferta_Equipo_Proxy()
+                    oferta.oferta_id = oferta_equipo.numero
+                    oferta.equipo = equipo_proxy
+                    oferta.cantidad = equipo_proxy.cantidad
+                    oferta.save()
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
@@ -287,7 +309,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 'wilferreira3@nauta.cu',
                  [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
                  fail_silently=False,
-                  )
+                )
         return super(Solicitud_EquipoAdmin, self).response_post_save_add(request, obj)
     
     def get(self, request, *args, **kwargs):

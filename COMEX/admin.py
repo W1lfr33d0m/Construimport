@@ -43,7 +43,7 @@ class Oferta_EquipoInlineResource(resources.ModelResource):
 class Oferta_EquipoInline(admin.TabularInline):
     resource_class = Oferta_EquipoInlineResource
     model = Oferta_Equipo_Proxy
-    fk_name = 'solicitud'
+    fk_name = 'oferta'
     extra = 1
     max_num = 1
     #readonly_fields = ('item',)
