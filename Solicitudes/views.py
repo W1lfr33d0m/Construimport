@@ -24,7 +24,7 @@ from django.db.models import base
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
     form_list = (('Datos Generales', FSolicitud_Equipo), 
-                 ( 'Equipos', FSolicitud_Equipo_Proxy), 
+                 ( 'Equipos', FSolicitud_Equipo_Proxy),03 
                  ('Confirmar', FSolicitud_Equipo_Confirmar)
                 )
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
@@ -209,7 +209,7 @@ class Agregar_Solicitud_Neumatico(SessionWizardView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['nombre_url'] = 'solicitud_equipo'
+        context['nombre_url'] = 'solicitud_neumatico'
         context['opts'] = Solicitud_Neumatico._meta,
         context['change'] = True,
         context['is_popup'] = False,
@@ -222,6 +222,7 @@ class Agregar_Solicitud_Neumatico(SessionWizardView):
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
         context.update(admin.site.each_context(self.request))
         return context
+    
     
     def dispatch(self, request, *args, **kwargs):
         self.instance = Solicitud_Neumatico()
@@ -258,13 +259,13 @@ class Agregar_Solicitud_Neumatico(SessionWizardView):
         l = list(solicitud_proxy.values())
         
         for neumatico in Neumatico.objects.filter(descripcion = l[0]):
-            eproxy = Solicitud_Neumatico_Proxy()
-            eproxy.numsolicitud_id = solicitud.numsolicitud
-            eproxy.idproducto_id= neumatico.idproducto
-            eproxy.cantidad = l[1]
-            eproxy.save()
+            nproxy = Solicitud_Neumatico_Proxy()
+            nproxy.numsolicitud_id = solicitud.numsolicitud
+            nproxy.idproducto_id= neumatico.idproducto
+            nproxy.cantidad = l[1]
+            nproxy.save()
         
-        return redirect('/')
+        return redirect('/admin/Solicitudes/solicitud_neumatico')
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -326,14 +327,14 @@ class Agregar_Solicitud_Bateria(SessionWizardView):
         
         l = list(solicitud_proxy.values())
         
-        for bateria in Equipo.objects.filter(descripcion = l[0]):
-            eproxy = Solicitud_Bateria_Proxy()
-            eproxy.numsolicitud_id = solicitud.numsolicitud
-            eproxy.idproducto_id= bateria.idproducto
-            eproxy.cantidad = l[1]
-            eproxy.save()
+        for bateria in Bateria.objects.filter(descripcion = l[0]):
+            bproxy = Solicitud_Bateria_Proxy()
+            bproxy.numsolicitud_id = solicitud.numsolicitud
+            bproxy.idproducto_id= bateria.idproducto
+            bproxy.cantidad = l[1]
+            bproxy.save()
         
-        return redirect('/')
+        return redirect('/admin/Solicitudes/solicitud_bateria')
     
     def form_valid(self, form):
         return super().form_valid(form)
