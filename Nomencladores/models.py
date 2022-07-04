@@ -160,6 +160,14 @@ def validate_representante(representante):
         if i.isnumeric():
             raise ValidationError(_('%(representante)s solo puede contener letras'), params={'representante': representante},)
 
+def fecha_contrato(fecha_contrato):
+     if fecha_contrato and timezone.now():
+        delta = timezone.timedelta(days=3)
+        if fecha_contrato <  timezone.now() - delta:
+            raise ValidationError('La fecha del Contrato no puede ser 3 días anteriores a la fecha actual')
+        elif fecha_contrato > timezone.now() + delta:
+            raise ValidationError('La fecha del Contrato no puede ser 3 días posteriores a la fecha actual') 
+
 def fecha_caducidad_cliente():
     delta = timedelta(days=365)
     fecha_caducidad = timezone.now() + delta
@@ -168,14 +176,14 @@ def fecha_caducidad_cliente():
 class Cliente(Empresa):
     
     delta = timezone.timedelta(days=365) # create a timedelta object
-    
+
     person_name_validator = UnicodePersonNameValidator()
     
     OSDE = models.ForeignKey(OSDE, models.DO_NOTHING, null=False, default='GEDIC')
     codigoprovincia = models.ForeignKey(Provincia, on_delete=models.PROTECT, db_column='codigoprovincia', default='HB', verbose_name='Provincia')
     representante = models.CharField(max_length=40, null=False, validators=[person_name_validator], verbose_name='Representante')
-    fecha_contrato = models.DateField(default = timezone.now)
-    fecha_caducidad = models.DateField(null = True, blank= True, default= fecha_caducidad_cliente, verbose_name='Caducidad del Contrato')
+    fecha_contrato = models.DateTimeField(default = timezone.now, validators=[fecha_contrato])
+    fecha_caducidad = models.DateTimeField(null = True, blank= True, default= fecha_caducidad_cliente, verbose_name='Caducidad del Contrato')
     activo = models.BooleanField(default=False)
     
     class Meta:

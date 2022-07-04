@@ -33,6 +33,7 @@ from django.utils.translation import ngettext_lazy
 from django.views.generic.edit import FormView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import admin
+import time
 #from cryptography.fernet import Fernet
 import wget
 from django.urls import reverse_lazy
@@ -132,7 +133,8 @@ def db_save(request):
     os.putenv('PGPASSWORD', PASSWORD)
     address = "static/db/" + fecha_hora + "construimport.sql"   ##RUTA DONDE SE GUARDA EL ARCHIVO DE LA BD##
     try:
-        subprocess.Popen("pg_dump -c -h localhost -p 5433 -U postgres -d construimport > " + address, shell=True)
+        subprocess.Popen("pg_dump -c -h localhost -p 5432 -U postgres -d construimport > " + address, shell=True)
+        time.sleep(1)
         save_address_dbs(address)
         list = list_address_db()
         messages.success(request, "Datos salvados")
@@ -154,30 +156,13 @@ def db_restore(request:HttpRequest, name):
         'name' : name
     }
     try:
-        subprocess.Popen("psql -h localhost -p 5433 -U postgres -d construimport <" + address, shell=True)
+        subprocess.Popen("psql -h localhost -p 5432 -U postgres -d construimport <" + address, shell=True)
         messages.success(request, "Datos restaurados correctamente")
         return render(request, 'salvarestaura.html', {'dblist': list})
     except:
         messages.error(request, "Error al restaurar la base de datos")
         return render(request, 'salvarestaura.html', {'dblist': list}) 
-
-    
-@permission_required('auth.add_user', login_url='403')
-def download_file(request:HttpRequest, name):
-    list = list_address_db()
-    file_path = os.path.join(settings.MEDIA_ROOT, 'static/db')
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type="sql")
-            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path) + name
-            return response
-    return render(request, 'salvarestaura.html', {'dblist': list}) 
-    # list = list_address_db()
-    # address = "static/db/" + name    ##RUTA DONDE ESTA GUARDADO EL ARCHIVO DE LA BD##
-    # os.
-    # #wget.download(address)
-    # return redirect('Salvas:Salvas')
-    
+   
 @permission_required('auth.add_user', login_url='403')    
 def remove_file(request:HttpResponse, name):
     list = list_address_db()
@@ -185,11 +170,6 @@ def remove_file(request:HttpResponse, name):
     remove_address_dbs(name)
     print(name)
     address = "static/db/" + name
+    time.sleep(1)
     os.remove(address)
     return redirect('Salvas:Salvas')
-    #return render(request, 'salvarestaura.html',  {'dblist': list})
-    
-# def get_context_data(self, **kwargs):
-#         context= super().get_context_data(**kwargs)
-#         context.update(admin.site.each_context(self.request))
-#         return context

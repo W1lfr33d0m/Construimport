@@ -151,6 +151,7 @@ class Solicitud(models.Model):
         db_column='username',
         verbose_name='Especialista COMEX',
         null=True,
+        blank= True
     )
     
     class Meta:

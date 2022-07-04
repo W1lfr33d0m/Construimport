@@ -97,7 +97,7 @@ class OSDEAdmin(admin.ModelAdmin):
         return formfield
     
     def edit_link(self,obj):
-        return format_html(u'<a href="/%s/%s/%s/change/">Detalles</a>' % (
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
              obj._meta.app_label, obj._meta.model_name, obj.reeup))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
@@ -108,7 +108,7 @@ class ClienteAdmin(admin.ModelAdmin):
     
     def get_fields(self, request: HttpRequest, obj=None):
         #if request.user.groups.filter(name = 'Marketing').exists():
-        return['reeup', 'nombre', 'siglas', 'direccion', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
+        return['reeup', 'nombre', 'siglas', 'direccion', 'correo', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
         return super().get_fields(request, obj)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
@@ -171,7 +171,7 @@ class ProvinciaAdmin(admin.ModelAdmin):
 
 
 @admin.register(Marca)
-class MarcaAdmin(ImportExportModelAdmin):
+class MarcaAdmin(admin.ModelAdmin):
     resource_class = MarcaResource
     list_display = ('nommarca', 'pais', 'activa')
         
@@ -231,7 +231,15 @@ class PPAAdmin(ImportExportModelAdmin):
             kwargs["queryset"] = Equipo.objects.filter(owner=request.marca)
         return super(PPAAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
         
-        
+    def get_form(self, request=HttpRequest, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
+            form.base_fields['marca'] = forms.ModelChoiceField(queryset=Marca.objects.filter(activa = True))
+            form.base_fields['UM'].widget.can_add_related = False
+            form.base_fields['UM'].widget.can_delete_related = False
+            form.base_fields['UM'].widget.can_change_related = False
+        return form
+      
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(PPAAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name == 'modelo': 
@@ -259,17 +267,26 @@ class PPAAdmin(ImportExportModelAdmin):
     edit_link.short_description = "Detalles"
     
 @admin.register(Neumatico)
-class NeumaticoAdmin(ImportExportModelAdmin):
+class NeumaticoAdmin(admin.ModelAdmin):
     resource_class = NeumaticoResource
     list_display = ('idproducto', 'descripcion', 'UM', 'diametro', 'grosor', 'marca', 'edit_link')
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(NeumaticoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'marca':
+        if db_field.name == 'marca' or db_field.name == 'UM':
            formfield.widget.can_add_related = False
            formfield.widget.can_change_related = False
            formfield.widget.can_delete_related = False
         return formfield
+
+    def get_form(self, request:HttpRequest, obj, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['idproducto', 'descripcion', 'UM', 'Marca', 'activo', 'diametro', 'grosor']
+        if request.user.groups.filter(name = 'Marketing').exists():
+            form.base_fields['UM'].widget.can_add_related = False
+            form.base_fields['UM'].widget.can_delete_related = False
+            form.base_fields['UM'].widget.can_change_related = False
+        return form
 
     def edit_link(self,obj):
         return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
@@ -290,6 +307,15 @@ class BateriaAdmin(ImportExportModelAdmin):
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
         return formfield
+    
+    def get_form(self, request=HttpRequest, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
+            form.base_fields['marca'] = forms.ModelChoiceField(queryset=Marca.objects.filter(activa = True))
+            form.base_fields['UM'].widget.can_add_related = False
+            form.base_fields['UM'].widget.can_delete_related = False
+            form.base_fields['UM'].widget.can_change_related = False
+        return form
     
     def edit_link(self,obj):
         return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (

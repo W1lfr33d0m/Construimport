@@ -6,5 +6,5 @@ from django.utils.translation import gettext as _
 class LogEntry(models.Model):
    
     class meta:
-        verbose_name = ('Traza')
-        verbose_name_plural = ('Trazas')
+        verbose_name = ('  Traza')
+        verbose_name_plural = ('  Trazas')

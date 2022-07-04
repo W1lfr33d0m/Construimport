@@ -28,7 +28,7 @@ from Solicitudes.views import *
 
 
 urlpatterns = [
-    path('admin/', RedirectView.as_view(url='Dashboard/dashboard' , permanent=False)),
+    path('admin/', RedirectView.as_view(url='/admin/Dashboard/dashboard' , permanent=False)),
     path('admin/Salvas/', include('Salvas.urls', namespace='Salvas')),
     path('admin/Reportes/', include('Reportes.urls')),
     path('admin/Solicitudes/', include('Solicitudes.urls')),

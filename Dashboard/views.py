@@ -25,8 +25,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 #     data = serializers.serialize('json', dataset)
 #     return JsonResponse(data, safe=False)
 
-# def index(request):
-#     return render(request, 'dashboard/index.html')
+def index(request):
+   return render(request, 'admin/dashboard.html')
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
@@ -37,6 +37,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         
     def get_solicitudes_equipo(self):
         eq = Solicitud_Equipo.objects.filter(estado = 'Pendiente').count()
+        print(eq)
        
         return eq
         

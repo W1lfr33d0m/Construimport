@@ -166,20 +166,17 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                    'fechasol', 
                    'estado',
                    'valor_estimado',
+                   'fecha_venc',
                    'edit_link',
-                   'fecha_venc'
                    )
-    
     
     def get_fields(self, request, obj):  
         if request.user.groups.filter(name = 'Marketing').exists():
             return ['cliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-           #print(User.objects.filter(groups = 'Especialista_COMEX_Equipo'))
-        #    for user in request.user.objects.all:
-        #     self.fields['especialista'] = request.user.groups.filter(name = 'Especialista_COMEX_Equipo')
-        #     print(self.fields['especialista'])
            return ['estado', 'especialista']
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+            return ['cliente', 'observaciones', 'valor_estimado', 'estado', 'especialista']
         return super().get_fields(request, obj)
     
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
@@ -190,7 +187,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             form.base_fields['cliente'].widget.can_add_related = False
             form.base_fields['cliente'].widget.can_delete_related = False
             form.base_fields['cliente'].widget.can_change_related = False
-        elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj: 
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj:
             form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 4))
             form.base_fields['especialista'].widget.can_add_related = False
             form.base_fields['especialista'].widget.can_delete_related = False
@@ -199,7 +196,9 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request: HttpRequest, obj=None):
         if request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj and obj.estado == 'Aprobada': 
-            return False    
+            return False
+        if request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj and obj.estado == 'Cancelada': 
+            return False       
         return super(Solicitud_EquipoAdmin, self).has_change_permission(request, obj)       
     
     def get(self, request, *args, **kwargs):
@@ -251,7 +250,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
                 'ap_director': apdirector,
             }
             doc.render(context)
-            filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
+            #filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
             resultFilePath = 'media/Solicitud de Equipos' + str(solicitud.numsolicitud) + '.docx'
             doc.save(resultFilePath)
             convert(resultFilePath, 'D:\Downloads')
@@ -265,50 +264,44 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     def exportar_solicitud(self, request, queryset):   
         return self.exportar_solicitud_pdf(request, queryset)
     exportar_solicitud.short_description = 'Generar Documento en PDF'
-    
-    # def changeform_view(self, request: HttpRequest, object_id=None, form_url='', extra_context=None):
-    #     extra_context = extra_context or {}
-    #     extra_context['show_save_and_continue'] = False
-    #     extra_context['show_save_and_add_another'] = False
-    #     extra_context['show_delete'] = False
         
-    #     return super(Solicitud_EquipoAdmin, self).changeform_view(request, object_id, form_url, extra_context)
-    
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
-        print(Solicitud_EquipoInline.get_marca(self, obj))
-        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
-            for p in obj.proveedores.all().values_list('codmincex', flat=True):
-                oferta_equipo = Oferta_Equipo()
-                oferta_equipo.solicitud_id = obj.numsolicitud
-                oferta_equipo.proveedor_id = p
-                oferta_equipo.especialista = obj.especialista
-                oferta_equipo.valor_estimado = obj.valor_estimado
-                oferta_equipo.save()
-                for i in obj.equipo.all().values():
-                    q1 = Q(numsolicitud=obj.numsolicitud)
-                    q2 = Q(idproducto=i['descripcion'])
-                    equipo_proxy = Solicitud_Equipo_Proxy.objects.get(q1 | q2)
-                    # idproducto = i['idproducto']
-                    # equipo_proxy.idproducto = Equipo.objects.get(idproducto)
-                    print(obj.numsolicitud)
-                    print(equipo_proxy.cantidad)
-                    oferta = Oferta_Equipo_Proxy()
-                    oferta.oferta_id = oferta_equipo.numero
-                    oferta.equipo = equipo_proxy
-                    oferta.cantidad = equipo_proxy.cantidad
-                    oferta.save()
-        msg2 = "Solicitud modificada correctamente"
-        self.message_user(request, msg2, level=messages.SUCCESS)
-        return self.response_post_save_change(request, obj)
-    
+        try:
+            if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
+                for p in obj.proveedores.all().values_list('codmincex', flat=True):
+                    oferta_equipo = Oferta_Equipo()
+                    oferta_equipo.solicitud_id = obj.numsolicitud
+                    oferta_equipo.proveedor_id = p
+                    oferta_equipo.especialista = obj.especialista
+                    oferta_equipo.valor_estimado = obj.valor_estimado
+                    oferta_equipo.save()
+                    for i in obj.equipo.all().values():
+                        q1 = Q(numsolicitud=obj.numsolicitud)
+                        q2 = Q(idproducto=i['descripcion'])
+                        equipo_proxy = Solicitud_Equipo_Proxy.objects.get(q1 | q2)
+                        print(obj.numsolicitud)
+                        print(equipo_proxy.cantidad)
+                        oferta = Oferta_Equipo_Proxy()
+                        oferta.oferta_id = oferta_equipo.numero
+                        oferta.equipo = equipo_proxy
+                        oferta.cantidad = equipo_proxy.cantidad
+                        oferta.save()
+            msg2 = "Solicitud modificada correctamente"
+            self.message_user(request, msg2, level=messages.SUCCESS)
+            return self.response_post_save_change(request, obj)
+        except:
+            if obj.estado == 'Cancelada':
+                obj.especialista = 'No asignado'
+            return self.response_post_save_change(request, obj)
+        
     def response_post_save_add(self, request, obj=None):
         if request.user.groups.filter(name='Especialista_Marketing').exists():
           send_mail(
                 'Nueva solicitud',
                 'Tiene solicitudes pendientes a aprobar',
-                'wilferreira3@nauta.cu',
-                 [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
-                 fail_silently=False,
+                [User.groups.filter(name='Especialista_marketing').values_list('email', flat=True)],
+                [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
+                fail_silently=False,
                 )
         return super(Solicitud_EquipoAdmin, self).response_post_save_add(request, obj)
     
@@ -388,74 +381,51 @@ class Solicitud_PPAAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         fields = ['cliente', 'estado', 'especialista']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Marketing').exists():
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
             form.base_fields['cliente'].widget.can_add_related = False
             form.base_fields['cliente'].widget.can_delete_related = False
             form.base_fields['cliente'].widget.can_change_related = False
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj: 
-            form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 7))
+            form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 5))
             form.base_fields['especialista'].widget.can_add_related = False
             form.base_fields['especialista'].widget.can_delete_related = False
             form.base_fields['especialista'].widget.can_change_related = False
         return form
         
-        return form
-        
-    def get_proveedores(self, obj):
-           return obj.proveedores.all().values_list('codmincex', flat=True)
-                
-    def get_piezas(self, obj):
-       return obj.equipo.all().values_list('idproducto', flat=True)
-    
-    def get_cantidad(self, obj, idproducto):
-        if obj.idproducto == idproducto:
-            return obj.cantidad
-    
-    def response_add(self, request, obj, post_url_continue=None):
-        msg = "Solicitud agregada correctamente"
-        self.message_user(request, msg, level=messages.SUCCESS)
-        return self.response_post_save_add(request, obj)
-    
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
-        print(Solicitud_PPAInline.get_marca(self, obj))
-        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
-                print(p)
                 oferta_ppa = Oferta_PPA()
                 oferta_ppa.solicitud_id = obj.numsolicitud
                 oferta_ppa.proveedor_id = p
                 oferta_ppa.especialista = obj.especialista
                 oferta_ppa.valor_estimado = obj.valor_estimado
-                #oferta_equipo.save()
-                for ppa in obj.ppa.all().values_list('codmincex', flat=True):
-                   print(ppa.numsolicitud)
-                   oferta_ppa_proxy = Oferta_PPA_Proxy()
-                   oferta_ppa_proxy.solicitud_id = str(ppa.numsolicitud)
-                   oferta_ppa_proxy.equipo = ppa
-                   oferta_ppa_proxy.cantidad = ppa.cantidad
-                   oferta_ppa_proxy.save        
-                #super(Oferta_Equipo, self).response_post_save_add(request,obj)
-        #msg1 = "Tiene nuevas solicitudes de Ofertas"
-        #receiver = request.user.objects.filter(name = str(obj.especialista))
-        #self.message_user(receiver, msg1, level=messages.INFO)
+                oferta_ppa.save()
+                for i in obj.equipo.all().values():
+                    q1 = Q(numsolicitud=obj.numsolicitud)
+                    q2 = Q(idproducto=i['descripcion'])
+                    ppa_proxy = Solicitud_PPA_Proxy.objects.get(q1 | q2)
+                    # idproducto = i['idproducto']
+                    # equipo_proxy.idproducto = Equipo.objects.get(idproducto)
+                    oferta = Oferta_PPA_Proxy()
+                    oferta.oferta_id = oferta_ppa.numero
+                    oferta.ppa = ppa_proxy
+                    oferta.cantidad = ppa_proxy.cantidad
+                    oferta.save()
         msg2 = "Solicitud modificada correctamente"
         self.message_user(request, msg2, level=messages.SUCCESS)
         return self.response_post_save_change(request, obj)
     
     def response_post_save_add(self, request, obj=None):
-        if request.user.groups.filter(name='Marketing').exists():
+        if request.user.groups.filter(name='Especialista_Marketing').exists():
           send_mail(
                 'Nueva solicitud',
                 'Tiene solicitudes pendientes a aprobar',
-                'wilferreira3@nauta.cu',
-                 [User.groups.filter(name='Marketing').values_list('email', flat=True)],
-                 fail_silently=False,
-                  )
-        #return super().response_post_save_add(request, obj)
-        
-    def save(self, request:HttpResponse, obj=None):
-        
-        return super(Solicitud_Equipo, self).save(request, obj)
+                [User.groups.filter(name='Especialista_marketing').values_list('email', flat=True)],
+                [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
+                fail_silently=False,
+                )
+        return super(Solicitud_PPAAdmin, self).response_post_save_add(request, obj)
        
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
@@ -519,13 +489,11 @@ class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
     
     def get_fields(self, request, obj):  
         if request.user.groups.filter(name = 'Marketing').exists():
-            return ['cliente', 'observaciones', 'valor_estimado']
+            return ['cliente', 'observaciones', 'valor_estimado', 'plazo']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
-           #print(User.objects.filter(groups = 'Especialista_COMEX_Equipo'))
-        #    for user in request.user.objects.all:
-        #     self.fields['especialista'] = request.user.groups.filter(name = 'Especialista_COMEX_Equipo')
-        #     print(self.fields['especialista'])
            return ['estado', 'especialista']
+        elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj.estado == 'Aprobada':
+            return ['cliente', 'observaciones', 'valor_estimado', 'estado', 'especialista']
         return super().get_fields(request, obj)
             
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
@@ -543,17 +511,38 @@ class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
             form.base_fields['especialista'].widget.can_change_related = False
         return form
     
-    def response_add(self, request, obj, post_url_continue=None):
-        msg = "Solicitud agregada correctamente"
-        self.message_user(request, msg, level=messages.SUCCESS)
-        return self.response_post_save_add(request, obj)
+    def response_change(self, request:HttpRequest, obj, post_url_continue=None):
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
+            for p in obj.proveedores.all().values_list('codmincex', flat=True):
+                oferta_neumatico = Oferta_Neumatico()
+                oferta_neumatico.solicitud_id = obj.numsolicitud
+                oferta_neumatico.proveedor_id = p
+                oferta_neumatico.especialista = obj.especialista
+                oferta_neumatico.valor_estimado = obj.valor_estimado
+                oferta_neumatico.save()
+                for i in obj.neumatico.all().values():
+                    q1 = Q(numsolicitud=obj.numsolicitud)
+                    q2 = Q(idproducto=i['descripcion'])
+                    neumatico_proxy = Solicitud_Neumatico_Proxy.objects.get(q1 | q2)
+                    oferta = Oferta_Neumatico_Proxy()
+                    oferta.oferta_id = oferta_neumatico.numero
+                    oferta.neumatico = neumatico_proxy
+                    oferta.cantidad = neumatico_proxy.cantidad
+                    oferta.save()
+        msg2 = "Solicitud modificada correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+        return self.response_post_save_change(request, obj)
     
-    def save(self, request, queryset):
-        s = queryset.get(estado = 'Pendiente')
-        if request.user.groups.filter(name = 'Marketing').exists():
-           self.message_user(request, ngettext(
-            '%d Se añadieron nuevas solicitudes.', s,
-            ) %s, messages.SUCCESS)
+    def response_post_save_add(self, request, obj=None):
+        if request.user.groups.filter(name='Especialista_Marketing').exists():
+          send_mail(
+                'Nueva solicitud',
+                'Tiene solicitudes pendientes a aprobar',
+                [User.groups.filter(name='Especialista_marketing').values_list('email', flat=True)],
+                [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
+                fail_silently=False,
+                )
+        return super(Solicitud_NeumaticoAdmin, self).response_post_save_add(request, obj)
         
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
@@ -625,7 +614,7 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
     #filter_horizontal = ('productos', )    
         
     def get_fields(self, request, obj):  
-        if request.user.groups.filter(name = 'Marketing').exists():
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
             return ['cliente', 'observaciones', 'valor_estimado']
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists():
            #print(User.objects.filter(groups = 'Especialista_COMEX_Equipo'))
@@ -639,7 +628,7 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         fields = ['cliente', 'estado', 'especialista']
         #form.base_fields['fechasol' ].readonly = True
-        if request.user.groups.filter(name = 'Marketing').exists():
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
             form.base_fields['cliente'].widget.can_add_related = False
             form.base_fields['cliente'].widget.can_delete_related = False
             form.base_fields['cliente'].widget.can_change_related = False
@@ -650,17 +639,39 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
             form.base_fields['especialista'].widget.can_change_related = False
         return form
     
-    def response_add(self, request, obj, post_url_continue=None):
-        msg = "Solicitud agregada correctamente"
-        self.message_user(request, msg, level=messages.SUCCESS)
-        return self.response_post_save_add(request, obj)
+    def response_change(self, request:HttpRequest, obj, post_url_continue=None):
+        if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
+            for p in obj.proveedores.all().values_list('codmincex', flat=True):
+                oferta_bateria = Oferta_Bateria()
+                oferta_bateria.solicitud_id = obj.numsolicitud
+                oferta_bateria.proveedor_id = p
+                oferta_bateria.especialista = obj.especialista
+                oferta_bateria.valor_estimado = obj.valor_estimado
+                oferta_bateria.save()
+                for i in obj.bateria.all().values():
+                    q1 = Q(numsolicitud=obj.numsolicitud)
+                    q2 = Q(idproducto=i['descripcion'])
+                    bateria_proxy = Solicitud_Bateria_Proxy.objects.get(q1 | q2)
+                    oferta = Oferta_Bateria_Proxy()
+                    oferta.oferta_id = oferta_bateria.numero
+                    oferta.bateria = bateria_proxy
+                    oferta.cantidad = bateria_proxy.cantidad
+                    oferta.save()
+        msg2 = "Solicitud modificada correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+        return self.response_post_save_change(request, obj)
     
-    def post_save(self, request, queryset):
-        s = queryset.get(estado = 'Pendiente')
-        if request.user.username == 'director_desarrollo':
-            self.message_user(request, ngettext(
-                '%d Se añadieron nuevas solicitudes.', s,
-            ) %s, messages.SUCCESS)
+    def response_post_save_add(self, request, obj=None):
+        if request.user.groups.filter(name='Especialista_Marketing').exists():
+          send_mail(
+                'Nueva solicitud',
+                'Tiene solicitudes pendientes a aprobar',
+                [User.groups.filter(name='Especialista_Marketing').values_list('email', flat=True)],
+                [User.groups.filter(name='Director_Desarrollo').values_list('email', flat=True)],
+                fail_silently=False,
+                )
+        return super(Solicitud_BateriaAdmin, self).response_post_save_add(request, obj)
+        
         
     def get_inline_formsets(self, request, formsets= None, inline_instances = None, obj=None):
         return super().get_inline_formsets(request, formsets, inline_instances, obj)
@@ -673,8 +684,3 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
              obj._meta.app_label, obj._meta.model_name, obj.numsolicitud))
     edit_link.allow_tags = True
     edit_link.short_description = "Detalles"
-    
-    def pending_alert(self, request):
-        for sol in self:
-            if sol.get_estado == 'Pendiente' and request.user.username == 'director_desarrollo':
-                messages.info(request, f"La solicitud",sol.numsolicitud,"está pendiente a revisar")

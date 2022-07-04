@@ -77,3 +77,9 @@ class LogEntryAdmin(admin.ModelAdmin):
     def exportar_trazas(self, request, queryset):     
         return self.exportar_trazas_pdf(request, queryset)
     exportar_trazas.short_description = 'Exportar Trazas'
+    
+    # def get_actions(self, request: HttpRequest):
+    #     actions = super().get_actions(request)
+    #     if request.user.groups.filter(name = 'Administrador'):
+    #        return actions['Exportar Trazas',]
+    #     return actions

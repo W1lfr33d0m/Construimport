@@ -24,7 +24,7 @@ from django.db.models import base
 class Agregar_Solicitud_Equipo(SessionWizardView):
     model = Solicitud_Equipo
     form_list = (('Datos Generales', FSolicitud_Equipo), 
-                 ( 'Equipos', FSolicitud_Equipo_Proxy),03 
+                 ( 'Equipos', FSolicitud_Equipo_Proxy),
                  ('Confirmar', FSolicitud_Equipo_Confirmar)
                 )
     #fields = ['numcontratocliente', 'observaciones', 'valor_estimado']
