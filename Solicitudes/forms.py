@@ -47,19 +47,11 @@ class FSolicitud_Equipo_Proxy(forms.ModelForm):
             }),
         }
         
-class FSolicitud_Equipo_Confirmar(forms.Form):
-    class Meta:
-        fields = ['cliente', 'observaciones', 'valor_estimado']
-        widgets = {
-            'cliente': label,
-            'observaciones': label,
-            'valor_estimado': label,
-        }
-
 FSolicitud_Equipo_ProxyFormset = forms.inlineformset_factory(
                                                              model=Solicitud_Equipo_Proxy, 
                                                              parent_model=Solicitud_Equipo, 
-                                                             form=FSolicitud_Equipo_Proxy, extra=1,
+                                                             form=FSolicitud_Equipo_Proxy, 
+                                                             extra=1,
                                                              widgets={
                                                                         'idproducto': forms.Select(attrs={
                                                                         'placeholder': '',
@@ -72,11 +64,23 @@ FSolicitud_Equipo_ProxyFormset = forms.inlineformset_factory(
                                                                         
         }
                                                              )
+        
+class FSolicitud_Equipo_Confirmar(forms.Form):
+    class Meta:
+        model = Solicitud_Equipo
+        labels = ['cliente', 'observaciones', 'valor_estimado']
+        widgets = {
+            'cliente': label,
+            'observaciones': label,
+            'valor_estimado': label,
+        }
+
+
 
 class FSolicitud_PPA(forms.ModelForm):
     class Meta:
         model =  Solicitud_PPA
-        fields = ['cliente', 'observaciones', 'valor_estimado']   
+        fields = ['cliente', 'observaciones', 'valor_estimado', 'plazo']   
         widgets = {
             'cliente': forms.Select(attrs={
                 'placeholder': '',
@@ -110,7 +114,7 @@ class FSolicitud_PPA_Proxy(forms.ModelForm):
 class FSolicitud_Neumatico(forms.ModelForm):
     class Meta:
         model =  Solicitud_Neumatico
-        fields = ['cliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado', 'plazo']
         widgets = {
             'cliente': forms.Select(attrs={
                 'placeholder': '',
@@ -144,7 +148,7 @@ class FSolicitud_Neumatico_Proxy(forms.ModelForm):
 class FSolicitud_Bateria(forms.ModelForm):
     class Meta:
         model =  Solicitud_Bateria
-        fields = ['cliente', 'observaciones', 'valor_estimado']
+        fields = ['cliente', 'observaciones', 'valor_estimado', 'plazo']
         widgets = {
             'cliente': forms.Select(attrs={
                 'placeholder': '',
