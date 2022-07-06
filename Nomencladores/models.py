@@ -355,6 +355,19 @@ def nombre_validator(nomproveedor):
         if not nomproveedor[0].isalpha():
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nomproveedor},)
 
+def fecha_contrato(fecha_contrato):
+     if fecha_contrato and timezone.now():
+        delta = timezone.timedelta(days=3)
+        if fecha_contrato <  timezone.now() - delta:
+            raise ValidationError('La fecha del Contrato no puede ser 3 días anteriores a la fecha actual')
+        elif fecha_contrato > timezone.now():
+            raise ValidationError('La fecha del Contrato no puede ser posterior a la fecha actual') 
+
+def fecha_caducidad_proveedor():
+    delta = timedelta(days=365*5)
+    fecha_caducidad = timezone.now() + delta
+    return fecha_caducidad
+
 class Proveedor(models.Model):
         
     Productor = 'Productor'
@@ -419,6 +432,17 @@ class Proveedor(models.Model):
                                 blank=True,
     )
     
+    fecha_contrato = models.DateTimeField(
+                                    default = timezone.now, 
+                                    validators=[fecha_contrato]
+                                    )
+    
+    fecha_caducidad = models.DateTimeField(
+                                    null = True, 
+                                    blank= True, 
+                                    default= fecha_caducidad_proveedor, 
+                                    verbose_name='Caducidad del Contrato'
+                                    )
     
     activo = models.BooleanField(default=False)
     

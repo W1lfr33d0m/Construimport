@@ -47,8 +47,13 @@ class ProveedorAdmin(admin.ModelAdmin):
     resource_class = ProveedorResource
     inlines = [Casa_MatrizInline, Sucursal_CubaInline]
     # add_form_template = 'proveedor_form.html'
-    list_display = ('codmincex', 'nomproveedor', 'codigopais', 'clasificacion')
+    list_display = ('codmincex', 'nomproveedor', 'codigopais', 'clasificacion', 'fecha_caducidad', 'activo', 'edit_link')
     #filter_horizontal = ['productos',]
+    
+    def get_fields(self, request, obj):  
+        if request.user.groups.filter(name = 'Especialista_Marketing').exists():
+            return ['codmincex', 'nomproveedor', 'codigopais', 'clasificacion', 'marca', 'equipos', 'ppa', 'neumaticos', 'baterias', 'activo',]
+        return super().get_fields(request, obj)
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -135,6 +140,12 @@ class ProveedorAdmin(admin.ModelAdmin):
                     if str(i.marca) != str(j.nommarca):
                         raise ValidationError('Las baterías deben ser de las marcas seleccionadas')
         return super().response_post_save_change(request, obj)
+    
+    def edit_link(self,obj):
+        return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
+             obj._meta.app_label, obj._meta.model_name, obj.codmincex))
+    edit_link.allow_tags = True
+    edit_link.short_description = "Detalles"
     
 @admin.register(Ministerio)
 class MinisterioAdmin(admin.ModelAdmin):
