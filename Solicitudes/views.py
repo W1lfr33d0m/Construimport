@@ -54,10 +54,13 @@ class Agregar_Solicitud_Equipo(SessionWizardView):
         context['nombre_formulario'] = 'Agregar Solicitud de Equipo'
         context['mensaje'] = 'La solicitud fue adicionada correctamente.'
         context.update(admin.site.each_context(self.request))
-        # if self.steps.current == 1:
-        #     context.update({
-        #         'FSolicitud_Equipo_Proxy': FSolicitud_Equipo_ProxyFormset()
-        #     })
+        print(self.steps.current)
+        if self.steps.current == 2:
+            context.update({2: self.get_all_cleaned_data()})
+        if self.steps.current == 1:
+            context.update({
+                'FSolicitud_Equipo_Proxy': FSolicitud_Equipo_ProxyFormset()
+            })
         return context
     
     def dispatch(self, request, *args, **kwargs):
@@ -179,7 +182,22 @@ class Agregar_Solicitud_PPA(SessionWizardView):
         solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
-        
+        solicitud.plazo = datos_sol['plazo']
+        solicitud.fechasol = timezone.now()
+        if solicitud.plazo == '3 días':
+            delta1 = timezone.timedelta(days=3)
+            solicitud.fecha_venc = solicitud.fechasol + delta1
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1)    
+        elif solicitud.plazo == '7 días':
+            delta2 = timezone.timedelta(days=7)
+            solicitud.fecha_venc = solicitud.fechasol + delta2
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1)         
         solicitud.save()
         
         print(solicitud)
@@ -188,14 +206,14 @@ class Agregar_Solicitud_PPA(SessionWizardView):
         
         l = list(solicitud_proxy.values())
         
-        for ppa in Equipo.objects.filter(descripcion = l[0]):
-            eproxy = Solicitud_PPA_Proxy()
-            eproxy.numsolicitud_id = solicitud.numsolicitud
-            eproxy.idproducto_id= ppa.idproducto
-            eproxy.cantidad = l[1]
-            eproxy.save()
+        for ppa in PPA.objects.filter(descripcion = l[0]):
+            ppaproxy = Solicitud_PPA_Proxy()
+            ppaproxy.numsolicitud_id = solicitud.numsolicitud
+            ppaproxy.idproducto_id= ppa.idproducto
+            ppaproxy.cantidad = l[1]
+            ppaproxy.save()
         
-        return redirect('/')
+        return redirect('/admin/Solicitudes/solicitud_ppa/')  
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -249,7 +267,22 @@ class Agregar_Solicitud_Neumatico(SessionWizardView):
         solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
-        
+        solicitud.plazo = datos_sol['plazo']
+        solicitud.fechasol = timezone.now()
+        if solicitud.plazo == '3 días':
+            delta1 = timezone.timedelta(days=3)
+            solicitud.fecha_venc = solicitud.fechasol + delta1
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1)    
+        elif solicitud.plazo == '7 días':
+            delta2 = timezone.timedelta(days=7)
+            solicitud.fecha_venc = solicitud.fechasol + delta2
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1) 
         solicitud.save()
         
         print(solicitud)
@@ -318,7 +351,22 @@ class Agregar_Solicitud_Bateria(SessionWizardView):
         solicitud.cliente = datos_sol['cliente']
         solicitud.observaciones = datos_sol['observaciones']
         solicitud.valor_estimado = datos_sol['valor_estimado']
-        
+        solicitud.plazo = datos_sol['plazo']
+        solicitud.fechasol = timezone.now()
+        if solicitud.plazo == '3 días':
+            delta1 = timezone.timedelta(days=3)
+            solicitud.fecha_venc = solicitud.fechasol + delta1
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1)    
+        elif solicitud.plazo == '7 días':
+            delta2 = timezone.timedelta(days=7)
+            solicitud.fecha_venc = solicitud.fechasol + delta2
+            if solicitud.fecha_venc.weekday() == 5:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=2)
+            elif solicitud.fecha_venc.weekday() == 6:
+                solicitud.fecha_venc = solicitud.fecha_venc + timezone.timedelta(days=1) 
         solicitud.save()
         
         print(solicitud)

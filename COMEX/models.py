@@ -32,6 +32,18 @@ from django.contrib.auth.models import User, Group
 #   if idespecialista.user.groups.filter(name = 'Especialista_COMEX').exists():
 #       return True
 
+# def fecha_oferta(fecha):
+#      if fecha_contrato and timezone.now():
+#         delta = timezone.timedelta(days=3)
+#         if fecha_contrato <  timezone.now() - delta:
+#             raise ValidationError('La fecha de la Oferta no puede ser 3 días anteriores a la fecha actual')
+#         elif fecha_contrato > timezone.now() + delta:
+#             raise ValidationError('La fecha de la Oferta no puede ser 3 días posteriores a la fecha actual') 
+
+# def fecha_validez():
+#     delta = timedelta(days=365)
+#     fecha_caducidad = timezone.now() + delta
+#     return fecha_caducidad
     
 class Oferta(models.Model):
     
@@ -60,7 +72,7 @@ class Oferta(models.Model):
     fecha = models.DateTimeField(
         default= timezone.now, 
         verbose_name = 'Fecha de la Oferta',
-        blank=True
+        editable=False,
     )
     
     pais = models.ForeignKey(
@@ -107,6 +119,7 @@ class Oferta(models.Model):
     monto_total = models.FloatField(
         #max_length=10,
         null=True,
+        blank= True,
         verbose_name='Monto Total'
     )
     

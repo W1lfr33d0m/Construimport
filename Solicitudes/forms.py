@@ -66,14 +66,17 @@ FSolicitud_Equipo_ProxyFormset = forms.inlineformset_factory(
                                                              )
         
 class FSolicitud_Equipo_Confirmar(forms.Form):
-    class Meta:
-        model = Solicitud_Equipo
-        labels = ['cliente', 'observaciones', 'valor_estimado']
-        widgets = {
+     widgets = {
+            'mensaje': forms.Textarea(attrs={
+                'placeholder':'¿Está seguro de agregar la Siguiente Solicitud?',
+                'class':'form-control',
+                'disabled': True
+                }),
             'cliente': label,
             'observaciones': label,
             'valor_estimado': label,
         }
+     
 
 
 

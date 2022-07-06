@@ -44,10 +44,10 @@ class Casa_MatrizInline(admin.StackedInline):
 
 
 @admin.register(Proveedor)
-class ProveedorAdmin(ImportExportModelAdmin):
+class ProveedorAdmin(admin.ModelAdmin):
     resource_class = ProveedorResource
     inlines = [Sucursal_CubaInline, Casa_MatrizInline]
-    add_form_template = 'proveedor_form.html'
+    # add_form_template = 'proveedor_form.html'
     list_display = ('codmincex', 'nomproveedor', 'codigopais', 'clasificacion')
     #filter_horizontal = ['productos',]
     
@@ -55,9 +55,9 @@ class ProveedorAdmin(ImportExportModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['codigopais'].widget.can_add_related = False
         #form.base_fields['equipos'] = Equipo.objects.filter(marca = Marca.objects.all())
-        # form.base_fields['marcas'].widget.can_add_related = False
-        # form.base_fields['marcas'].widget.can_change_related = False
-        # form.base_fields['marcas'].widget.can_delete_related = False
+        form.base_fields['marca'].widget.can_add_related = False
+        form.base_fields['marca'].widget.can_change_related = False
+        form.base_fields['marca'].widget.can_delete_related = False
         form.base_fields['equipos'].widget.can_add_related = False
         form.base_fields['equipos'].widget.can_change_related = False
         form.base_fields['equipos'].widget.can_delete_related = False
@@ -73,6 +73,69 @@ class ProveedorAdmin(ImportExportModelAdmin):
         
         return form
     
+    def render_change_form(self, request:HttpRequest, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_save_and_add_another': False,
+            'show_exit':True,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
+    def response_post_save_add(self, request: HttpRequest, obj:None):
+        if request.method == 'POST' and obj:
+            marcas = obj.marca.all()
+            equipos = obj.equipos.all()
+            ppa = obj.ppa.all()
+            neumaticos = obj.neumaticos.all()
+            baterias = obj.baterias.all()
+            for i in equipos:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Los equipos deben ser de las marcas seleccionadas')
+            for i in ppa:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Las partes y pieza deben ser de las marcas seleccionadas')
+            for i in neumaticos:
+                print(i.marca)
+                for j in marcas:
+                    print(j.nommarca)
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Los neumáticos deben ser de las marcas seleccionadas')
+            for i in baterias:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Las baterías deben ser de las marcas seleccionadas')
+        return super().response_post_save_add(request, obj)
+    
+    def response_post_save_change(self, request: HttpRequest, obj:None):
+        if request.method == 'POST' and obj:
+            marcas = obj.marca.all()
+            equipos = obj.equipos.all()
+            ppa = obj.ppa.all()
+            neumaticos = obj.neumaticos.all()
+            baterias = obj.baterias.all()
+            for i in equipos:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Los equipos deben ser de las marcas seleccionadas')
+            for i in ppa:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Las partes y pieza deben ser de las marcas seleccionadas')
+            for i in neumaticos:
+                print(i.marca)
+                for j in marcas:
+                    print(j.nommarca)
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Los neumáticos deben ser de las marcas seleccionadas')
+            for i in baterias:
+                for j in marcas:
+                    if str(i.marca) != str(j.nommarca):
+                        raise ValidationError('Las baterías deben ser de las marcas seleccionadas')
+        return super().response_post_save_change(request, obj)
     
 @admin.register(Ministerio)
 class MinisterioAdmin(admin.ModelAdmin):
@@ -110,6 +173,16 @@ class ClienteAdmin(admin.ModelAdmin):
         #if request.user.groups.filter(name = 'Marketing').exists():
         return['reeup', 'nombre', 'siglas', 'direccion', 'correo', 'telefono', 'OSDE', 'codigoprovincia', 'representante', 'fecha_contrato']
         return super().get_fields(request, obj)
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_save_and_add_another': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
        formfield = super(ClienteAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -181,6 +254,13 @@ class MarcaAdmin(admin.ModelAdmin):
     
         return form
     
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def edit_link(self,obj):
         return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
@@ -192,6 +272,15 @@ class MarcaAdmin(admin.ModelAdmin):
 class UMAdmin(admin.ModelAdmin):
     list_display = ('codigoum', 'descripcionum')
 
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_save_and_add_another': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+
 @admin.register(Equipo)
 class EquipoAdmin(admin.ModelAdmin):
     resource_class = EquipoResource
@@ -199,7 +288,7 @@ class EquipoAdmin(admin.ModelAdmin):
         
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(EquipoAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
-        if db_field.name == 'marca' or db_field == 'UM':
+        if db_field.name == 'marca' or db_field.name == 'UM':
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
@@ -208,11 +297,19 @@ class EquipoAdmin(admin.ModelAdmin):
     def get_form(self, request:HttpRequest, obj, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['idproducto', 'descripcion', 'UM', 'Marca', 'Modelo']
-        if request.user.groups.filter(name = 'Marketing').exists():
-            form.base_fields['UM'].widget.can_add_related = False
-            form.base_fields['UM'].widget.can_delete_related = False
-            form.base_fields['UM'].widget.can_change_related = False
+        # if request.user.groups.filter(name = 'Marketing').exists():
+        #     form.base_fields['UM'].widget.can_add_related = False
+        #     form.base_fields['UM'].widget.can_delete_related = False
+        #     form.base_fields['UM'].widget.can_change_related = False
         return form
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def edit_link(self,obj):
         return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
@@ -225,6 +322,13 @@ class PPAAdmin(ImportExportModelAdmin):
     resource_class = PPAResource
     list_display = ('idproducto', 'descripcion', 'marca', 'edit_link')
     
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'marca':
@@ -288,6 +392,14 @@ class NeumaticoAdmin(admin.ModelAdmin):
             form.base_fields['UM'].widget.can_change_related = False
         return form
 
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
     def edit_link(self,obj):
         return format_html(u'<a href="/admin/%s/%s/%s/change/">Detalles</a>' % (
         obj._meta.app_label, obj._meta.model_name, obj.idproducto))
@@ -307,6 +419,14 @@ class BateriaAdmin(ImportExportModelAdmin):
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
         return formfield
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def get_form(self, request=HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)

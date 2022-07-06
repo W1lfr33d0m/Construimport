@@ -281,17 +281,19 @@ body {
                 </table>
                 {% if wizard.steps.prev %}
                 {% comment %} <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button> {% endcomment %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Anterior</button>
                 {% endif %}
-                {% if wizard.steps.current == 1 %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.step1 }}">Agregar otro</button>
+                {% if wizard.steps.current == 2 %}
+                    <h3>¿Está seguro de agregar la Siguiente Solicitud?</h3>
                 {% endif %}
-                <input type="submit" value="Siguiente"/>
-                {{ wizard.steps.current }}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Siguiente</button>
+                {% comment %} <input type="submit" value="Siguiente"/> {% endcomment %}
+                {% comment %} {{ wizard.steps.current }} {% endcomment %}
             </fieldset>
         </form>
     </div>
 </div>
+{% block jquery %}
 <script>
     //jQuery time
 var current_fs, next_fs, previous_fs; //fieldsets
@@ -375,4 +377,5 @@ $(".submit").click(function(){
 	return false;
 })
 </script>
+{% endblock %}
 {% endblock %}

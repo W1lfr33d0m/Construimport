@@ -4,6 +4,7 @@ from unicodedata import name
 from django.db import connection, reset_queries
 #from celery import group
 from fastapi import Query
+from numpy import number
 from requests import request
 import psycopg2
 from colorama import Cursor
@@ -24,6 +25,7 @@ from django.db.models import Model
 from .models import *
 from django.contrib import messages
 from django.http import HttpRequest
+from import_export.admin import ExportActionMixin
 
 # Register your models here.
 
@@ -33,7 +35,6 @@ class Oferta_EquipoInlineResource(resources.ModelResource):
         attribute= 'solicitud',
         widget= ForeignKeyWidget(Oferta_Equipo_Proxy, 'numsolicitud')
     )
-    
     class Meta:
         model = Solicitud
         skip_unchanged = True
@@ -46,7 +47,7 @@ class Oferta_EquipoInline(admin.TabularInline):
     fk_name = 'oferta'
     extra = 1
     max_num = 1
-    #readonly_fields = ('item',)
+    readonly_fields = ('equipo', 'cantidad')
     fields = ('equipo', 'cantidad', 'precio', 'importe')
     #Autocomplete_fields = ['', ]
         
@@ -57,45 +58,88 @@ class Oferta_EquipoInline(admin.TabularInline):
             formfield.widget.can_change_related = False
         return formfield
     
-    #def get_fields(self, request: HttpRequest, obj=None):
-    #    if self.fields.solicitud:
-    #        return ['equipo', 'cantidad', 'precio', 'importe']   
-    #    return super().get_fields(request, obj)
-      
+    def get_fields(self, request: HttpRequest, obj=None):
+       if self.fields:
+           return ['equipo', 'cantidad', 'precio', 'importe']   
+       return super().get_fields(request, obj)
+   
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        fields = ['equipo', 'cantidad', 'precio', 'importe']
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj:
+            form.base_fields['importe'].disabled = False
+        return form
     
 @admin.register(Oferta_Equipo)
-class Oferta_EquipoAdmin(admin.ModelAdmin):
+class Oferta_EquipoAdmin(ImportExportModelAdmin):
     inlines = [Oferta_EquipoInline,]
-    list_display = ('numero', 'solicitud', 'pais', 'proveedor', 'especialista', 'estado', 'edit_link')
-        
+    list_display = ('numero', 'solicitud', 'proveedor', 'especialista', 'fecha', 'estado', 'pais', 'edit_link')   
+    
     def get_fields(self, request, obj):
-        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj:
-            return ['fecha', 'proveedor', 'pais', 'validez', 'solicitud']
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists():
+            return ['proveedor', 'pais', 'validez', 'solicitud']
         elif request.user.groups.filter(name = 'Director_COMEX').exists():
             return ['estado', 'idespecialista']
         return super().get_fields(request, obj)
+    
+    # def formfield_for_dbfield(self, db_field, request, **kwargs):
+    #     formfield = super(Oferta_Equipo, self).formfield_for_dbfield(db_field, request, **kwargs)
+    #     if db_field.name == 'idproducto':
+    #         formfield.widget.can_add_related = False
+    #         formfield.widget.can_change_related = False
+    #     return formfield
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
+    def has_change_permission(self, request: HttpRequest, obj=None):
+        if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj and obj.estado == 'Aprobada': 
+            return False
+        if request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj and obj.estado == 'Cancelada': 
+            return False       
+        return super(Oferta_EquipoAdmin, self).has_change_permission(request, obj)
     
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['pais',]
         readonly_fields = ['proveedor', 'especialista', 'solicitud']
-        #form.base_fields['fechasol' ].readonly = True
         if request.user.groups.filter(name = 'Especialista_COMEX_Equipo').exists() and obj:
             form.base_fields['pais'].widget.can_add_related = False
             form.base_fields['pais'].widget.can_delete_related = False
             form.base_fields['pais'].widget.can_change_related = False
             form.base_fields['proveedor'].disabled = True
+            form.base_fields['especialista'].can_add_related = False
+            form.base_fields['especialista'].can_change_related = False
             form.base_fields['especialista'].can_delete_related = False
             form.base_fields['especialista'].disabled = True
+            form.base_fields['estado'].can_add_related = False
+            form.base_fields['estado'].can_change_related = False
+            form.base_fields['estado'].can_delete_related = False
+            form.base_fields['estado'].disabled = True
+            form.base_fields['monto_total'].disabled = True
             form.base_fields['solicitud'].disabled = True
             form.base_fields['valor_estimado'].disabled = True
+            
         return form
     
-    def response_change(self, request, obj, post_url_continue=None):
-        if request.method == 'POST':
-            for i in obj.equipos.all():
-                suma += i.importe
+    def response_change(self, request, obj=None, post_url_continue=None):
+        if request.method == 'POST' and obj:
+            suma = 0
+            for i in Oferta_Equipo_Proxy.objects.filter(oferta = obj.numero):
+                try:
+                    if (float(i.cantidad) and float(i.precio)) and (i.cantidad > 0 and i.precio > 0 ):
+                        i.importe = i.cantidad * i.precio
+                        suma += i.importe
+                except:
+                    # if not float(i.cantidad) or not float(i.precio):
+                    raise ValidationError('Los valores deben ser números positivos')
             obj.monto_total = suma
+            print(obj.monto_total)
             if suma > obj.valor_estimado:
                 raise warning('El monto total excede el valor estimado, debe modificar la oferta')
             elif i.importe != (i.cantidad * i.precio):
@@ -180,6 +224,14 @@ class Oferta_PPAAdmin(admin.ModelAdmin):
             form.base_fields['valor_estimado'].disabled = True
         return form
     
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
     def response_change(self, request, obj, post_url_continue=None):
         msg = "Oferta modificada correctamente"
         self.message_user(request, msg, level=messages.SUCCESS)
@@ -260,6 +312,14 @@ class Oferta_NeumaticoAdmin(admin.ModelAdmin):
             form.base_fields['solicitud'].disabled = True
             form.base_fields['valor_estimado'].disabled = True
         return form
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def response_change(self, request, obj, post_url_continue=None):
         msg = "Oferta modificada correctamente"
@@ -342,6 +402,14 @@ class Oferta_BateriAdmin(admin.ModelAdmin):
             form.base_fields['solicitud'].disabled = True
             form.base_fields['valor_estimado'].disabled = True
         return form
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def response_change(self, request, obj, post_url_continue=None):
         msg = "Oferta modificada correctamente"

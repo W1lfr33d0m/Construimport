@@ -151,15 +151,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     inlines = (Solicitud_EquipoInline, Solicitud_Equipo_ProveedorInline)
     #readonly_fields = ('numsolicitud')
-    
-    
-    # fieldsets = (
-    #     (None, {
-    #         "fields": (('numcontratocliente'), 'observaciones', 'valor_estimado'),
-    #     }),
         
-    #  )
-    
     list_display = (
                    'numsolicitud', 
                    'cliente', 
@@ -182,7 +174,6 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['cliente', 'estado', 'especialista']
-        #form.base_fields['fechasol' ].readonly = True
         if request.user.groups.filter(name = 'Marketing').exists():
             form.base_fields['cliente'].widget.can_add_related = False
             form.base_fields['cliente'].widget.can_delete_related = False
@@ -191,8 +182,20 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             form.base_fields['especialista'] = forms.ModelChoiceField(queryset=User.objects.filter(groups = 4))
             form.base_fields['especialista'].widget.can_add_related = False
             form.base_fields['especialista'].widget.can_delete_related = False
-            form.base_fields['especialista'].widget.can_change_related = False            
+            form.base_fields['especialista'].widget.can_change_related = False
+            # form.base_fields['cliente'].disabled = True
+            # form.base_fields['observaciones'].disabled = True
+            # form.base_fields['valor_estimado'].disabled = True
+            # form.base_fields['plazo'].disabled = True
         return form
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     def has_change_permission(self, request: HttpRequest, obj=None):
         if request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj and obj.estado == 'Aprobada': 
@@ -216,7 +219,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
     def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
         for solicitud in queryset:        
             base_url = os.path.join('media') + '/Solicitudes/'
-            asset_url = base_url + 'Generar Solicitud.docx'
+            asset_url = base_url + 'Generar Solicitud Equipo.docx'
             doc = DocxTemplate(asset_url)
             cliente = Cliente.objects.get(nombre = solicitud.cliente)
             eqlist = []
@@ -291,7 +294,7 @@ class Solicitud_EquipoAdmin(admin.ModelAdmin):
             return self.response_post_save_change(request, obj)
         except:
             if obj.estado == 'Cancelada':
-                obj.especialista = 'No asignado'
+                obj.especialista = None
             return self.response_post_save_change(request, obj)
         
     def response_post_save_add(self, request, obj=None):
@@ -335,7 +338,7 @@ class Solicitud_PPAInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_PPA_Proxy
     fk_name = 'numsolicitud'
-    extra = 1
+    extra = 0
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['productos', ]
@@ -352,8 +355,8 @@ class Solicitud_PPAInline(admin.StackedInline):
 class Solicitud_PPAAdmin(admin.ModelAdmin):
     add_form_template = 'solicitud_form.html'
     resource_class = SolicitudResource
+    actions = ['exportar_solicitud',]
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
-    
     inlines = (Solicitud_PPAInline, )
     list_display = (
                    'numsolicitud', 
@@ -361,7 +364,8 @@ class Solicitud_PPAAdmin(admin.ModelAdmin):
                    'fechasol', 
                    'estado',
                    'valor_estimado',
-                   'edit_link'
+                   'fecha_venc',
+                   'edit_link',
                    )
     
     #filter_horizontal = ('productos', )            
@@ -377,6 +381,14 @@ class Solicitud_PPAAdmin(admin.ModelAdmin):
            return ['estado', 'especialista']
         return super().get_fields(request, obj)
             
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
+    
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['cliente', 'estado', 'especialista']
@@ -391,7 +403,58 @@ class Solicitud_PPAAdmin(admin.ModelAdmin):
             form.base_fields['especialista'].widget.can_delete_related = False
             form.base_fields['especialista'].widget.can_change_related = False
         return form
-        
+    
+    def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
+        for solicitud in queryset:        
+            base_url = os.path.join('media') + '/Solicitudes/'
+            asset_url = base_url + 'Generar Solicitud PPA.docx'
+            doc = DocxTemplate(asset_url)
+            cliente = Cliente.objects.get(nombre = solicitud.cliente)
+            ppalist = []
+            for i in Solicitud_PPA_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud):
+                for j in PPA.objects.filter(descripcion = i.idproducto):
+                    ppadict = {'producto': {'idproducto': j.idproducto, 'descripcion': j.descripcion, 'UM': j.UM, 'cantidad': i.cantidad}}
+                    ppalist.append(ppadict)
+            ppa_proxy = Solicitud_PPA_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
+            ppa = PPA.objects.get(descripcion = ppa_proxy.idproducto)
+            nomespecialista = request.user.first_name
+            apespecialista = request.user.last_name
+            nomdirector = User.objects.get(username = 'director_desarrollo').first_name
+            apdirector = User.objects.get(username = 'director_desarrollo').last_name
+            fecha = "{:%d - %m - %Y}".format(solicitud.fechasol)
+            fecha_venc = "{:%d - %m - %Y}".format(solicitud.fecha_venc)
+            context = {
+                'numsolicitud':solicitud.numsolicitud,
+                'fecha': fecha,
+                'fecha_caducidad': fecha_venc,
+                'cliente': solicitud.cliente,
+                'representante': cliente.representante,
+                'telefono': cliente.telefono,
+                'correo': cliente.correo,
+                'valor_estimado': solicitud.valor_estimado,
+                'observaciones': solicitud.observaciones,
+                'ppa':ppalist,
+                'nombre_usuario': nomespecialista,
+                'ap_usuario': apespecialista,
+                'nombre_director': nomdirector,
+                'ap_director': apdirector,
+            }
+            doc.render(context)
+            #filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
+            resultFilePath = 'media/Solicitud de PPA' + str(solicitud.numsolicitud) + '.docx'
+            doc.save(resultFilePath)
+            convert(resultFilePath, 'D:\Downloads')
+            os.remove(resultFilePath)
+            path = 'D:\Downloads'
+            webbrowser.open(path)
+        msg2 = "Documentos generados correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+    
+    
+    def exportar_solicitud(self, request, queryset):   
+        return self.exportar_solicitud_pdf(request, queryset)
+    exportar_solicitud.short_description = 'Generar Documento en PDF'
+       
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
             for p in obj.proveedores.all().values_list('codmincex', flat=True):
@@ -457,7 +520,7 @@ class Solicitud_NeumaticoInline(admin.StackedInline):
       
     model = Solicitud_Neumatico_Proxy
     fk_name = 'numsolicitud'
-    extra = 1
+    extra = 0
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['productos', ]
@@ -476,13 +539,15 @@ class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     add_form_template = 'solicitud_form.html'
     inlines = (  Solicitud_NeumaticoInline, )
+    actions = ['exportar_solicitud',]
     list_display = (
                    'numsolicitud', 
                    'cliente', 
                    'fechasol', 
                    'estado',
                    'valor_estimado',
-                   'edit_link'
+                   'fecha_venc',
+                   'edit_link',
                    )
     
     #filter_horizontal = ('productos', )    
@@ -495,6 +560,14 @@ class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
         elif request.user.groups.filter(name = 'Director_Desarrollo').exists() and obj.estado == 'Aprobada':
             return ['cliente', 'observaciones', 'valor_estimado', 'estado', 'especialista']
         return super().get_fields(request, obj)
+    
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
             
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -510,6 +583,58 @@ class Solicitud_NeumaticoAdmin(admin.ModelAdmin):
             form.base_fields['especialista'].widget.can_delete_related = False
             form.base_fields['especialista'].widget.can_change_related = False
         return form
+    
+    def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
+        for solicitud in queryset:        
+            base_url = os.path.join('media') + '/Solicitudes/'
+            asset_url = base_url + 'Generar Solicitud Neumatico.docx'
+            doc = DocxTemplate(asset_url)
+            cliente = Cliente.objects.get(nombre = solicitud.cliente)
+            nmlist = []
+            for i in Solicitud_Neumatico_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud):
+                for j in Neumatico.objects.filter(descripcion = i.idproducto):
+                    nmdict = {'producto': {'idproducto': j.idproducto, 'descripcion': j.descripcion, 'UM': j.UM, 'cantidad': i.cantidad}}
+                    nmlist.append(nmdict)
+            neumaticoo_proxy = Solicitud_Neumatico_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
+            neumatico = Neumatico.objects.get(descripcion = neumaticoo_proxy.idproducto)
+            nomespecialista = request.user.first_name
+            apespecialista = request.user.last_name
+            nomdirector = User.objects.get(username = 'director_desarrollo').first_name
+            apdirector = User.objects.get(username = 'director_desarrollo').last_name
+            fecha = "{:%d - %m - %Y}".format(solicitud.fechasol)
+            fecha_venc = "{:%d - %m - %Y}".format(solicitud.fecha_venc)
+            print(fecha)
+            context = {
+                'numsolicitud':solicitud.numsolicitud,
+                'fecha': fecha,
+                'fecha_caducidad': fecha_venc,
+                'cliente': solicitud.cliente,
+                'representante': cliente.representante,
+                'telefono': cliente.telefono,
+                'correo': cliente.correo,
+                'valor_estimado': solicitud.valor_estimado,
+                'observaciones': solicitud.observaciones,
+                'neumaticos':nmlist,
+                'nombre_usuario': nomespecialista,
+                'ap_usuario': apespecialista,
+                'nombre_director': nomdirector,
+                'ap_director': apdirector,
+            }
+            doc.render(context)
+            #filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
+            resultFilePath = 'media/Solicitud de Neumatico' + str(solicitud.numsolicitud) + '.docx'
+            doc.save(resultFilePath)
+            convert(resultFilePath, 'D:\Downloads')
+            os.remove(resultFilePath)
+            path = 'D:\Downloads'
+            webbrowser.open(path)
+        msg2 = "Documentos generados correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+    
+    
+    def exportar_solicitud(self, request, queryset):   
+        return self.exportar_solicitud_pdf(request, queryset)
+    exportar_solicitud.short_description = 'Generar Documento en PDF'
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:
@@ -578,12 +703,11 @@ class Solicitud_Bateria_ProveedorInline(admin.StackedInline):
         formfield.widget.can_change_related = False
         return formfield
 
-    
 class Solicitud_BateriaInline(admin.StackedInline):
     #resource_class = Solicitud_ProductoResource
     model = Solicitud_Bateria_Proxy
     fk_name = 'numsolicitud'
-    extra = 1
+    extra = 0
     #readonly_fields = ('item',)
     fields = ('idproducto', 'cantidad')
     #Autocomplete_fields = ['productos', ]
@@ -601,6 +725,7 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
     #resource_class = SolicitudResource
     #productos_display = Solicitud_ProductoInlineAdmin.productos_display
     add_form_template = 'solicitud_form.hrml'
+    actions = ['exportar_solicitud',]
     inlines = ( Solicitud_BateriaInline, )
     list_display = (
                    'numsolicitud', 
@@ -608,7 +733,8 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
                    'fechasol', 
                    'estado',
                    'valor_estimado',
-                   'edit_link'
+                   'fecha_venc',
+                   'edit_link',
                    )
     
     #filter_horizontal = ('productos', )    
@@ -624,6 +750,14 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
            return ['estado', 'especialista']
         return super().get_fields(request, obj)
         
+    def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
+        context.update({
+            'show_save': True,
+            'show_save_and_continue': False,
+            'show_delete': False
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)    
+    
     def get_form(self, request:HttpRequest, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['cliente', 'estado', 'especialista']
@@ -638,6 +772,58 @@ class Solicitud_BateriaAdmin(admin.ModelAdmin):
             form.base_fields['especialista'].widget.can_delete_related = False
             form.base_fields['especialista'].widget.can_change_related = False
         return form
+    
+    def exportar_solicitud_pdf(self, request:HttpRequest, queryset):              
+        for solicitud in queryset:        
+            base_url = os.path.join('media') + '/Solicitudes/'
+            asset_url = base_url + 'Generar Solicitud Bateria.docx'
+            doc = DocxTemplate(asset_url)
+            cliente = Cliente.objects.get(nombre = solicitud.cliente)
+            btlist = []
+            for i in Solicitud_Bateria_Proxy.objects.filter(numsolicitud = solicitud.numsolicitud):
+                for j in Bateria.objects.filter(descripcion = i.idproducto):
+                    btdict = {'producto': {'idproducto': j.idproducto, 'descripcion': j.descripcion, 'UM': j.UM, 'cantidad': i.cantidad}}
+                    btlist.append(btdict)
+            bateria_proxy = Solicitud_Bateria_Proxy.objects.get(numsolicitud = solicitud.numsolicitud)
+            bateria = Bateria.objects.get(descripcion = bateria_proxy.idproducto)
+            nomespecialista = request.user.first_name
+            apespecialista = request.user.last_name
+            nomdirector = User.objects.get(username = 'director_desarrollo').first_name
+            apdirector = User.objects.get(username = 'director_desarrollo').last_name
+            fecha = "{:%d - %m - %Y}".format(solicitud.fechasol)
+            fecha_venc = "{:%d - %m - %Y}".format(solicitud.fecha_venc)
+            print(fecha)
+            context = {
+                'numsolicitud':solicitud.numsolicitud,
+                'fecha': fecha,
+                'fecha_caducidad': fecha_venc,
+                'cliente': solicitud.cliente,
+                'representante': cliente.representante,
+                'telefono': cliente.telefono,
+                'correo': cliente.correo,
+                'valor_estimado': solicitud.valor_estimado,
+                'observaciones': solicitud.observaciones,
+                'baterias':btlist,
+                'nombre_usuario': nomespecialista,
+                'ap_usuario': apespecialista,
+                'nombre_director': nomdirector,
+                'ap_director': apdirector,
+            }
+            doc.render(context)
+            #filename = 'Solicitud de Equipos' + str(solicitud.numsolicitud) + '.pdf'
+            resultFilePath = 'media/Solicitud de Bateria' + str(solicitud.numsolicitud) + '.docx'
+            doc.save(resultFilePath)
+            convert(resultFilePath, 'D:\Downloads')
+            os.remove(resultFilePath)
+            path = 'D:\Downloads'
+            webbrowser.open(path)
+        msg2 = "Documentos generados correctamente"
+        self.message_user(request, msg2, level=messages.SUCCESS)
+    
+    
+    def exportar_solicitud(self, request, queryset):   
+        return self.exportar_solicitud_pdf(request, queryset)
+    exportar_solicitud.short_description = 'Generar Documento en PDF'
     
     def response_change(self, request:HttpRequest, obj, post_url_continue=None):
         if request.user.groups.filter(name='Director_Desarrollo').exists() and obj.estado == 'Aprobada' and obj.especialista is not None:

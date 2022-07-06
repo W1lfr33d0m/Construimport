@@ -20,7 +20,7 @@ from django.core.exceptions import ValidationError
 from numpy import blackman, save
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, UnicodeREEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator
+from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, REEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator
 from django import forms
 from django.utils.text import slugify
 from django.utils import timezone
@@ -82,32 +82,6 @@ class  Provincia(models.Model):
 Clase Cliente
     
 """
-def reeup_validator(reeup):
-    pass
-    # l = list(reeup)
-    # for i in l:
-    #     if i[0].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[1].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[2].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[3] != '.':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[4] != 0:
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[5] != '.':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[6].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[7].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[8].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[9].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
-    #     elif i[10].isalpha() or i == "''" or i == '/' or i == ',' or i == ';' or i == '@' or i == '#' or i == '$' or i == '%':
-    #         raise ValidationError(_('%(reeup)s solo puede contener números'), params={'reeup': reeup},)
         
 def nombre_validator(nombre):
     for i in nombre:
@@ -122,7 +96,7 @@ def validate_telefono(telefono):
         )
                 
 class Empresa(models.Model):
-    reeup = models.CharField(max_length=11, primary_key=True, validators=[UnicodeREEUPValidator, reeup_validator], verbose_name='Código REEUP')
+    reeup = models.CharField(max_length=11, primary_key=True, validators=[REEUPValidator.reeup_validator], verbose_name='Código REEUP')
     nombre = models.CharField(max_length=100, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Nombre')
     siglas = models.CharField(max_length=15, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Siglas')
     direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')

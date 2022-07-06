@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Ministerio',
             fields=[
-                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.UnicodeREEUPValidator, Nomencladores.models.reeup_validator], verbose_name='Código REEUP')),
+                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.REEUPValidator], verbose_name='Código REEUP')),
                 ('nombre', models.CharField(max_length=100, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Nombre')),
                 ('siglas', models.CharField(max_length=15, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Siglas')),
                 ('direccion', models.CharField(max_length=100, verbose_name='Dirección')),
@@ -197,7 +197,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OSDE',
             fields=[
-                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.UnicodeREEUPValidator, Nomencladores.models.reeup_validator], verbose_name='Código REEUP')),
+                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.REEUPValidator], verbose_name='Código REEUP')),
                 ('nombre', models.CharField(max_length=100, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Nombre')),
                 ('siglas', models.CharField(max_length=15, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Siglas')),
                 ('direccion', models.CharField(max_length=100, verbose_name='Dirección')),
@@ -240,7 +240,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cliente',
             fields=[
-                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.UnicodeREEUPValidator, Nomencladores.models.reeup_validator], verbose_name='Código REEUP')),
+                ('reeup', models.CharField(max_length=11, primary_key=True, serialize=False, validators=[Nomencladores.validators.REEUPValidator], verbose_name='Código REEUP')),
                 ('nombre', models.CharField(max_length=100, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Nombre')),
                 ('siglas', models.CharField(max_length=15, unique=True, validators=[Nomencladores.validators.UnicodenameValidator, Nomencladores.models.nombre_validator], verbose_name='Siglas')),
                 ('direccion', models.CharField(max_length=100, verbose_name='Dirección')),
