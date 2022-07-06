@@ -74,7 +74,7 @@ class FProveedor_Sucursal(forms.ModelForm):
     
     class Meta:
         model =  Sucursal_Cuba
-        fields = ['direccion', 'email', 'telefono', 'contacto', 'carnet_trabajo']
+        fields = ['direccion', 'email', 'telefono', 'contacto']
         widgets = {
             'direccion': forms.TextInput(attrs={
                 'placeholder': 'Escriba la dirección',
@@ -82,10 +82,6 @@ class FProveedor_Sucursal(forms.ModelForm):
             }),
             'contacto': forms.TextInput(attrs={
                 'placeholder': 'Escriba el nombre y los apellidos del representante',
-                'class': 'form-control'
-            }),
-            'carne_trabajo': forms.TextInput(attrs={
-                'placeholder': 'Escriba el carnet de trabajo',
                 'class': 'form-control'
             }),
         }

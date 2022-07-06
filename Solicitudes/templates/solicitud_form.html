@@ -286,8 +286,8 @@ body {
                 {% if wizard.steps.current == 2 %}
                     <h3>¿Está seguro de agregar la Siguiente Solicitud?</h3>
                 {% endif %}
-                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Siguiente</button>
-                {% comment %} <input type="submit" value="Siguiente"/> {% endcomment %}
+                {% comment %} <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Siguiente</button> {% endcomment %}
+                <input type="submit" value="Siguiente"/>
                 {% comment %} {{ wizard.steps.current }} {% endcomment %}
             </fieldset>
         </form>

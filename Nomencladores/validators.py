@@ -1,3 +1,4 @@
+import enum
 import re
 
 from django.core import validators
@@ -77,23 +78,65 @@ class UnicodeCodeValidator(validators.RegexValidator):
 class REEUPValidator():
     
     def reeup_validator(reeup):
-        try:
-            str(reeup)
-            primer = int(reeup[0:2])
-            punto1 = str(reeup[3:])
-            segundo = int(reeup[4:])
-            punto2 = str(reeup[5:])
-            tercer = int(reeup[6:10])
-        
-            if primer.isalpha() or primer != 126:
-                raise ValidationError('Los 3 primeros números no pueden contener letras y deben ser 126')
-            elif  segundo.isalpha() or segundo != '0' :
-                raise ValidationError('El segundo número no puede contener letras y debe ser 0')
-            elif tercer.isalpha():
-                raise ValidationError('El tercer número no puede contener letras')
-            elif punto1 != '.' or punto2 != '.':
-                raise ValidationError('Escriba correctamente el código')
-            elif len(reeup) != 11:
+            reeup = str(reeup)
+            punto1 = str(reeup[3:4])
+            segundo = reeup[4:5]
+            punto2 = str(reeup[5:6])
+            tercer = reeup[6:]
+            if len(reeup) != 11:
                 raise ValidationError(u'El código debe contener 11 dígitos.')
-        except ValueError:
-            raise ValidationError('El código reeup no puede contener letras')
+            for i in reeup:
+                if i.isalpha() or i=="!" or i=='?' or i== ';' or i== ',' or i=='/' or i== '@' or i=='#' or i=='#' or i =='%':
+                    raise ValidationError("No puede contener letras ni caracteres especiales")
+            if reeup[3] != '.' or reeup[5] != '.':
+                raise ValidationError('Debe escribir punto en la cuarta y sexta posición')
+            primer = str(reeup[0:3])
+            for i in primer:
+                if i.isalpha():
+                    raise ValidationError('Los 3 primeros valores deben ser un números')
+            for i in segundo:
+                if i.isalpha():
+                    raise ValidationError('El quinto valor debe ser un número')
+            for i in tercer:
+                if i.isalpha():
+                    raise ValidationError('Los 4 últimos valores deben ser un números')
+                
+class MINCEXValidator():
+    
+    def codmincex_validator(codmincex):
+            codmincex = str(codmincex)
+            
+            if len(codmincex) != 7:
+                raise ValidationError(u'El código debe contener 7 dígitos.')
+            for i in codmincex:
+                if i=="!" or i=='?' or i== ';' or i== ',' or i=='/' or i== '@' or i=='#' or i=='#' or i =='%':
+                    raise ValidationError("No puede contener caracteres especiales, excepto -")
+            if not codmincex[0].isalpha() or not codmincex[1].isalpha() or codmincex[0].islower() or codmincex[1].islower():
+                raise ValidationError('Debe escribir letras mayúsculas en las 2 primeras posiciones')
+            if codmincex[2] != '-':
+                raise ValidationError('El tercer caracter debe ser -')
+            if not codmincex[3:9].isnumeric():
+                raise ValidationError('Debe escribir números a partir de la cuarta posición')
+            
+class ProductoValidator():
+    
+    def idproducto_validator(idproducto):
+            idproducto = str(idproducto)
+            
+            if len(idproducto) > 15:
+                raise ValidationError('Solo puede escribir hasta 15 caracteres')
+            
+            for i in idproducto:
+                if i=="!" or i=='?' or i== ';' or i== ',' or i=='/' or i== '@' or i=='#' or i=='#' or i =='%' or i == '.':
+                    raise ValidationError("No puede contener caracteres especiales, excepto -")
+                
+class TelefonoValidator():
+
+    def telefono_validator(telefono):
+        
+            telefono = str(telefono)
+            if len(telefono) > 8 or len(telefono) < 8:
+                raise ValidationError('El teléfono es incorrecto')
+            for i in telefono:
+                if not i.isnumeric():
+                    raise ValidationError('Solo puede introducir números')

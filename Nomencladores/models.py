@@ -17,10 +17,10 @@ from django.db import models
 from operator import contains
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
-from numpy import blackman, save
+from numpy import blackman, maximum, save
 from .validators import UnicodenameValidator
 from django.utils import timezone
-from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, REEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator
+from Nomencladores.validators import UnicodenameValidator, UnicodeCodeValidator, REEUPValidator, UnicodProveedorValidator, UnicodePersonNameValidator, MINCEXValidator, ProductoValidator, TelefonoValidator
 from django import forms
 from django.utils.text import slugify
 from django.utils import timezone
@@ -82,26 +82,21 @@ class  Provincia(models.Model):
 Clase Cliente
     
 """
-        
 def nombre_validator(nombre):
     for i in nombre:
         if i.isnumeric():
             raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nombre},)
        
-def validate_telefono(telefono):
-    if telefono <= 0 or telefono > 99999999:
-        raise ValidationError(
-        _('%(telefono)s es incorrecto'),
-        params={'telefono': telefono},
-        )
+
                 
 class Empresa(models.Model):
+    
     reeup = models.CharField(max_length=11, primary_key=True, validators=[REEUPValidator.reeup_validator], verbose_name='Código REEUP')
     nombre = models.CharField(max_length=100, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Nombre')
     siglas = models.CharField(max_length=15, unique=True, null=False, validators=[UnicodenameValidator, nombre_validator], verbose_name='Siglas')
     direccion = models.CharField(max_length=100, null=False, verbose_name='Dirección')
     correo = models.EmailField(verbose_name='Correo electrónico', unique=True)
-    telefono = models.IntegerField(unique=True, validators=[validate_telefono], verbose_name='Teléfono')
+    telefono = models.CharField(unique=True, max_length=8, validators=[TelefonoValidator.telefono_validator], verbose_name='Teléfono')
     
     class Meta:
         abstract = True
@@ -139,8 +134,8 @@ def fecha_contrato(fecha_contrato):
         delta = timezone.timedelta(days=3)
         if fecha_contrato <  timezone.now() - delta:
             raise ValidationError('La fecha del Contrato no puede ser 3 días anteriores a la fecha actual')
-        elif fecha_contrato > timezone.now() + delta:
-            raise ValidationError('La fecha del Contrato no puede ser 3 días posteriores a la fecha actual') 
+        elif fecha_contrato > timezone.now():
+            raise ValidationError('La fecha del Contrato no puede ser posterior a la fecha actual') 
 
 def fecha_caducidad_cliente():
     delta = timedelta(days=365)
@@ -220,8 +215,8 @@ class Producto(models.Model):
     desc_validator = UnicodenameValidator
 
     
-    idproducto = models.CharField(max_length=50, primary_key=True, verbose_name = 'Código')
-    descripcion = models.CharField(max_length=50, verbose_name = 'Descripción', validators = [desc_validator])
+    idproducto = models.CharField(max_length=15, primary_key=True, verbose_name = 'Código', validators=[ProductoValidator.idproducto_validator])
+    descripcion = models.CharField(max_length=30, verbose_name = 'Descripción', validators = [desc_validator])
     UM = models.ForeignKey(UM, on_delete=models.PROTECT, db_column='codigoum', null= False)
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT, db_column='codigomarca', verbose_name='Marca')
     activo = models.BooleanField(default=False)
@@ -356,14 +351,12 @@ class Datos(models.Model):
 Clase Proveedor
     
 """
-# def validate_codmincex(codmincex):
-#     for i in codmincex:
-#         if not i[0].isalpha() or not i[1].isalpha() or i[2] != '-' or not i[3].isnumeric
+def nombre_validator(nomproveedor):
+        if not nomproveedor[0].isalpha():
+            raise ValidationError(_('%(nombre)s no puede comenzar con números'), params={'nombre': nomproveedor},)
 
 class Proveedor(models.Model):
-    
-    code_validator = UnicodeCodeValidator
-    
+        
     Productor = 'Productor'
     Comercializador = 'Comercializador'
     TIPO_PROVEEDOR_CHOICES = [(Productor, 'Productor'), (Comercializador, 'Comercializador')]
@@ -373,13 +366,13 @@ class Proveedor(models.Model):
                                  max_length=7,
                                  primary_key=True, 
                                  verbose_name = 'Código MINCEX', 
-                                 validators=[code_validator]
+                                 validators=[MINCEXValidator.codmincex_validator]
                                  )
     
     nomproveedor = models.CharField(
                                     max_length=100, 
                                     unique=True,
-                                    validators=[name_validator], 
+                                    validators=[nombre_validator], 
                                     verbose_name = 'Nombre'
                                     )
     
@@ -426,6 +419,7 @@ class Proveedor(models.Model):
                                 blank=True,
     )
     
+    
     activo = models.BooleanField(default=False)
     
     class Meta:
@@ -445,13 +439,7 @@ Clase Sucursal en Cuba
 """    
 
 class Sucursal_Cuba(Datos):    
-           
-    carnet_trabajo = models.CharField(
-                                      null=False,
-                                      verbose_name='Carnet de Trabajo',
-                                      max_length= 200,
-                                      )
-    
+               
     codmincex = models.ForeignKey(
                                   Proveedor,
                                   on_delete=models.PROTECT,
@@ -475,7 +463,7 @@ class Casa_Matriz(Datos):
     
     sitio_web = models.CharField(max_length=60, verbose_name='Página Web')
     
-    proveedor = models.ForeignKey(
+    proveedor = models.OneToOneField(
                                   Proveedor,
                                   on_delete=models.PROTECT,
                                   db_column='codmincex',

@@ -24,17 +24,17 @@ from docx2pdf import convert
 from docxtpl import DocxTemplate, InlineImage
 import webbrowser
 from django.contrib import messages
+from django.utils.html import format_html
 #from .forms import *
 
 # Register your models here.     
 class Sucursal_CubaInline(admin.StackedInline):
     model = Sucursal_Cuba
-    extra = 1
-    max_num = 1
+    max_num = 2
     verbose_name = 'Sucursal'
     verbose_name_plural = 'Sucursal'
-
-
+    
+    
 class Casa_MatrizInline(admin.StackedInline):
     model = Casa_Matriz
     extra = 1
@@ -42,11 +42,10 @@ class Casa_MatrizInline(admin.StackedInline):
     verbose_name = 'Casa Matriz'
     verbose_name_plural = 'Casa Matriz'
 
-
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
     resource_class = ProveedorResource
-    inlines = [Sucursal_CubaInline, Casa_MatrizInline]
+    inlines = [Casa_MatrizInline, Sucursal_CubaInline]
     # add_form_template = 'proveedor_form.html'
     list_display = ('codmincex', 'nomproveedor', 'codigopais', 'clasificacion')
     #filter_horizontal = ['productos',]
@@ -54,7 +53,7 @@ class ProveedorAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields['codigopais'].widget.can_add_related = False
-        #form.base_fields['equipos'] = Equipo.objects.filter(marca = Marca.objects.all())
+        form.base_fields['marca'] = forms.ModelMultipleChoiceField(queryset=Marca.objects.filter(activa = True))
         form.base_fields['marca'].widget.can_add_related = False
         form.base_fields['marca'].widget.can_change_related = False
         form.base_fields['marca'].widget.can_delete_related = False
@@ -232,7 +231,7 @@ class ClienteAdmin(admin.ModelAdmin):
 class PaisAdmin(admin.ModelAdmin):
     fields = ['codigopais', 'nompais']
     list_display = ('codigopais', 'nompais')
-    
+        
     search_fields = ('nompais',)
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(PaisAdmin, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -297,6 +296,7 @@ class EquipoAdmin(admin.ModelAdmin):
     def get_form(self, request:HttpRequest, obj, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         fields = ['idproducto', 'descripcion', 'UM', 'Marca', 'Modelo']
+        form.base_fields['marca'] = forms.ModelChoiceField(queryset=Marca.objects.filter(activa = True))
         # if request.user.groups.filter(name = 'Marketing').exists():
         #     form.base_fields['UM'].widget.can_add_related = False
         #     form.base_fields['UM'].widget.can_delete_related = False
