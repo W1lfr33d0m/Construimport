@@ -1,0 +1,17 @@
+pre, p {
+    font-size: 1.5em;
+    color: #7a580d;
+    background-color: transparent;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background-image: url(static/img/fondo.jpg) image(transparent);
+  width: 100%;
+}
+

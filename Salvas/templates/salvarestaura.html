@@ -1,0 +1,168 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify jazzmin %}
+{% get_jazzmin_settings request as jazzmin_settings %}
+
+{% block extrahead %}
+    <link type="text/css" href="{% static 'jazzmin/vendor/notyf/notyf.min.css' %}" rel="stylesheet">
+   
+    <!-- Core -->
+    <script src="{% static 'jazzmin/vendor/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'jazzmin/vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+    <!-- Vendor JS -->
+    <script src="{% static 'jazzmin/vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+
+    <!-- Slider -->
+
+    <link type="text/css" href="{% static 'jazzmin/vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+    <script src="{% static 'jazzmin/vendor/nouislider/distribute/nouislider.min.js' %}"></script>
+
+    <!-- Smooth scroll -->
+    <script src="{% static 'jazzmin/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+
+    <!-- Charts -->
+    <script src="{% static 'jazzmin/vendor/chartist/dist/chartist.min.js' %}"></script>
+    <script src="{% static 'jazzmin/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+
+    <!-- Datepicker -->
+    <script src="{% static 'jazzmin/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+    <!-- Sweet Alerts 2 -->
+    <script src="{% static 'jazzmin/vendor/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+
+    <!-- Moment JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+    <!-- Vanilla JS Datepicker -->
+    <script src="{% static 'jazzmin/vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+    <!-- Notyf -->
+    <script src="{% static 'jazzmin/vendor/notyf/notyf.min.js' %}"></script>
+
+    <!-- Simplebar -->
+    <script src="{% static 'jazzmin/vendor/simplebar/dist/simplebar.min.js' %}"></script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <!-- Volt JS -->
+    <script src="{% static 'jazzmin/js/volt/volt.js' %}"></script>
+    <script src="{% static 'jazzmin/js/volt/scripts.js' %}"></script>
+    <script src="https://kit.fontawesome.com/4fd3baa9fc.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content_title %} {% trans 'Listado de Salvas y Restauras' %} {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Salvas y Restauras' %}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+
+{% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+    {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
+
+
+<div class="wrapper">	
+	<section class="content">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+				<form class="form-horizontal" method="post" id="form" action="{% url 'Salvas:Salvas' %}">
+
+						{% csrf_token %}
+					<div class="card-header-primary">
+
+						 	<div class="col-md-12 text-right">
+							 	<button id="submit" type="submit" class="btn btn-success">
+									<a href="{% url 'Salvas:salvar'%}">
+								 	<span class="fa fa-save" style="color: #0e0f11;"> Salvar</span>
+								 	</a>
+								</button>
+						 	</div>
+
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body">
+						<div class="form-body">
+							<table id="example2" class="table table-bordered table-hover table-responsive-sm">
+								<thead>
+								<tr>
+									<th>
+										Número
+									</th>
+									<th>
+										Ruta de la salva
+									</th>
+									<th>
+										Nombre del fichero
+									</th>
+									<th>
+										Acción
+									</th>
+								</tr>
+								</thead>
+								<tbody>
+								{% for u in dblist %}
+									<tr>
+										<td>
+											{{ forloop.counter }}
+										</td>
+										<td>
+											{{ u.1.0 }} 
+										</td>
+										<td>
+											{{ u.0.0 }}
+										</td>
+
+										<td>
+											<span class="input-group-sm">
+											<a href="{% url 'Salvas:restaurar' u.0.0 %}"
+
+										   	class="btn btn-sm btn-primary" tit	le="Restaurar base de datos">
+												<i class="fa fa-history"></i>
+
+											</a>
+											{% if forloop.counter > 2 %}
+												<a href="{% url 'Salvas:eliminar' u.0.0 %}" class="btn btn-danger btn-sm"
+												title="Eliminar Archivo" >
+												<i class="fa fa-eraser"></i>
+												</a>
+											{% endif %}
+											</span>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				<!-- /.card-body -->
+				</form>
+				</div>
+				<!-- /.card -->
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.row -->
+	</section>
+</div>	
+{% endblock %}
+
+{% block extrajs %}
+    {{  block.super }}
+    <script type="text/javascript" src="{% static 'vendor/select2/js/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jazzmin/js/change_form.js' %}"></script>
+    {% if jazzmin_settings.related_modal_active %}
+    <script type="text/javascript" src="{% static 'jazzmin/plugins/bootstrap-show-modal/bootstrap-show-modal.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jazzmin/js/related-modal.js' %}"></script>
+    {% endif %}
+{% endblock %}

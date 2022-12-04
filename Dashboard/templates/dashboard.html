@@ -1,0 +1,129 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static jazzmin %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} 
+{% comment %} <link rel="stylesheet" type="text/css" href = "{% static 'jazzmin/css/main.css' %}"> {% endcomment %}
+dashboard
+
+{% endblock %}
+
+{% block content_title %} <h2> Sistema Integrado para la Gestión de Importaciones </h2> {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-building-alt"></i> {% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Página Principal' %}</li>
+    </ol>
+{% endblock %}
+
+
+{% block content %}
+    {% get_side_menu using="app_list" as dashboard_list %}
+    {% if dashboard_list %}
+    {% widthratio dashboard_list|length 2 1 as middle %}
+    {% endif %}
+
+    <br>
+    {% comment %} <div class="container-fluid py-4"> {% endcomment %}
+        {% comment %} {% if request.user|has_group:"Especialista_Marketing" %} {% endcomment %}
+   
+        <div class="row">
+	    <div class="col">
+		    <div class="col-md">
+			    <div class="card text-center text-black  mb-3" id="total-orders">
+			    	<div class="card-header">
+			  		    <h5 class="card-title">Solicitudes de Equipos Generadas</h5>
+			  	    <div class="card-body">
+			    	    <h3>{{ solicitudes_equipo|safe  }}</h3>
+                    </div>
+			  	    </div>
+			    </div>
+		    </div>
+	    </div>
+
+    
+
+	{% comment %} <div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-delivered">
+			  	<div class="card-header">
+			  		<h5 class="card-title">Orders Delivered</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">{{delivered}}</h3>
+			  	</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-pending">
+			  	<div class="card-header">
+			  		<h5 class="card-title">Orders Pending</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">{{pending}}</h3>
+			  	</div>
+			</div>
+		</div>
+	</div>
+</div>
+ 
+<script>
+
+    function processData(dataset) {
+        var result = []
+        dataset = JSON.parse(dataset);
+        dataset.forEach(item => result.push(item.fields));
+        return result;
+    }
+    $.ajax({
+        url: $("#pivot-table-container").attr("data-url"),
+        dataType: 'json',
+        success: function(data) {
+            new Flexmonster({
+                container: "#pivot-table-container",
+                componentFolder: "https://cdn.flexmonster.com/",
+                width: "100%",
+                height: 430,
+                toolbar: true,
+                report: {
+                    dataSource: {
+                        type: "json",
+                        data: processData(data)
+                    },
+                    slice: {}
+                }
+            });
+            new Flexmonster({
+                container: "#pivot-chart-container",
+                componentFolder: "https://cdn.flexmonster.com/",
+                width: "100%",
+                height: 430,
+                //toolbar: true,
+                report: {
+                    dataSource: {
+                        type: "json",
+                        data: processData(data)
+                    },
+                    slice: {},
+                    "options": {
+                        "viewType": "charts",
+                        "chart": {
+                            "type": "pie"
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+</script> {% endcomment %}
+{% endblock %}
+
